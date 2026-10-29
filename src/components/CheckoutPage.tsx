@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Script from "next/script";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, Check, CreditCard, MapPin, Pencil } from "lucide-react";
 import { INDIAN_STATES, validateCheckoutDetails, type CheckoutDetails, type CheckoutErrors, type CheckoutReview } from "@/lib/checkout";
@@ -19,10 +20,11 @@ const fields: { key: keyof CheckoutDetails; label: string; autoComplete: string;
 ];
 
 export function CheckoutPage() {
-  const { ready, items, summary, storageWarning, checkoutDetails, setCheckoutDetails } = useCart();
+  const { ready, items, summary, storageWarning, checkoutDetails, setCheckoutDetails, updateQuantity } = useCart();
   const [errors, setErrors] = useState<CheckoutErrors>({});
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [paymentPending, setPaymentPending] = useState(false);
   const [review, setReview] = useState<{ data: CheckoutReview; cartKey: string } | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const reviewRef = useRef<HTMLElement>(null);
@@ -92,7 +94,58 @@ export function CheckoutPage() {
     }
   }
 
+  async function startPayment() {
+    if (!currentReview || paymentPending) return;
+    setPaymentPending(true);
+    setError("");
+    try {
+      const response = await fetch("/api/payments/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items, customer: currentReview.customer }),
+      });
+      const result: unknown = await response.json();
+      if (!response.ok) throw new Error(isRecord(result) && typeof result.error === "string" ? result.error : "Payment is not available yet.");
+      if (!isRecord(result) || typeof result.orderId !== "string" || typeof result.razorpayOrderId !== "string" || typeof result.keyId !== "string" || typeof result.amount !== "number") throw new Error("Payment setup response was incomplete.");
+      if (typeof window.Razorpay !== "function") throw new Error("Secure payment checkout is still loading. Please try again.");
+      const razorpay = new window.Razorpay({
+        key: result.keyId,
+        amount: result.amount,
+        currency: "INR",
+        name: "Asal Organics",
+        description: "Asal Organics order",
+        order_id: result.razorpayOrderId,
+        prefill: { name: currentReview.customer.fullName, email: currentReview.customer.email, contact: `+91${currentReview.customer.phone}` },
+        theme: { color: "#2f5d3b" },
+        handler: async (payment: { razorpay_payment_id?: string; razorpay_order_id?: string; razorpay_signature?: string }) => {
+          try {
+            if (!payment.razorpay_payment_id || !payment.razorpay_signature) throw new Error("Payment could not be confirmed. Please contact us before trying again.");
+            const verification = await fetch("/api/payments/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId: result.orderId, paymentId: payment.razorpay_payment_id, signature: payment.razorpay_signature }) });
+            const verified = await verification.json() as unknown;
+            if (!verification.ok) throw new Error(isRecord(verified) && typeof verified.error === "string" ? verified.error : "Payment confirmation failed. Please contact us.");
+            for (const line of currentReview.summary.lines) updateQuantity(line.productId, 0);
+            setError("");
+            setReview(null);
+            setCheckoutDetails({ ...currentReview.customer });
+            window.alert("Payment received. Your order has been confirmed.");
+          } catch (cause) {
+            setError(cause instanceof Error ? cause.message : "Payment confirmation failed. Please contact us.");
+          } finally {
+            setPaymentPending(false);
+          }
+        },
+        modal: { ondismiss: () => setPaymentPending(false) },
+      });
+      razorpay.on("payment.failed", () => { setError("Payment was not completed. Your bag is still saved."); setPaymentPending(false); });
+      razorpay.open();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "We couldn’t start payment. Please try again.");
+      setPaymentPending(false);
+    }
+  }
+
   return <CommerceLayout step={currentReview ? 3 : 2}>
+    <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
     {!ready ? <p className="commerce-loading" role="status">Preparing checkout…</p> : !items.length ? <EmptyBag /> : <>
       <div className="commerce-title"><h1>{currentReview ? <>One last <em>look.</em></> : <>A little closer to <em>home.</em></>}</h1><p>{currentReview ? "Check your details and the essentials in your bag." : "Let’s get your everyday essentials ready."}</p></div>
       {storageWarning && <p className="commerce-alert" role="status">{storageWarning}</p>}
@@ -107,12 +160,13 @@ export function CheckoutPage() {
               <address>{currentReview.customer.address}<br />{currentReview.customer.apartment && <>{currentReview.customer.apartment}<br /></>}{currentReview.customer.city}, {currentReview.customer.state} {currentReview.customer.pincode}<br />India</address>
               <p>{currentReview.customer.email}<br />+91 {currentReview.customer.phone}</p>
             </div>
-            <div className="payment-boundary">
+              <div className="payment-boundary">
               <CreditCard size={25} strokeWidth={1.4} />
-              <div><h3>Payment is the next chapter.</h3><p>Razorpay isn’t connected yet. Your bag stays saved, but no payment can be collected and no order has been placed.</p></div>
+              <div><h3>Pay securely with Razorpay.</h3><p>Your payment is verified on our server before an order is confirmed. Your card, UPI or bank details never reach Asal.</p></div>
             </div>
-            <button className="button button-green full-width" disabled aria-describedby="payment-unavailable">Payment coming soon <CreditCard size={18} /></button>
-            <p id="payment-unavailable" className="payment-caption">Payment will open after Razorpay, delivery and tax settings are configured.</p>
+            {error && <p className="form-error-banner" role="alert">{error}</p>}
+            <button className="button button-green full-width" onClick={startPayment} disabled={paymentPending} aria-describedby="payment-caption">{paymentPending ? "Opening secure checkout…" : "Continue to secure payment"} <CreditCard size={18} /></button>
+            <p id="payment-caption" className="payment-caption">Payments are available only after the store owner configures Razorpay, the approved catalogue, shipping and tax settings.</p>
             <Link href="/cart" className="text-link back-to-bag"><ArrowLeft size={16} />Back to your bag</Link>
           </section> : <form ref={formRef} onSubmit={submit} noValidate className="checkout-form" aria-busy={pending}>
             <div className="checkout-section-heading"><span className="section-icon"><MapPin size={20} strokeWidth={1.5} /></span><div><h2>Where’s home?</h2><p>Enter your contact and delivery details.</p></div></div>
