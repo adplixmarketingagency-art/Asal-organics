@@ -59,10 +59,11 @@
   .announcement-bar a { display: inline-flex; gap: 5px; align-items: center; margin-left: 15px; color: #d8e7c8; border-bottom: 1px solid #77936e; line-height: 1.5; }
   .site-header { position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,.97); border-bottom: 1px solid var(--line); }
   .header-inner { display: flex; align-items: center; justify-content: space-between; height: 93px; gap: 40px; }
-  .brand { display: flex; flex-direction: column; line-height: 1; align-items: flex-start; min-width: 155px; }
-  .brand-word { font-family: var(--display); font-size: 53px; font-weight: 500; letter-spacing: -4.7px; line-height: .95; position: relative; padding-right: 10px; display: inline-block; }
+  /* Size the lockup to its lettering, not the header slot or footer column. */
+  .brand { display: inline-flex; flex-direction: column; line-height: 1; align-items: center; width: max-content; min-width: 0; flex-shrink: 0; }
+  .brand-word { font-family: var(--display); font-size: 53px; font-weight: 500; letter-spacing: -4.7px; line-height: .95; position: relative; display: inline-block; }
   .brand-word-tamil { font-family: "Noto Serif Tamil", "Tamil Sangam MN", "Nirmala UI", serif; font-weight: 600; letter-spacing: -2px; line-height: 1.08; }
-  .brand-word > span { position: absolute; right: -1px; top: 6px; font-family: var(--sans); font-size: 11px; line-height: 1; letter-spacing: 0; font-weight: 400; }
+  .brand-word > span { position: absolute; left: calc(100% + 3px); top: 6px; font-family: var(--sans); font-size: 11px; line-height: 1; letter-spacing: 0; font-weight: 400; }
   .brand-tagline { align-self: center; font-size: 10px; letter-spacing: .8px; margin-top: 7px; font-weight: 600; }
   .desktop-nav { display: flex; gap: 32px; margin-left: 30px; height: 100%; align-items: center; }
   .desktop-nav > a, .desktop-nav > button { position: relative; font-size: 12px; display: flex; gap: 7px; align-items: center; padding: 10px 0; white-space: nowrap; }
@@ -345,7 +346,6 @@
     .desktop-nav { gap: 18px; }
     .desktop-nav > a, .desktop-nav > button { font-size: 11px; }
     .header-favourites, .header-separator { display: none; }
-    .brand { min-width: 125px; }
     .brand-word { font-size: 47px; }
     .brand-tagline { font-size: 6px; letter-spacing: 1.3px; }
     .hero-copy { padding: 33px 29px 24px; }

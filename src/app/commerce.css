@@ -126,7 +126,6 @@
   @media (max-width: 700px) {
     .product-add { font-size: 11px; min-height: 44px; margin-top: 5px; }
     .commerce-header { gap: 14px; min-height: 91px; }
-    .commerce-header .brand { min-width: 100px; }
     .commerce-header > .text-link { font-size: 10px; gap: 7px; }
     .commerce-header > .text-link svg { width: 13px; }
     .commerce-bag { gap: 2px; }
