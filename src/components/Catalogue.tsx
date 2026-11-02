@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, ChevronDown, Grid2X2, Heart, LayoutList, Search, SlidersHorizontal, Sprout, X } from "lucide-react";
 import { products, selectProducts, formatPrice, type Category, type Product, type Sort } from "@/content/products";
 import { ProductCard } from "./ProductCard";
@@ -25,8 +25,11 @@ export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCateg
   const [maxPrice, setMaxPrice] = useState(700);
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
+  const filterToggleRef = useRef<HTMLButtonElement>(null);
   const selected = selectProducts(products, { category, sort, saved, maxPrice, query });
   const reset = () => { setQuery(""); setMaxPrice(700); onCategory("all"); };
+  // Closing unmounts the panel, so return focus to the control that owns aria-expanded.
+  const closeFilters = () => { setFiltersOpen(false); filterToggleRef.current?.focus(); };
 
   return (
     <section className="collection section-wrap" id="collection" aria-labelledby="collection-title">
@@ -45,7 +48,7 @@ export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCateg
       </div>
       <div className="collection-toolbar">
         <div className="filter-actions">
-          <button className={`filter-button ${filtersOpen ? "active" : ""}`} onClick={() => setFiltersOpen(!filtersOpen)} aria-expanded={filtersOpen} aria-controls="collection-filters">
+          <button ref={filterToggleRef} className={`filter-button ${filtersOpen ? "active" : ""}`} onClick={() => setFiltersOpen(!filtersOpen)} aria-expanded={filtersOpen} aria-controls="collection-filters">
             <SlidersHorizontal size={16} /> Filters {maxPrice < 700 || query ? <span className="filter-dot" /> : null}<ChevronDown size={14} />
           </button>
           <span className="result-count" role="status">{selected.length} {selected.length === 1 ? "oil" : "oils"} to discover</span>
@@ -63,10 +66,13 @@ export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCateg
           </div>
         </div>
       </div>
-      {filtersOpen && <div className="filter-panel" id="collection-filters">
+      {filtersOpen && <div className="filter-panel" id="collection-filters" onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); closeFilters(); } }}>
         <label className="filter-search"><Search size={17} /><input aria-label="Filter oils by name" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search the collection" /></label>
         <label className="price-filter"><span>Price up to <strong>{formatPrice(maxPrice)}</strong></span><input aria-label="Maximum price" type="range" min="100" max="700" step="10" value={maxPrice} onChange={(event) => setMaxPrice(Number(event.target.value))} /></label>
-        <button className="text-link reset-filters" onClick={reset}>Reset filters <X size={15} /></button>
+        <div className="filter-panel-actions">
+          <button type="button" className="text-link reset-filters" onClick={reset}>Reset filters</button>
+          <button type="button" className="icon-button filter-close" aria-label="Close filters" onClick={closeFilters}><X size={18} /></button>
+        </div>
       </div>}
       {selected.length ? <div className={`product-grid ${view === "list" ? "list-view" : ""}`}>
         {selected.map((product) => <ProductCard key={product.id} product={product} saved={saved.includes(product.id)} onSave={() => onSave(product.id)} onExplore={() => onExplore(product)} />)}

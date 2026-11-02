@@ -1,24 +1,24 @@
-# Graph Report - Asal  (2026-10-29)
+# Graph Report - Asal  (2026-10-30)
 
 ## Corpus Check
-- 39 files · ~33,246 words
+- 39 files · ~34,598 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 11 file(s) not represented in the graph (top: .ttf 7, .css 2, .example 1)
 
 ## Summary
-- 282 nodes · 576 edges · 18 communities (16 shown, 2 thin omitted)
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 55 edges (avg confidence: 0.84)
+- 276 nodes · 568 edges · 18 communities (16 shown, 2 thin omitted)
+- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 51 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8883458a`
+- Built from commit: `81fd5b83`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Storefront.tsx
-- prepareCheckoutReview
-- checkout.ts
+- Implemented (cart and checkout)
+- CommerceLayout.tsx
 - CartProvider.tsx
 - package.json
 - compilerOptions
@@ -30,7 +30,7 @@
 - Sesame Oil Product Photograph (sesame.jpg)
 - Wood Cold Pressed Sunflower Oil (1 L)
 - Castor Oil Product Photo (castor.jpg)
-- Asal Leaf App Icon (64x64 rounded-square mark)
+- layout.tsx
 - Razorpay payments and seller notifications
 - razorpay.d.ts
 
@@ -67,7 +67,6 @@
 - **Reference Catalogue to Product Photography Binding** — src_content_products_catalogue, src_content_products_coconut, public_images_products_coconut, public_images_products_coconut_one_litre_format [EXTRACTED 1.00]
 - **Sesame Product Listing Asset (catalogue entry consumes image, product and label data)** — src_content_products_products, public_images_products_sesame, public_images_products_sesame_wood_pressed_sesame_oil, public_images_products_sesame_label_information_panel [EXTRACTED 1.00]
 - **Asal Almond Oil Branded Product Hero Composition** — public_images_products_almond_almond_oil_product, public_images_products_almond_asal_brand, public_images_products_almond_quality_seal_badge, public_images_products_almond_product_packaging_design, public_images_products_almond_botanical_flourish [INFERRED 0.85]
-- **Asal App Icon Brand Mark Composition** — src_app_icon_leaf_mark, src_app_icon_leaf_motif, src_app_icon_brand_palette, src_app_icon_scalable_svg_strategy [INFERRED 0.85]
 - **Cart to Pre-payment Review Flow** — docs_checkout_asal_cart_v1, docs_checkout_review_ready, docs_checkout_review_invalidation, src_lib_checkout, src_app_api_checkout_route [INFERRED 0.85]
 - **Castor Oil Storefront Listing Identity** — public_images_products_castor, public_images_products_castor_castor_oil, public_images_products_castor_aishwaryam_oils, public_images_products_castor_label_design [INFERRED 0.85]
 - **Coconut Oil Front-of-Pack Claim Stack** — public_images_products_coconut_brand_mark, public_images_products_coconut_wood_crushed_claim, public_images_products_coconut_natural_cold_pressed, public_images_products_coconut_one_litre_format [INFERRED 0.85]
@@ -83,17 +82,17 @@
 Cohesion: 0.16
 Nodes (22): lucide-react, react, WoodPressedOils(), Home(), Catalogue(), categories, Editorial(), faqs (+14 more)
 
-### Community 1 - "prepareCheckoutReview"
-Cohesion: 0.07
-Nodes (31): node_modules/next/dist/docs Guides, asal-cart-v1 localStorage Cart, Cart and checkout, Checks, Implemented (cart and checkout), Razorpay boundary, Razorpay Readiness Checklist, 16 KiB Body Limit and no-store Responses (+23 more)
+### Community 1 - "Implemented (cart and checkout)"
+Cohesion: 0.09
+Nodes (26): node_modules/next/dist/docs Guides, asal-cart-v1 localStorage Cart, Cart and checkout, Checks, Implemented (cart and checkout), Razorpay boundary, Razorpay Readiness Checklist, 16 KiB Body Limit and no-store Responses (+18 more)
 
-### Community 2 - "checkout.ts"
-Cohesion: 0.13
-Nodes (26): config, next, metadata, Page(), metadata, Page(), CartPage(), useCart() (+18 more)
+### Community 2 - "CommerceLayout.tsx"
+Cohesion: 0.19
+Nodes (16): config, next, metadata, Page(), metadata, Page(), CartPage(), useCart() (+8 more)
 
 ### Community 3 - "CartProvider.tsx"
-Cohesion: 0.17
-Nodes (22): dmSans, fraunces, metadata, RootLayout(), CartContext, CartProvider(), useCartState(), addItem() (+14 more)
+Cohesion: 0.13
+Nodes (32): headers, POST(), CartContext, useCartState(), addItem(), commit(), onStorage(), read() (+24 more)
 
 ### Community 4 - "package.json"
 Cohesion: 0.06
@@ -104,8 +103,8 @@ Cohesion: 0.10
 Nodes (19): compilerOptions, allowImportingTsExtensions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib (+11 more)
 
 ### Community 6 - "orders.ts"
-Cohesion: 0.21
-Nodes (21): server-only, POST(), POST(), POST(), attachRazorpayOrder(), cancelUnlinkedOrder(), createPendingOrder(), ensureSchema() (+13 more)
+Cohesion: 0.22
+Nodes (20): server-only, POST(), POST(), POST(), attachRazorpayOrder(), createPendingOrder(), ensureSchema(), getOrder() (+12 more)
 
 ### Community 7 - "Hero Photograph (hero.jpg)"
 Cohesion: 0.36
@@ -135,9 +134,9 @@ Nodes (4): Asthwarayu Oils (Asal) Brand, Sunflower Oil Product Photograph, Clear
 Cohesion: 0.50
 Nodes (3): Castor Oil Product Photo (castor.jpg), Aishwaryam Oils (Brand), Wood Crushed Castor Oil, 250 ml Amber Bottle
 
-### Community 14 - "Asal Leaf App Icon (64x64 rounded-square mark)"
-Cohesion: 0.60
-Nodes (4): Brand Palette: Deep Forest Green #173f34 on Off-White #e8f2f8, Asal Leaf App Icon (64x64 rounded-square mark), Leaf Silhouette Motif with Central Vein, Next.js App Router icon.svg File Convention (auto-generated favicon)
+### Community 14 - "layout.tsx"
+Cohesion: 0.29
+Nodes (5): dmSans, fraunces, metadata, RootLayout(), CartProvider()
 
 ### Community 16 - "Razorpay payments and seller notifications"
 Cohesion: 0.50
@@ -151,17 +150,17 @@ Nodes (3): Activation checklist, Razorpay payments and seller notifications, Sel
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Razorpay boundary` connect `prepareCheckoutReview` to `checkout.ts`?**
-  _High betweenness centrality (0.092) - this node is a cross-community bridge._
+- **Why does `Razorpay boundary` connect `Implemented (cart and checkout)` to `CartProvider.tsx`?**
+  _High betweenness centrality (0.096) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `useCartState()` (e.g. with `addItem()` and `onStorage()`) actually correct?**
   _`useCartState()` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `react-dom`, `@types/node`, `@types/pg` to the rest of the system?**
   _15 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `prepareCheckoutReview` be split into smaller, more focused modules?**
-  _Cohesion score 0.06976744186046512 - nodes in this community are weakly interconnected._
-- **Why does `products` connect `Storefront.tsx` to `Sesame Oil Product Photograph (sesame.jpg)`, `checkout.ts`, `CartProvider.tsx`, `Castor Oil Product Photo (castor.jpg)`?**
-  _High betweenness centrality (0.079) - this node is a cross-community bridge._
-- **Should `checkout.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.13368983957219252 - nodes in this community are weakly interconnected._
-- **Why does `next` connect `checkout.ts` to `Storefront.tsx`, `CartProvider.tsx`, `package.json`?**
-  _High betweenness centrality (0.068) - this node is a cross-community bridge._
+- **Should `Implemented (cart and checkout)` be split into smaller, more focused modules?**
+  _Cohesion score 0.0873440285204991 - nodes in this community are weakly interconnected._
+- **Why does `products` connect `Storefront.tsx` to `Sesame Oil Product Photograph (sesame.jpg)`, `CartProvider.tsx`, `Castor Oil Product Photo (castor.jpg)`?**
+  _High betweenness centrality (0.082) - this node is a cross-community bridge._
+- **Should `CartProvider.tsx` be split into smaller, more focused modules?**
+  _Cohesion score 0.12560975609756098 - nodes in this community are weakly interconnected._
+- **Why does `next` connect `CommerceLayout.tsx` to `Storefront.tsx`, `CartProvider.tsx`, `package.json`, `layout.tsx`?**
+  _High betweenness centrality (0.071) - this node is a cross-community bridge._
