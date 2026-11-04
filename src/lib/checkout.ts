@@ -1,4 +1,4 @@
-import { products } from "../content/products.ts";
+import { canAddToBag, products } from "../content/products.ts";
 import { getCartSummary, isRecord, MAX_ITEM_QUANTITY, type CartItem } from "./cart.ts";
 
 export const INDIAN_STATES = [
@@ -63,14 +63,14 @@ type ReviewResult =
 /** A review is NOT an order. Recompute prices here, never trust client totals. */
 export function prepareCheckoutReview(value: unknown): ReviewResult {
   if (!isRecord(value) || !Array.isArray(value.items) || !value.items.length) {
-    return { ok: false, error: "Your bag is empty. Add an oil before checking out." };
+    return { ok: false, error: "Your bag is empty. Add a product before checking out." };
   }
   if (value.items.length > products.length) return { ok: false, error: "Your bag contains too many product lines." };
   const seen = new Set<string>();
   const items: CartItem[] = [];
   for (const item of value.items) {
     if (!isRecord(item) || typeof item.productId !== "string" ||
-      !products.some((product) => product.id === item.productId) || seen.has(item.productId) ||
+      !products.some((product) => product.id === item.productId && canAddToBag(product)) || seen.has(item.productId) ||
       typeof item.quantity !== "number" || !Number.isSafeInteger(item.quantity) ||
       item.quantity < 1 || item.quantity > MAX_ITEM_QUANTITY) {
       return { ok: false, error: "Your bag has an invalid product or quantity. Please update your bag and try again." };

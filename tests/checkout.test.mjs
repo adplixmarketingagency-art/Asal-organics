@@ -32,7 +32,7 @@ test("checkout ignores forged prices and does not claim payment, order creation 
     items: payload.items.map((item) => ({ ...item, price: 1, unitPricePaise: 1 })),
   });
   assert.equal(result.ok, true);
-  assert.equal(result.review.summary.subtotalPaise, 167700);
+  assert.equal(result.review.summary.subtotalPaise, 154000);
   assert.equal(result.review.currency, "INR");
   assert.deepEqual(result.review.payment, { provider: "razorpay", enabled: false });
   assert.equal(result.review.shipping, "not_configured");
@@ -56,7 +56,7 @@ test("checkout API validates and returns a no-store review", async () => {
   }));
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("cache-control"), "no-store");
-  assert.equal((await response.json()).summary.subtotalPaise, 167700);
+  assert.equal((await response.json()).summary.subtotalPaise, 154000);
 });
 
 test("checkout API rejects invalid content, JSON, sizes and details", async () => {
@@ -72,5 +72,12 @@ test("checkout API rejects invalid content, JSON, sizes and details", async () =
     }));
     assert.equal(response.status, status);
     assert.equal(response.headers.get("cache-control"), "no-store");
+  }
+});
+
+
+test("server rejects retired and missing-unit products even with a forged size", () => {
+  for (const productId of ["sunflower", "almond", "castor", "ragi", "bajra"]) {
+    assert.equal(prepareCheckoutReview({ customer, items: [{ productId, quantity: 1, size: "1 kg" }] }).ok, false);
   }
 });

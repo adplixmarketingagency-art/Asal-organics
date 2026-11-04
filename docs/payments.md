@@ -4,7 +4,7 @@ The application contains a server-only Razorpay adapter, order snapshot tables, 
 
 ## Activation checklist
 
-1. Replace the public reference catalogue with Asal-owned products, prices, stock, images, delivery rules, and tax rules. The current subtotal is not a launch total.
+1. Confirm missing quantities, stock, delivery rules, and tax rules for the owner-supplied Asal catalogue. The current subtotal is not a launch total.
 2. Provision managed Postgres (Neon is the recommended Vercel Marketplace storage option) and set `DATABASE_URL`. Do not use local JSON or memory for orders.
 3. Create Razorpay Test Mode keys. Set `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, and a separate random `RAZORPAY_WEBHOOK_SECRET` as server-only secrets.
 4. Set `PAYMENTS_ENABLED=true` only after catalogue and totals are approved. Only the public key reaches the browser.

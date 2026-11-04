@@ -203,7 +203,7 @@ export function CheckoutPage() {
           <Link href="/cart" className="text-link summary-edit"><Pencil size={14} />Edit your bag</Link>
         </OrderSummary>
       </div>
-      <p className="commerce-reference">Asal checkout preview · Aishwaryam Oils reference catalogue · No inventory is reserved.</p>
+      <p className="commerce-reference">Asal checkout preview · No order is placed and no inventory is reserved.</p>
     </>}
   </CommerceLayout>;
 }

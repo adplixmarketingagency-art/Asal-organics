@@ -25,8 +25,8 @@ const fraunces = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Asal — Wood-Pressed Oils. Nature, Uncomplicated.",
-  description: "Discover a simpler kind of everyday. Explore wood-pressed oils, find your favourite, and learn what makes each one special. Asal storefront design preview.",
+  title: "Asal — Everyday Essentials. Rooted in Tradition.",
+  description: "Explore Asal’s cold-pressed oils, masala and grain flours, milk products, and traditional rice varieties. Browse product prices and quantities.",
   robots: { index: false, follow: false },
 };
 

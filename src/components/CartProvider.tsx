@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { Check, X } from "lucide-react";
-import { products } from "@/content/products";
+import { canAddToBag, products } from "@/content/products";
 import { addCartItem, CART_STORAGE_KEY, getCartSummary, MAX_ITEM_QUANTITY, parseStoredCart, serializeCart, setCartQuantity, type CartItem } from "@/lib/cart";
 import { EMPTY_CHECKOUT_DETAILS, type CheckoutDetails } from "@/lib/checkout";
 
@@ -53,9 +53,9 @@ function useCartState() {
   function addItem(productId: string) {
     if (!ready) return;
     const product = products.find((item) => item.id === productId);
-    if (!product) return;
+    if (!product || !canAddToBag(product)) return;
     if ((current.current.find((item) => item.productId === productId)?.quantity ?? 0) >= MAX_ITEM_QUANTITY) {
-      setAnnouncement(`You can add up to ${MAX_ITEM_QUANTITY} bottles of ${product.name}.`);
+      setAnnouncement(`You can add up to ${MAX_ITEM_QUANTITY} units of ${product.name}.`);
       return;
     }
     commit(addCartItem(current.current, productId));

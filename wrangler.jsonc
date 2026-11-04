@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "asal-organics",
+  "account_id": "65446830387918c7b7a15450c724e9e2",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-02",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "asaliyarkaiangadi.in",
+      "custom_domain": true
+    }
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "asal-organics"
+    }
+  ],
+  "vars": {
+    "PAYMENTS_ENABLED": "false",
+    "PAYMENT_MODE": "test",
+    "CATALOGUE_APPROVED": "false",
+    "PURCHASE_TOTAL_APPROVED": "false"
+  }
+}

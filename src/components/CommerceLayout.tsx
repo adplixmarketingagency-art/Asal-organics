@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, Leaf, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import type { ReactNode } from "react";
-import { formatPrice } from "@/content/products";
+import { categoryLabel, formatPrice } from "@/content/products";
 import { MAX_ITEM_QUANTITY, type CartSummary } from "@/lib/cart";
 import { useCart } from "./CartProvider";
+import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
 
 export function CommerceLayout({ step, children }: { step: 1 | 2 | 3; children: ReactNode }) {
   const { summary } = useCart();
@@ -35,8 +35,8 @@ export function EmptyBag() {
   return <section className="empty-bag">
     <span className="empty-bag-icon"><ShoppingBag size={34} strokeWidth={1.2} /></span>
     <h1>A little goodness awaits.</h1>
-    <p>Your bag is empty. Find an oil for your everyday<br />and make a little room for something good.</p>
-    <Link href="/#collection" className="button button-green">Explore the oils <ArrowRight size={18} /></Link>
+    <p>Your bag is empty. Find something for your everyday<br />and make a little room for something good.</p>
+    <Link href="/#collection" className="button button-green">Explore the collection <ArrowRight size={18} /></Link>
   </section>;
 }
 
@@ -45,14 +45,14 @@ export function CartLines({ compact = false, summary: suppliedSummary }: { compa
   const summary = suppliedSummary ?? browserSummary;
   return <ul className={`cart-lines ${compact ? "compact-lines" : ""}`}>
     {summary.lines.map(({ product, productId, quantity, lineTotalPaise }) => <li key={productId} className="cart-line">
-      <div className="cart-line-image"><Image src={product.image} alt={product.name} width={144} height={164} />{compact && <span>{quantity}</span>}</div>
+      <ProductImagePlaceholder compact className="cart-image-space" />
       <div className="cart-line-description">
-        {!compact && <p className="eyebrow">{product.category === "cooking" ? "WOOD-PRESSED GOODNESS" : "NATURAL CARE"}</p>}
-        <h3>{product.name}</h3><p>{product.size}{!compact && <> · {formatPrice(product.price)} each</>}</p>
+        {!compact && <p className="eyebrow">{categoryLabel(product.category)}</p>}
+        <h3>{product.name}</h3><p>{product.size}{compact && <> · Qty {quantity}</>}{!compact && <> · {formatPrice(product.price)} each</>}</p>
         {!compact && <div className="cart-line-controls">
           <div className="quantity-control" role="group" aria-label={`${product.name} quantity`}>
             <button type="button" aria-label={`Decrease ${product.name} quantity`} disabled={quantity <= 1} onClick={() => updateQuantity(productId, quantity - 1)}><Minus size={14} /></button>
-            <span aria-live="polite" aria-label={`${quantity} ${quantity === 1 ? "bottle" : "bottles"}`}>{quantity}</span>
+            <span aria-live="polite" aria-label={`${quantity} ${quantity === 1 ? "unit" : "units"}`}>{quantity}</span>
             <button type="button" aria-label={`Increase ${product.name} quantity`} disabled={quantity >= MAX_ITEM_QUANTITY} onClick={() => updateQuantity(productId, quantity + 1)}><Plus size={14} /></button>
           </div>
           <button type="button" className="remove-item" aria-label={`Remove ${product.name} from bag`} onClick={() => updateQuantity(productId, 0)}><Trash2 size={14} /><span>Remove</span></button>
@@ -69,12 +69,11 @@ export function OrderSummary({ summary, children, showItems = false }: { summary
     {showItems && <CartLines compact summary={summary} />}
     <dl className="summary-totals">
       <div><dt>Items subtotal</dt><dd>{formatPrice(summary.subtotalPaise / 100)}</dd></div>
-      {summary.savingsPaise > 0 && <div className="summary-savings"><dt>Reference price savings</dt><dd>{formatPrice(summary.savingsPaise / 100)}</dd></div>}
       <div><dt>Delivery</dt><dd>To be confirmed</dd></div>
       <div><dt>Tax</dt><dd>To be confirmed</dd></div>
       <div className="summary-subtotal"><dt>Estimated subtotal</dt><dd>{formatPrice(summary.subtotalPaise / 100)}</dd></div>
     </dl>
-    <p className="summary-disclaimer">Reference product prices only. Delivery and tax rules must be confirmed before payment.</p>
+    <p className="summary-disclaimer">Prices are for the listed quantities. Delivery and tax rules must be confirmed before payment.</p>
     {children}
     <div className="summary-footnote"><Leaf size={18} strokeWidth={1.3} /><span>A little tradition.<br />A whole lot of goodness.</span></div>
   </aside>;

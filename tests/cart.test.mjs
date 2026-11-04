@@ -45,8 +45,19 @@ test("storage only contains versioned IDs and quantities", () => {
 test("totals use integer paise and current catalogue prices", () => {
   const result = getCartSummary([{ productId: "sesame", quantity: 2 }, { productId: "groundnut", quantity: 1 }]);
   assert.equal(result.itemCount, 3);
-  assert.equal(result.subtotalPaise, 167700);
-  assert.equal(result.savingsPaise, 28000);
-  assert.equal(result.lines[0].lineTotalPaise, 119800);
-  assert.deepEqual(getCartSummary([]), { lines: [], itemCount: 0, subtotalPaise: 0, savingsPaise: 0 });
+  assert.equal(result.subtotalPaise, 154000);
+  assert.equal("savingsPaise" in result, false);
+  assert.equal(result.lines[0].lineTotalPaise, 112000);
+  assert.deepEqual(getCartSummary([]), { lines: [], itemCount: 0, subtotalPaise: 0 });
+});
+
+
+test("retired products and missing-unit products cannot enter a bag", () => {
+  for (const productId of ["sunflower", "castor", "almond", "ragi", "bajra"]) {
+    assert.deepEqual(addCartItem([], productId), []);
+    assert.deepEqual(setCartQuantity([], productId, 2), []);
+    assert.deepEqual(normalizeCart([{ productId, quantity: 1 }]), []);
+  }
+  const summary = getCartSummary([{ productId: "bilona-ghee", quantity: 2 }, { productId: "karuppu-kavuni", quantity: 1 }]);
+  assert.equal(summary.subtotalPaise, 405500);
 });

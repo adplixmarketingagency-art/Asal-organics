@@ -1,4 +1,4 @@
-import { products, type Product } from "../content/products.ts";
+import { canAddToBag, products, type Product } from "../content/products.ts";
 
 export const CART_STORAGE_KEY = "asal-cart-v1";
 export const MAX_ITEM_QUANTITY = 99;
@@ -20,7 +20,7 @@ export function normalizeCart(value: unknown): CartItem[] {
   const quantities = new Map<string, number>();
   for (const item of value) {
     if (!isRecord(item) || typeof item.productId !== "string" ||
-      !products.some((product) => product.id === item.productId) ||
+      !products.some((product) => product.id === item.productId && canAddToBag(product)) ||
       typeof item.quantity !== "number" || !Number.isSafeInteger(item.quantity) || item.quantity < 1) continue;
     quantities.set(item.productId, Math.min(MAX_ITEM_QUANTITY, (quantities.get(item.productId) ?? 0) + item.quantity));
   }
@@ -42,7 +42,7 @@ export function serializeCart(items: CartItem[]): string {
 
 export function setCartQuantity(items: CartItem[], productId: string, quantity: number): CartItem[] {
   const clean = normalizeCart(items);
-  if (!products.some((product) => product.id === productId) || !Number.isSafeInteger(quantity) || quantity < 0) return clean;
+  if (!products.some((product) => product.id === productId && canAddToBag(product)) || !Number.isSafeInteger(quantity) || quantity < 0) return clean;
   if (quantity === 0) return clean.filter((item) => item.productId !== productId);
   const existing = clean.find((item) => item.productId === productId);
   if (!existing) return [...clean, { productId, quantity: Math.min(quantity, MAX_ITEM_QUANTITY) }];
@@ -64,7 +64,6 @@ export function getCartSummary(items: CartItem[]) {
     lines,
     itemCount: lines.reduce((sum, line) => sum + line.quantity, 0),
     subtotalPaise: lines.reduce((sum, line) => sum + line.lineTotalPaise, 0),
-    savingsPaise: lines.reduce((sum, line) => sum + Math.round((line.product.originalPrice - line.product.price) * 100) * line.quantity, 0),
   };
 }
 

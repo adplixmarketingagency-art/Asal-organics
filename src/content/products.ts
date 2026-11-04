@@ -1,106 +1,57 @@
+export const productCategories = [
+  { id: "oils", label: "Cold-pressed Oils" },
+  { id: "masala", label: "Flour (Masala)" },
+  { id: "grain", label: "Flour (Grain)" },
+  { id: "milk", label: "Milk Products" },
+  { id: "rice", label: "Rice Varieties (Traditional)" },
+] as const;
+
+export type ProductCategory = typeof productCategories[number]["id"];
 export type Product = {
   id: string;
   name: string;
-  subtitle: string;
-  size: string;
+  tamilName?: string;
+  size: "1 Litre" | "1 kg" | null;
   price: number;
-  originalPrice: number;
-  image: string;
-  category: "cooking" | "care";
-  note: string;
-  description: string;
-  source: string;
+  category: ProductCategory;
 };
 
-// Public reference catalogue, not Asal inventory. Prices checked 28 October 2026.
-// Merchant-owned catalogue and photography are required before launch.
+// Transcribed from the owner's two handwritten lists, November 2026.
+// Selling prices only: exclude production costs and crossed-out entries.
+// Grain quantities were not supplied; do not assume a pack size.
 export const products: Product[] = [
-  {
-    id: "sesame",
-    name: "Sesame Oil",
-    subtitle: "A little tradition in every meal.",
-    size: "1 Litre",
-    price: 599,
-    originalPrice: 679,
-    image: "/images/products/sesame.jpg",
-    category: "cooking",
-    note: "Rich & nutty",
-    description: "Bring a deep, nutty character to your kitchen. Sesame oil is a familiar favourite for South Indian cooking, flavourful tempering, and traditional pickles. Contains sesame.",
-    source: "https://aishwaryamoils.com/products/sesame-oil-1-litre",
-  },
-  {
-    id: "groundnut",
-    name: "Groundnut Oil",
-    subtitle: "Your everyday kitchen companion.",
-    size: "1 Litre",
-    price: 479,
-    originalPrice: 599,
-    image: "/images/products/groundnut.jpg",
-    category: "cooking",
-    note: "Everyday favourite",
-    description: "A gently nutty oil that feels right at home in everyday cooking. Use it for sautéing, stir-frying, and making familiar family recipes your own. Contains peanuts.",
-    source: "https://aishwaryamoils.com/products/groundnut-oil-1-litre",
-  },
-  {
-    id: "coconut",
-    name: "Coconut Oil",
-    subtitle: "A taste of the tropics. Naturally.",
-    size: "1 Litre",
-    price: 559,
-    originalPrice: 649,
-    image: "/images/products/coconut.jpg",
-    category: "cooking",
-    note: "Naturally aromatic",
-    description: "Enjoy the distinctive aroma of coconut in coastal curries, sautéed vegetables, and homemade favourites. Coconut oil can naturally turn solid in cooler temperatures.",
-    source: "https://aishwaryamoils.com/products/coconut-oil-1-litre",
-  },
-  {
-    id: "sunflower",
-    name: "Sunflower Oil",
-    subtitle: "Light on the palate. Big on possibility.",
-    size: "1 Litre",
-    price: 629,
-    originalPrice: 699,
-    image: "/images/products/sunflower.jpg",
-    category: "cooking",
-    note: "Light & versatile",
-    description: "An easy-going addition to an everyday kitchen. Its mild flavour lets your ingredients take the lead, from sautéed vegetables to your favourite homemade dishes.",
-    source: "https://aishwaryamoils.com/products/sunflower-oil-1-litre",
-  },
-  {
-    id: "castor",
-    name: "Castor Oil",
-    subtitle: "A classic for your care ritual.",
-    size: "250 ml",
-    price: 179,
-    originalPrice: 249,
-    image: "/images/products/castor.jpg",
-    category: "care",
-    note: "For your care ritual",
-    description: "A rich oil traditionally used in hair and body care. Not a cooking oil. Follow the supplier’s usage directions and patch-test before topical use. Do not ingest without medical guidance.",
-    source: "https://aishwaryamoils.com/products/castor-oil-250ml",
-  },
-  {
-    id: "almond",
-    name: "Almond Oil",
-    subtitle: "A gentle addition to slow mornings.",
-    size: "100 ml",
-    price: 499,
-    originalPrice: 599,
-    image: "/images/products/almond.jpg",
-    category: "care",
-    note: "A little everyday care",
-    description: "Explore almond oil for your hair and body care routine. Contains almonds; avoid with a nut allergy and patch-test before topical use. Follow the supplier’s directions.",
-    source: "https://aishwaryamoils.com/products/almond-oil-100ml",
-  },
+  { id: "groundnut", name: "Groundnut Oil", size: "1 Litre", price: 420, category: "oils" },
+  { id: "sesame", name: "Sesame Oil", size: "1 Litre", price: 560, category: "oils" },
+  { id: "coconut", name: "Coconut Oil", size: "1 Litre", price: 420, category: "oils" },
+  { id: "turmeric", name: "Turmeric", size: "1 kg", price: 560, category: "masala" },
+  { id: "curry-masala", name: "South Indian All Purpose Curry Masala", size: "1 kg", price: 478, category: "masala" },
+  { id: "chilli-powder", name: "Chilli Powder", size: "1 kg", price: 560, category: "masala" },
+  { id: "coriander-powder", name: "Coriander Powder", size: "1 kg", price: 410, category: "masala" },
+  { id: "ragi", name: "Ragi", size: null, price: 95, category: "grain" },
+  { id: "bajra", name: "Bajra", size: null, price: 73, category: "grain" },
+  { id: "bilona-ghee", name: "Bilona Ghee", size: "1 Litre", price: 1930, category: "milk" },
+  { id: "bilona-butter", name: "Bilona Butter", size: "1 kg", price: 1820, category: "milk" },
+  { id: "palkova", name: "Palkova", tamilName: "பால்கோவா", size: "1 kg", price: 650, category: "milk" },
+  { id: "karuppu-kavuni-halwa", name: "Karuppu Kavuni Halwa", tamilName: "கருப்பு கவுனி அல்வா", size: "1 kg", price: 520, category: "milk" },
+  { id: "paneer", name: "Paneer", size: "1 kg", price: 910, category: "milk" },
+  { id: "karuppu-kavuni", name: "Karuppu Kavuni", size: "1 kg", price: 195, category: "rice" },
+  { id: "mapillai-samba", name: "Mapillai Samba", size: "1 kg", price: 130, category: "rice" },
+  { id: "seera-samba", name: "Seera Samba (Vasanai)", size: "1 kg", price: 156, category: "rice" },
 ];
 
-export type Category = "all" | "cooking" | "care" | "saved";
+export const categoryLabel = (category: ProductCategory) =>
+  productCategories.find((item) => item.id === category)!.label;
+export const quantityLabel = (product: Product) => product.size ?? "Quantity not specified";
+export const canAddToBag = (product: Product) => product.size !== null;
+export const catalogueMaxPrice = Math.max(...products.map((product) => product.price));
+export const catalogueMinPrice = Math.min(...products.map((product) => product.price));
+
+export type Category = "all" | ProductCategory | "saved";
 export type Sort = "featured" | "price-asc" | "price-desc" | "name";
 
 export function selectProducts(
   items: Product[],
-  { category = "all", query = "", maxPrice = 700, saved = [], sort = "featured" }: {
+  { category = "all", query = "", maxPrice = Infinity, saved = [], sort = "featured" }: {
     category?: Category;
     query?: string;
     maxPrice?: number;
@@ -112,7 +63,7 @@ export function selectProducts(
   const selected = items.filter((product) =>
     (category === "all" || (category === "saved" ? saved.includes(product.id) : product.category === category)) &&
     product.price <= maxPrice &&
-    `${product.name} ${product.subtitle} ${product.note}`.toLocaleLowerCase().includes(normalizedQuery),
+    `${product.name} ${product.tamilName ?? ""} ${categoryLabel(product.category)}`.toLocaleLowerCase().includes(normalizedQuery),
   );
   if (sort === "price-asc") selected.sort((a, b) => a.price - b.price);
   if (sort === "price-desc") selected.sort((a, b) => b.price - a.price);

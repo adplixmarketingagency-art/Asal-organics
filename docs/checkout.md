@@ -36,7 +36,7 @@ Payment integration is deliberately **not implemented**, as requested. The last 
 
 Before enabling Razorpay:
 
-1. Replace the attributed reference catalogue with approved merchant products, prices, stock and images.
+1. Confirm the missing Ragi and Bajra quantities and inventory availability. The catalogue now uses the owner’s handwritten product lists, without photography.
 2. Configure actual delivery eligibility, shipping and tax rules. They are currently **unconfigured**, not free or zero-rated. The UI therefore shows an estimated items subtotal, not a payable grand total.
 3. Provision durable merchant order storage and appropriate privacy, support and fulfilment policies.
 4. Revalidate stock and recompute the final payable amount on the server when creating a Razorpay order. Never trust browser totals or a previous review response.
@@ -48,4 +48,4 @@ Before enabling Razorpay:
 
 `npm test` covers cart normalization, merging, persistence format, bounds, integer totals, form validation, tamper-resistant review calculation, API errors and body size limits.
 
-Run `npm run typecheck` and `npm run build` as well. For manual testing, add oils → open bag → adjust quantity → checkout → try invalid fields → submit test details → edit review. Check refresh, a second tab, empty bag and a narrow mobile viewport. No checkout request contacts Razorpay.
+Run `npm run typecheck` and `npm run build` as well. For manual testing, add products → open bag → adjust quantity → checkout → try invalid fields → submit test details → edit review. Check refresh, a second tab, empty bag and a narrow mobile viewport. No checkout request contacts Razorpay.
