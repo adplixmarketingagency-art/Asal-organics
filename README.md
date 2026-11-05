@@ -20,6 +20,11 @@ npm run typecheck
 npm run build
 ```
 
+`npm run build` creates the complete Cloudflare OpenNext bundle without deploying.
+Use `npm run build:next` only when a plain Next.js build is specifically needed.
+Build release artifacts from a clean checkout without local `.env*` or `.dev.vars*`
+files. Payment credentials belong in Worker runtime secrets, not build variables.
+
 ## Routes
 
 - `/` and `/collections/wood-pressed-oils`: storefront
@@ -38,6 +43,23 @@ run a manual Wrangler deployment.
 
 This project uses the OpenNext Cloudflare adapter. Wrangler is installed locally;
 the Worker name and account are configured in `wrangler.jsonc`.
+
+Keep these settings in Cloudflare Workers Builds:
+
+| Setting | Value |
+| --- | --- |
+| Root directory | `/` |
+| Build command | `npm run build` |
+| Deploy command | `npx wrangler deploy` |
+
+The build script runs OpenNext, which invokes `npm run build:next` once before
+generating `.open-next/worker.js`, `.open-next/assets` and the compiled adapter
+configuration. A plain `next build` only produces `.next`; deploying that alone
+fails with “Could not find compiled Open Next config”.
+
+Cloudflare runs the deploy command automatically after the build. Do not execute
+it locally for a normal Git release. These commands are for local preview or an
+explicitly requested manual deployment only:
 
 ```sh
 npx wrangler whoami

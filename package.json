@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1",
-    "build": "next build",
+    "build": "npm run build:cloudflare",
+    "build:next": "next build",
     "start": "next start --hostname 127.0.0.1",
     "build:cloudflare": "opennextjs-cloudflare build",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
