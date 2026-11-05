@@ -78,11 +78,11 @@ export default function Storefront() {
           {productCategories.map(({ id, label, tamilLabel }) => (
             <button key={id} className="category-shortcut" onClick={() => goToCollection(id)} aria-pressed={category === id} aria-controls="collection">
               <span className="category-shortcut-photo"><img src={categoryImages[id]} alt="" width="800" height="800" loading="lazy" decoding="async" /></span>
-              <span className="category-shortcut-caption"><span><strong>{label}</strong><span lang="ta">{tamilLabel}</span></span><ArrowUpRight size={18} aria-hidden="true" /></span>
+              <span className="category-shortcut-caption"><strong>{label}</strong><span lang="ta">{tamilLabel}</span></span>
             </button>
           ))}
         </nav>
-        <p className="category-image-note">Category images are illustrative.</p>
+        <div className="category-shelf-footnote"><p className="category-image-note">Category images are illustrative.</p><p className="category-scroll-hint">Scroll to browse <ArrowRight size={13} aria-hidden="true" /></p></div>
       </section>
       <div className="qualities section-wrap"><div><Sprout /><span>Cold-pressed oils</span></div><span className="quality-divider" /><div><Droplets /><span>Traditional rice varieties</span></div><span className="quality-divider" /><div><Sun /><span>Everyday kitchen essentials</span></div><span className="quality-divider" /><div><Heart /><span>Goodness, kept simple</span></div></div>
       <KolamDivider className="collection-divider" />

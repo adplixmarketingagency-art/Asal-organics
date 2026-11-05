@@ -80,6 +80,13 @@ Self-hosted delivery assets in `public/images/categories` are 800 × 800 WebP
 no repainting or watermark removal. Cards use decorative empty alt text alongside
 their bilingual category labels, lazy loading and explicit dimensions.
 
+Category navigation is a compact, single-row browse strip, separate from the
+product catalogue. All eight shortcuts fit on desktop, with 96 px square images
+and centred English/Tamil labels. Below 1100 px the row scrolls horizontally
+instead of wrapping into large cards; on phones the images reduce to 80 px.
+Native scrolling, scroll snapping, a browse hint and visible keyboard/selected
+states keep every category reachable without adding a carousel dependency.
+
 ## Kolam
 
 The owner supplied two kolam reference sheets on November 5, 2026 and requested

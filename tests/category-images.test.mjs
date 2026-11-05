@@ -20,7 +20,7 @@ test("every owner-listed category has a unique self-hosted category image", () =
   }
 });
 
-test("homepage photo cards retain bilingual category navigation, not product imagery", () => {
+test("homepage category shortcuts retain bilingual navigation, not product imagery", () => {
   const source = readFileSync(new URL("../src/components/Storefront.tsx", import.meta.url), "utf8");
   assert.match(source, /productCategories\.map\(\(\{ id, label, tamilLabel \}\)/);
   assert.match(source, /onClick=\{\(\) => goToCollection\(id\)\}/);
@@ -32,13 +32,28 @@ test("homepage photo cards retain bilingual category navigation, not product ima
   assert.match(source, /getElementById\("collection"\)\?\.scrollIntoView/);
   assert.match(source, /prefers-reduced-motion: reduce/);
   assert.doesNotMatch(source, /categoryIcons|category-shortcut-icon/);
+  const shelf = source.slice(source.indexOf('<section className="category-shelf'), source.indexOf('<div className="qualities'));
+  assert.doesNotMatch(shelf, /<ArrowUpRight/);
+  assert.match(shelf, /className="category-scroll-hint"[\s\S]*Scroll to browse/);
   assert.equal(selectProducts(products, { category: "wood-oils" }).length, 3);
 });
 
-test("category cards have a four/two-column layout and visible keyboard focus", () => {
+test("category shortcuts stay in one compact row with bounded square thumbnails", () => {
   const css = readFileSync(new URL("../src/app/heritage.css", import.meta.url), "utf8");
-  assert.match(css, /\.category-shortcuts \{[^}]*grid-template-columns: repeat\(4, minmax\(0, 1fr\)\)/);
-  assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.category-shortcuts \{[^}]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(css, /\.category-shortcuts \{[^}]*grid-template-columns: repeat\(8, minmax\(0, 1fr\)\)/);
+  assert.match(css, /\.category-shortcut-photo \{[^}]*width: 6rem;[^}]*aspect-ratio: 1/);
+  assert.match(css, /\.category-shortcut \{[^}]*align-items: center;[^}]*border: 0;[^}]*background: transparent;[^}]*text-align: center/);
+  assert.doesNotMatch(css, /\.category-shortcuts \{[^}]*repeat\([24],/);
+});
+
+test("narrow category strips scroll without shrinking labels and retain accessible states", () => {
+  const css = readFileSync(new URL("../src/app/heritage.css", import.meta.url), "utf8");
+  assert.match(css, /\.category-shortcuts \{[^}]*overflow-x: auto;[^}]*scroll-snap-type: x proximity/);
+  assert.match(css, /@media \(max-width: 1100px\)[\s\S]*\.category-shortcuts \{[^}]*grid-template-columns: none;[^}]*grid-auto-flow: column;[^}]*grid-auto-columns: 7rem/);
+  assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.category-shortcuts \{[^}]*grid-auto-columns: 6rem/);
+  assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.category-shortcut-photo \{[^}]*width: 5rem/);
   assert.match(css, /\.category-shortcut:focus-visible \{[^}]*outline: 3px solid var\(--green\)/);
+  assert.match(css, /\.category-shortcut\[aria-pressed="true"\] \.category-shortcut-photo \{[^}]*border-color: var\(--green\)/);
+  assert.match(css, /\.category-shortcut-caption \{[^}]*overflow-wrap: anywhere/);
   assert.doesNotMatch(css, /category-shortcut-icon/);
 });
