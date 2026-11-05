@@ -4,7 +4,7 @@ const MAX_BODY_BYTES = 16_384;
 const headers = { "Cache-Control": "no-store" };
 
 export async function POST(request: Request) {
-  if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
+  if (request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase() !== "application/json") {
     return Response.json({ error: "Send checkout details as JSON." }, { status: 415, headers });
   }
   const reader = request.body?.getReader();

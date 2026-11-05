@@ -5,7 +5,8 @@
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-11-02",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-  "workers_dev": true,
+  "workers_dev": false,
+  "preview_urls": false,
   "routes": [
     {
       "pattern": "asaliyarkaiangadi.in",
@@ -23,7 +24,7 @@
     }
   ],
   "vars": {
-    "PAYMENTS_ENABLED": "false",
+    "PAYMENTS_ENABLED": "true",
     "PAYMENT_MODE": "test",
     "CATALOGUE_APPROVED": "false",
     "PURCHASE_TOTAL_APPROVED": "false"

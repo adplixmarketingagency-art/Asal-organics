@@ -1,5 +1,7 @@
 "use client";
 
+import { BrandWordmark } from "./BrandWordmark";
+
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, Leaf, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -14,7 +16,7 @@ export function CommerceLayout({ step, children }: { step: 1 | 2 | 3; children: 
     <a className="skip-link" href="#main">Skip to content</a>
     <div className="announcement-bar"><Leaf size={13} /><span>A little closer to nature. A little more goodness.</span></div>
     <header className="commerce-header section-wrap">
-      <Link href="/" className="brand" aria-label="Asal Organics home"><span className="brand-word brand-word-tamil" lang="ta">அசல்<span>®</span></span><span className="brand-tagline">Asal Organics</span></Link>
+      <Link href="/" className="brand" aria-label="Asal Organics home"><BrandWordmark /></Link>
       <Link href="/#collection" className="text-link"><ArrowLeft size={16} />Continue shopping</Link>
       <Link href="/cart" className="commerce-bag" aria-label={`Your bag, ${summary.itemCount} ${summary.itemCount === 1 ? "item" : "items"}`}><ShoppingBag size={21} /><span>{summary.itemCount}</span></Link>
     </header>
@@ -27,7 +29,7 @@ export function CommerceLayout({ step, children }: { step: 1 | 2 | 3; children: 
       </nav>
       {children}
     </main>
-    <footer className="commerce-footer section-wrap"><span>© 2026 Asal. Nature, uncomplicated.</span><span>Checkout preview · No payments collected</span></footer>
+    <footer className="commerce-footer section-wrap"><span>© 2026 Asal. Nature, uncomplicated.</span><span>Secure checkout · Powered by Razorpay</span></footer>
   </div>;
 }
 
@@ -44,18 +46,19 @@ export function CartLines({ compact = false, summary: suppliedSummary }: { compa
   const { summary: browserSummary, updateQuantity } = useCart();
   const summary = suppliedSummary ?? browserSummary;
   return <ul className={`cart-lines ${compact ? "compact-lines" : ""}`}>
-    {summary.lines.map(({ product, productId, quantity, lineTotalPaise }) => <li key={productId} className="cart-line">
+    {summary.lines.map(({ product, productId, variant, variantId, quantity, unitPricePaise, lineTotalPaise }) => <li key={variantId} className="cart-line">
       <ProductImagePlaceholder compact className="cart-image-space" />
       <div className="cart-line-description">
         {!compact && <p className="eyebrow">{categoryLabel(product.category)}</p>}
-        <h3>{product.name}</h3><p>{product.size}{compact && <> · Qty {quantity}</>}{!compact && <> · {formatPrice(product.price)} each</>}</p>
+        <h3>{product.name}</h3><p className="cart-line-tamil" lang="ta">{product.tamilName}</p>
+        <p>{variant.size}{compact && <> · Qty {quantity}</>}{!compact && <> · {formatPrice(unitPricePaise / 100)} each</>}</p>
         {!compact && <div className="cart-line-controls">
-          <div className="quantity-control" role="group" aria-label={`${product.name} quantity`}>
-            <button type="button" aria-label={`Decrease ${product.name} quantity`} disabled={quantity <= 1} onClick={() => updateQuantity(productId, quantity - 1)}><Minus size={14} /></button>
+          <div className="quantity-control" role="group" aria-label={`${product.name} ${variant.size} quantity`}>
+            <button type="button" aria-label={`Decrease ${product.name} ${variant.size} quantity`} disabled={quantity <= 1} onClick={() => updateQuantity(productId, quantity - 1, variantId)}><Minus size={14} /></button>
             <span aria-live="polite" aria-label={`${quantity} ${quantity === 1 ? "unit" : "units"}`}>{quantity}</span>
-            <button type="button" aria-label={`Increase ${product.name} quantity`} disabled={quantity >= MAX_ITEM_QUANTITY} onClick={() => updateQuantity(productId, quantity + 1)}><Plus size={14} /></button>
+            <button type="button" aria-label={`Increase ${product.name} ${variant.size} quantity`} disabled={quantity >= MAX_ITEM_QUANTITY} onClick={() => updateQuantity(productId, quantity + 1, variantId)}><Plus size={14} /></button>
           </div>
-          <button type="button" className="remove-item" aria-label={`Remove ${product.name} from bag`} onClick={() => updateQuantity(productId, 0)}><Trash2 size={14} /><span>Remove</span></button>
+          <button type="button" className="remove-item" aria-label={`Remove ${product.name} ${variant.size} from bag`} onClick={() => updateQuantity(productId, 0, variantId)}><Trash2 size={14} /><span>Remove</span></button>
         </div>}
       </div>
       <strong className="cart-line-total">{formatPrice(lineTotalPaise / 100)}</strong>
@@ -73,7 +76,7 @@ export function OrderSummary({ summary, children, showItems = false }: { summary
       <div><dt>Tax</dt><dd>To be confirmed</dd></div>
       <div className="summary-subtotal"><dt>Estimated subtotal</dt><dd>{formatPrice(summary.subtotalPaise / 100)}</dd></div>
     </dl>
-    <p className="summary-disclaimer">Prices are for the listed quantities. Delivery and tax rules must be confirmed before payment.</p>
+    <p className="summary-disclaimer">Prices are for the listed quantities. Delivery and tax rules must be confirmed before real payments.</p>
     {children}
     <div className="summary-footnote"><Leaf size={18} strokeWidth={1.3} /><span>A little tradition.<br />A whole lot of goodness.</span></div>
   </aside>;

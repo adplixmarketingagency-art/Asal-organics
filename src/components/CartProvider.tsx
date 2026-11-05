@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { Check, X } from "lucide-react";
-import { canAddToBag, products } from "@/content/products";
+import { getProductVariant, products } from "@/content/products";
 import { addCartItem, CART_STORAGE_KEY, getCartSummary, MAX_ITEM_QUANTITY, parseStoredCart, serializeCart, setCartQuantity, type CartItem } from "@/lib/cart";
 import { EMPTY_CHECKOUT_DETAILS, type CheckoutDetails } from "@/lib/checkout";
 
@@ -50,27 +50,38 @@ function useCartState() {
     }
   }
 
-  function addItem(productId: string) {
+  function addItem(productId: string, variantId?: string) {
     if (!ready) return;
     const product = products.find((item) => item.id === productId);
-    if (!product || !canAddToBag(product)) return;
-    if ((current.current.find((item) => item.productId === productId)?.quantity ?? 0) >= MAX_ITEM_QUANTITY) {
-      setAnnouncement(`You can add up to ${MAX_ITEM_QUANTITY} units of ${product.name}.`);
+    const variant = getProductVariant(productId, variantId);
+    if (!product || !variant) return;
+    if ((current.current.find((item) => item.variantId === variant.id)?.quantity ?? 0) >= MAX_ITEM_QUANTITY) {
+      setAnnouncement(`You can add up to ${MAX_ITEM_QUANTITY} units of ${product.name}, ${variant.size}.`);
       return;
     }
-    commit(addCartItem(current.current, productId));
-    setAnnouncement(`${product.name} added to your bag.`);
+    commit(addCartItem(current.current, productId, variant.id));
+    setAnnouncement(`${product.name}, ${variant.size} added to your bag.`);
   }
 
-  function updateQuantity(productId: string, quantity: number) {
+  function updateQuantity(productId: string, quantity: number, variantId: string) {
     if (!ready) return;
-    commit(setCartQuantity(current.current, productId, quantity));
-    if (quantity === 0) setAnnouncement(`${products.find((product) => product.id === productId)?.name ?? "Item"} removed from your bag.`);
+    commit(setCartQuantity(current.current, productId, quantity, variantId));
+    if (quantity === 0) setAnnouncement(`${products.find((product) => product.id === productId)?.name ?? "Item"}, ${getProductVariant(productId, variantId)?.size ?? "pack"} removed from your bag.`);
+  }
+
+  function removePurchasedItems(purchased: CartItem[]) {
+    if (!ready) return;
+    let next = current.current;
+    for (const item of purchased) {
+      const remaining = (next.find((line) => line.variantId === item.variantId)?.quantity ?? 0) - item.quantity;
+      next = setCartQuantity(next, item.productId, Math.max(0, remaining), item.variantId);
+    }
+    commit(next);
   }
 
   return {
     items, ready, storageWarning, announcement, setAnnouncement,
-    summary: getCartSummary(items), addItem, updateQuantity,
+    summary: getCartSummary(items), addItem, updateQuantity, removePurchasedItems,
     checkoutDetails, setCheckoutDetails,
   };
 }

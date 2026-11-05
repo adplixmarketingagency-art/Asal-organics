@@ -11,8 +11,9 @@ declare global {
       order_id: string;
       prefill?: { name?: string; email?: string; contact?: string };
       theme?: { color?: string };
+      retry?: { enabled: boolean };
       handler: (payment: { razorpay_payment_id?: string; razorpay_order_id?: string; razorpay_signature?: string }) => void | Promise<void>;
       modal?: { ondismiss?: () => void };
-    }) => { open: () => void; on: (event: string, callback: () => void) => void };
+    }) => { open: () => void; close: () => void; on: (event: "payment.failed", callback: () => void) => void };
   }
 }

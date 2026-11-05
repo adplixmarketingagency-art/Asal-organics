@@ -22,7 +22,7 @@ export function CartPage() {
           <p className="payment-caption">Delivery details first. No payment required.</p>
         </OrderSummary>
       </div>
-      <p className="commerce-reference">Online payments and order placement are not yet available. Delivery and tax settings remain to be confirmed.</p>
+      <p className="commerce-reference">Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing. Delivery and tax settings remain to be confirmed.</p>
     </>}
   </CommerceLayout>;
 }

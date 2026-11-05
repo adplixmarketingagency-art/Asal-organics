@@ -1,19 +1,32 @@
 import "server-only";
+import Razorpay from "razorpay";
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-function basic(config: { keyId: string; keySecret: string }) { return `Basic ${Buffer.from(`${config.keyId}:${config.keySecret}`).toString("base64")}`; }
+function client(config: { keyId: string; keySecret: string }) {
+  const sdk = new Razorpay({ key_id: config.keyId, key_secret: config.keySecret });
+  // Use the SDK's fetch transport in both Node and Cloudflare's nodejs_compat runtime.
+  const api = sdk.api as typeof sdk.api & { rq: { defaults: { adapter: string; timeout: number } } };
+  api.rq.defaults.adapter = "fetch";
+  api.rq.defaults.timeout = 15_000;
+  return sdk;
+}
+
+export function isValidPaymentAmount(amount: unknown): amount is number {
+  return typeof amount === "number" && Number.isSafeInteger(amount) && amount >= 100;
+}
+
 export async function createRazorpayOrder(config: { keyId: string; keySecret: string }, amount: number, receipt: string) {
-  const response = await fetch("https://api.razorpay.com/v1/orders", { method: "POST", headers: { Authorization: basic(config), "Content-Type": "application/json" }, body: JSON.stringify({ amount, currency: "INR", receipt, partial_payment: false }), cache: "no-store" });
-  if (!response.ok) throw new Error("Razorpay order creation failed");
-  return response.json() as Promise<{ id: string; amount: number; currency: string }>;
+  if (!isValidPaymentAmount(amount)) throw new Error("Amount must be at least 100 paise.");
+  const order = await client(config).orders.create({ amount, currency: "INR", receipt, partial_payment: false });
+  return { id: order.id, amount: Number(order.amount), currency: order.currency };
 }
+
 export async function fetchRazorpayPayment(config: { keyId: string; keySecret: string }, paymentId: string) {
-  const response = await fetch(`https://api.razorpay.com/v1/payments/${encodeURIComponent(paymentId)}`, { headers: { Authorization: basic(config) }, cache: "no-store" });
-  if (!response.ok) throw new Error("Razorpay payment lookup failed");
-  return response.json() as Promise<{ id: string; order_id: string; amount: number; currency: string; status: string }>;
+  const payment = await client(config).payments.fetch(paymentId);
+  return { id: payment.id, order_id: payment.order_id, amount: Number(payment.amount), currency: payment.currency, status: payment.status };
 }
-export function validHmac(value: string, expected: string, secret: string) {
+export function validHmac(value: string | Uint8Array, expected: string, secret: string) {
+  if (!/^[a-f0-9]{64}$/i.test(expected)) return false;
   const actual = createHmac("sha256", secret).update(value).digest("hex");
-  const a = Buffer.from(actual, "utf8"); const b = Buffer.from(expected, "utf8");
-  return a.length === b.length && timingSafeEqual(a, b);
+  return timingSafeEqual(Buffer.from(actual, "hex"), Buffer.from(expected, "hex"));
 }

@@ -10,6 +10,7 @@ node_modules/
 .DS_Store
 .claude/
 .impeccable/
+docs/assets/category-originals/
 graphify-out/*
 !graphify-out/graph.json
 !graphify-out/graph.html

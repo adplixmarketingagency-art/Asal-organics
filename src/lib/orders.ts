@@ -1,6 +1,6 @@
 import "server-only";
 import { Pool, type PoolClient } from "pg";
-import type { CheckoutReview } from "./checkout";
+import type { CheckoutReview } from "./checkout.ts";
 
 let pool: Pool | null = null;
 function getPool() {
@@ -40,7 +40,7 @@ export async function createPendingOrder(review: CheckoutReview, receipt: string
     const id = crypto.randomUUID();
     const result = await client.query<StoredOrder>(
       `INSERT INTO asal_orders (id, receipt, status, amount_paise, currency, customer, items) VALUES ($1,$2,'pending',$3,$4,$5,$6) RETURNING id, receipt, razorpay_order_id AS "razorpayOrderId", amount_paise AS "amountPaise", currency, status`,
-      [id, receipt, review.summary.subtotalPaise, review.currency, review.customer, review.summary.lines.map((line) => ({ productId: line.productId, name: line.product.name, quantity: line.quantity, unitPricePaise: line.unitPricePaise }))],
+      [id, receipt, review.summary.subtotalPaise, review.currency, review.customer, review.summary.lines.map((line) => ({ productId: line.productId, variantId: line.variantId, size: line.variant.size, name: line.product.name, quantity: line.quantity, unitPricePaise: line.unitPricePaise }))],
     );
     return result.rows[0];
   });
@@ -55,17 +55,19 @@ export async function getOrder(id: string) {
 }
 
 export async function getOrderByRazorpayId(razorpayOrderId: string) {
-  return withDatabase(async (client) => (await client.query(`SELECT id FROM asal_orders WHERE razorpay_order_id=$1`, [razorpayOrderId])).rows[0] ?? null);
+  return withDatabase(async (client) => (await client.query(`SELECT id, razorpay_order_id AS "razorpayOrderId", amount_paise AS "amountPaise", currency, status, payment_id AS "paymentId" FROM asal_orders WHERE razorpay_order_id=$1`, [razorpayOrderId])).rows[0] ?? null);
 }
 
 export async function markPaid(id: string, paymentId: string) {
   return withDatabase(async (client) => {
     await client.query("BEGIN");
     try {
-      const result = await client.query(`UPDATE asal_orders SET status='paid', payment_id=$2, updated_at=now() WHERE id=$1 AND status <> 'paid' RETURNING id`, [id, paymentId]);
+      const result = await client.query(`UPDATE asal_orders SET status='paid', payment_id=$2, updated_at=now() WHERE id=$1 AND status='pending' RETURNING id`, [id, paymentId]);
       if (result.rowCount) await client.query(`INSERT INTO asal_notification_outbox (id, order_id, kind) VALUES ($1,$2,'seller_order_paid') ON CONFLICT DO NOTHING`, [crypto.randomUUID(), id]);
+      // A duplicate confirmation succeeds only for the same captured payment.
+      const alreadyPaid = !result.rowCount && (await client.query(`SELECT id FROM asal_orders WHERE id=$1 AND status='paid' AND payment_id=$2`, [id, paymentId])).rowCount === 1;
       await client.query("COMMIT");
-      return result.rowCount === 1;
+      return result.rowCount === 1 || alreadyPaid;
     } catch (error) {
       await client.query("ROLLBACK");
       throw error;

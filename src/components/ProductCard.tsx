@@ -1,7 +1,8 @@
 "use client";
 
-import { ArrowUpRight, Heart, Plus } from "lucide-react";
-import { canAddToBag, categoryLabel, formatPrice, quantityLabel, type Product } from "@/content/products";
+import { Heart, Plus } from "lucide-react";
+import { useState } from "react";
+import { categoryLabel, formatPrice, getProductVariant, productVariantsFor, quantityLabel, type Product } from "@/content/products";
 import { useCart } from "./CartProvider";
 import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
 
@@ -12,6 +13,9 @@ export function ProductCard({ product, saved, onSave, onExplore }: {
   onExplore: () => void;
 }) {
   const { addItem, ready } = useCart();
+  const [variantId, setVariantId] = useState(() => getProductVariant(product.id)?.id);
+  const variants = productVariantsFor(product);
+  const variant = getProductVariant(product.id, variantId);
   return (
     <article className="product-card" data-product={product.id}>
       <div className="product-media">
@@ -25,15 +29,19 @@ export function ProductCard({ product, saved, onSave, onExplore }: {
       <div className="product-info">
         <p className="product-category">{categoryLabel(product.category)}</p>
         <h3><button onClick={onExplore}>{product.name}</button></h3>
-        {product.tamilName && <p className="product-tamil" lang="ta">{product.tamilName}</p>}
-        <p className="product-quantity">{quantityLabel(product)}</p>
-        <div className="product-bottom">
-          <div className="product-price"><strong>{formatPrice(product.price)}</strong></div>
-          <button className="explore-button" onClick={onExplore} aria-label={`View ${product.name}`}><span>Details</span><ArrowUpRight size={18} /></button>
+        <p className="product-tamil" lang="ta">{product.tamilName}</p>
+        {variant ? <label className="pack-select">
+          <span>Pack size</span>
+          <select aria-label={`${product.name} pack size`} value={variant.id} onChange={(event) => setVariantId(event.target.value)}>
+            {variants.map((pack) => <option key={pack.id} value={pack.id}>{pack.size} · {formatPrice(pack.price)}</option>)}
+          </select>
+        </label> : <p className="product-quantity">{quantityLabel(product)}</p>}
+        <div className="product-purchase">
+          <div className="product-price"><strong aria-live="polite">{variant ? formatPrice(variant.price) : "Price pending"}</strong></div>
+          <button className="product-add" onClick={() => addItem(product.id, variant?.id)} disabled={!ready || !variant} aria-label={`Add ${product.name}${variant ? ` ${variant.size}` : ""} to bag`}>
+            {variant ? <>Add to bag <Plus size={15} /></> : "Unavailable"}
+          </button>
         </div>
-        <button className="product-add" onClick={() => addItem(product.id)} disabled={!ready || !canAddToBag(product)} aria-label={`Add ${product.name} to bag`}>
-          {canAddToBag(product) ? <>Add to bag <Plus size={15} /></> : "Quantity to be confirmed"}
-        </button>
       </div>
     </article>
   );

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { prepareCheckoutReview, validateCheckoutDetails } from "../src/lib/checkout.ts";
 import { POST } from "../src/app/api/checkout/route.ts";
+import { productVariants } from "../src/content/products.ts";
 
 const customer = {
   fullName: "Test Customer", email: "checkout@example.com", phone: "+91 98765 43210",
@@ -62,6 +63,8 @@ test("checkout API validates and returns a no-store review", async () => {
 test("checkout API rejects invalid content, JSON, sizes and details", async () => {
   for (const [body, contentType, status] of [
     [JSON.stringify(payload), "text/plain", 415],
+    [JSON.stringify(payload), "application/jsonfoo", 415],
+    [JSON.stringify(payload), "application/json; charset=utf-8", 200],
     ["{", "application/json", 400],
     ["x".repeat(16385), "application/json", 413],
     [JSON.stringify({ customer: {}, items: payload.items }), "application/json", 422],
@@ -80,4 +83,49 @@ test("server rejects retired and missing-unit products even with a forged size",
   for (const productId of ["sunflower", "almond", "castor", "ragi", "bajra"]) {
     assert.equal(prepareCheckoutReview({ customer, items: [{ productId, quantity: 1, size: "1 kg" }] }).ok, false);
   }
+});
+
+test("review accepts distinct packs, uses server prices and returns canonical variants", () => {
+  const result = prepareCheckoutReview({ customer, items: [
+    { productId: "groundnut", variantId: "groundnut:500ml", quantity: 2, price: 1 },
+    { productId: "groundnut", variantId: "groundnut:1l", quantity: 1 },
+    { productId: "curry-masala", variantId: "curry-masala:250g", quantity: 1, size: "5 Litres" },
+  ] });
+  assert.equal(result.ok, true);
+  assert.equal(result.review.summary.subtotalPaise, 96000);
+  assert.deepEqual(result.review.summary.lines.map(({ variantId }) => variantId), ["groundnut:500ml", "groundnut:1l", "curry-masala:250g"]);
+  assert.equal(result.review.summary.lines[2].variant.size, "250 g");
+});
+
+test("review rejects forged, cross-product, null and duplicate pack IDs", () => {
+  for (const variantId of ["sesame:500ml", "groundnut:100ml", "", null, 1, {}]) {
+    assert.equal(prepareCheckoutReview({ customer, items: [{ productId: "groundnut", variantId, quantity: 1 }] }).ok, false);
+  }
+  assert.equal(prepareCheckoutReview({ customer, items: [
+    { productId: "groundnut", quantity: 1 },
+    { productId: "groundnut", variantId: "groundnut:1l", quantity: 1 },
+  ] }).ok, false);
+});
+
+test("checkout accepts wood-pressed packs at server prices and rejects swapping pressing methods", () => {
+  const result = prepareCheckoutReview({ customer, items: [
+    { productId: "groundnut", variantId: "groundnut:500ml", quantity: 1 },
+    { productId: "wood-groundnut", variantId: "wood-groundnut:500ml", quantity: 1, price: 1 },
+    { productId: "wood-sesame", variantId: "wood-sesame:2l", quantity: 1, unitPricePaise: 1 },
+    { productId: "wood-coconut", variantId: "wood-coconut:5l", quantity: 1 },
+  ] });
+  assert.equal(result.ok, true);
+  assert.equal(result.review.summary.subtotalPaise, 364000);
+  assert.deepEqual(result.review.summary.lines.map(({ productId }) => productId),
+    ["groundnut", "wood-groundnut", "wood-sesame", "wood-coconut"]);
+  for (const [productId, variantId] of [
+    ["wood-groundnut", "groundnut:500ml"], ["groundnut", "wood-groundnut:500ml"],
+  ]) assert.equal(prepareCheckoutReview({ customer, items: [{ productId, variantId, quantity: 1 }] }).ok, false);
+});
+
+test("review supports all distinct packs, but never more than the catalogue", () => {
+  const items = productVariants.map(({ productId, id: variantId }) => ({ productId, variantId, quantity: 1 }));
+  assert.ok(items.length > 17);
+  assert.equal(prepareCheckoutReview({ customer, items }).ok, true);
+  assert.equal(prepareCheckoutReview({ customer, items: [...items, items[0]] }).ok, false);
 });
