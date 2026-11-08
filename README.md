@@ -27,7 +27,9 @@ files. Payment credentials belong in Worker runtime secrets, not build variables
 
 ## Routes
 
-- `/` and `/collections/wood-pressed-oils`: storefront
+- `/`: Asal Iyarkai Angadi storefront and full catalogue
+- `/collections/wood-pressed-oils`: dedicated wood-pressed oil collection
+- `/robots.txt` and `/sitemap.xml`: search-engine discovery
 - `/cart`: bag quantities, removal and subtotal
 - `/checkout`: delivery details, checkout review and Razorpay test/live payment UI
 - `POST /api/checkout`: validate details and recalculate catalogue pricing
@@ -73,7 +75,11 @@ preview URLs on the next deployment.
 `wrangler.jsonc` attaches `asaliyarkaiangadi.in` as a Workers Custom Domain using
 `custom_domain: true`. Cloudflare manages the apex DNS record and TLS certificate
 for the Worker. The old Hostinger apex A record and wildcard Worker route have
-been removed; the existing `www` CNAME is preserved.
+been removed; the existing proxied `www` CNAME is preserved. A Worker route for
+`www.asaliyarkaiangadi.in/*` now handles the permanent redirect to the HTTPS apex
+address before the old origin is contacted. The Next.js redirects preserve paths
+and query strings and redirect HTTP apex requests using Cloudflare's
+`X-Forwarded-Proto` header.
 
 For routing-only changes, run `npx wrangler triggers deploy` without rebuilding
 or uploading another Worker version. The domain's nameservers are
@@ -100,3 +106,16 @@ and licence details before publishing a certification section.
 Razorpay is integrated for sandbox testing. Live checkout remains gated: order storage is not configured, shipping/tax rules are unimplemented and inventory is not reserved. Test success does not place a fulfilment order or clear the bag. Complete the live-readiness checklist in `docs/payments.md` before collecting real money.
 
 See [checkout integration notes](docs/checkout.md) and [design direction](docs/design.md).
+
+## Search visibility
+
+Public pages are indexable and publish route-specific titles, descriptions,
+canonical URLs and share images. The homepage includes `WebSite` and
+`Organization` structured data using the brand name Asal Iyarkai Angadi and its
+alternate spelling Asaliyarkaiangadi. Cart and checkout remain `noindex`, and no
+unverified product offers, ratings, addresses or certifications are published.
+
+After the Git deployment is live, verify ownership in Google Search Console,
+submit `https://asaliyarkaiangadi.in/sitemap.xml`, and request indexing of the
+homepage. See [the indexing checklist](docs/seo.md) for validation and setup.
+Code changes alone do not submit the site to Search Console or guarantee indexing.

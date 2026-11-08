@@ -82,9 +82,10 @@ test("removed brand, products and photos cannot return through storefront compon
     assert.doesNotMatch(source, /aishw(?:a|ari)|sunflower|castor|almond|product\.image|originalPrice|images\/products|images\/hero/i, file);
   }
   const assets = readdirSync(new URL("../public/", import.meta.url), { recursive: true });
-  // Editorial and category illustrations are authorized; product photos stay absent.
+  // Brand marks/previews, editorial and category art only; product photos stay absent.
   assert.deepEqual(assets.filter((name) => /\.(jpg|jpeg|png|webp)$/i.test(name)).sort(),
     [
+      "apple-touch-icon.png", "brand-icon.png", "images/asal-logo.png", "images/asal-social.png",
       ...["oils", "wood-oils", "ghee", "masala", "milk", "paneer", "rice", "grain"].map((id) => `images/categories/${id}.webp`),
       "images/editorial/fields.webp", "images/editorial/kitchen-harvest.webp",
     ].sort());

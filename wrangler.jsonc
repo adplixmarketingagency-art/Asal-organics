@@ -11,6 +11,10 @@
     {
       "pattern": "asaliyarkaiangadi.in",
       "custom_domain": true
+    },
+    {
+      "pattern": "www.asaliyarkaiangadi.in/*",
+      "zone_name": "asaliyarkaiangadi.in"
     }
   ],
   "assets": {

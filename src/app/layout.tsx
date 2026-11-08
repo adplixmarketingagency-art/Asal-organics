@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { CartProvider } from "@/components/CartProvider";
 import { BrandIntro } from "@/components/BrandIntro";
+import { homeDescription, homeTitle, siteName, siteUrl } from "@/lib/seo";
 import "./globals.css";
 import "./commerce.css";
 import "./heritage.css";
@@ -27,9 +28,19 @@ const tamil = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Asal — Everyday Essentials. Rooted in Tradition.",
-  description: "Explore Asal’s cold-pressed oils, masala and grain flours, milk products, and traditional rice varieties. Browse product prices and quantities.",
-  robots: { index: false, follow: false },
+  metadataBase: new URL(siteUrl),
+  applicationName: siteName,
+  title: { default: homeTitle, template: `%s | ${siteName}` },
+  description: homeDescription,
+  robots: { index: true, follow: true, "max-image-preview": "large" },
+  icons: {
+    icon: { url: "/brand-icon.png", type: "image/png", sizes: "96x96" },
+    apple: { url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" },
+  },
+  // URL-prefix verification is optional; DNS verification needs no code change.
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
