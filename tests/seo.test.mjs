@@ -3,6 +3,8 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import robots from "../src/app/robots.ts";
 import sitemap from "../src/app/sitemap.ts";
+import { products } from "../src/content/products.ts";
+import { productPath } from "../src/lib/product-pages.ts";
 import {
   homeDescription, homeTitle, publicPageMetadata, serializeJsonLd, siteName,
   siteUrl, websiteStructuredData, woodOilsBreadcrumbs, woodOilsDescription, woodOilsPath,
@@ -55,10 +57,13 @@ test("robots allows HTML and assets, including noindex pages, and advertises the
 });
 
 test("sitemap lists only distinct canonical public pages without fabricated timestamps", () => {
-  assert.deepEqual(sitemap(), [{ url: `${siteUrl}/` }, { url: `${siteUrl}${woodOilsPath}` }]);
+  assert.deepEqual(sitemap(), [
+    { url: `${siteUrl}/` }, { url: `${siteUrl}${woodOilsPath}` },
+    ...products.map((product) => ({ url: `${siteUrl}${productPath(product)}` })),
+  ]);
   for (const entry of sitemap()) {
     assert.equal(entry.lastModified, undefined);
-    assert.doesNotMatch(entry.url, /cart|checkout|api|localhost|workers\.dev|[#?]/);
+    assert.doesNotMatch(entry.url, /\/(?:cart|checkout|api)(?:\/|$)|localhost|workers\.dev|[#?]/);
   }
 });
 

@@ -1,4 +1,6 @@
 import type { MetadataRoute } from "next";
+import { products } from "../content/products.ts";
+import { productPath } from "../lib/product-pages.ts";
 import { siteUrl, woodOilsPath } from "../lib/seo.ts";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -6,5 +8,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: `${siteUrl}/` },
     { url: `${siteUrl}${woodOilsPath}` },
+    ...products.map((product) => ({ url: `${siteUrl}${productPath(product)}` })),
   ];
 }

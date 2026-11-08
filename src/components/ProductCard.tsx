@@ -1,9 +1,11 @@
 "use client";
 
 import { Heart, Plus } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { categoryLabel, formatPrice, getProductVariant, productVariantsFor, quantityLabel, type Product } from "@/content/products";
 import { useCart } from "./CartProvider";
+import { productPath } from "@/lib/product-pages";
 import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
 
 export function ProductCard({ product, saved, onSave, onExplore }: {
@@ -28,7 +30,7 @@ export function ProductCard({ product, saved, onSave, onExplore }: {
       </div>
       <div className="product-info">
         <p className="product-category">{categoryLabel(product.category)}</p>
-        <h3><button onClick={onExplore}>{product.name}</button></h3>
+        <h3><Link href={productPath(product)} prefetch={false}>{product.name}</Link></h3>
         <p className="product-tamil" lang="ta">{product.tamilName}</p>
         {variant ? <label className="pack-select">
           <span>Pack size</span>

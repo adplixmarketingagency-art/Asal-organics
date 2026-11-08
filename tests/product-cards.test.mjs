@@ -9,7 +9,7 @@ test("compact cards keep pack selection, details, Tamil names and accessible pur
   assert.match(card, /className="product-purchase"/);
   assert.match(card, /className="product-price"[\s\S]*className="product-add"[\s\S]*<\/button>\s*<\/div>/);
   assert.match(card, /aria-label=\{`View \$\{product.name\} details`\}/);
-  assert.match(card, /<h3><button onClick=\{onExplore\}>\{product.name\}<\/button><\/h3>/);
+  assert.match(card, /<h3><Link href=\{productPath\(product\)\}[^>]*>\{product.name\}<\/Link><\/h3>/);
   assert.match(card, /lang="ta">\{product.tamilName\}/);
   assert.match(card, /aria-label=\{`\$\{product.name\} pack size`\}/);
   assert.match(card, /disabled=\{!ready \|\| !variant\}/);

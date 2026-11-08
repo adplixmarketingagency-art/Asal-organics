@@ -8,6 +8,7 @@ import { ArrowRight, ArrowUpRight, Heart, Leaf, Search, ShoppingBag } from "luci
 import { canAddToBag, categoryLabel, formatPrice, getProductVariant, productCategories, productPackSizes, productVariantsFor, products, quantityLabel, selectProducts, type Product, type ProductCategory } from "@/content/products";
 import { Modal } from "./Modal";
 import { useCart } from "./CartProvider";
+import { productPath } from "@/lib/product-pages";
 import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
 
 export type DialogState = { type: "search" | "guide" | "ordering" | "about" } | { type: "product"; product: Product } | null;
@@ -72,6 +73,7 @@ export function StorefrontDialogs({ dialog, onClose, onExplore, saved, onSave }:
           </label>) : productPackSizes(product).map((size) => <div className="pack-option pending" key={size}><span><strong>{size}</strong><small>Price pending</small></span></div>)}
         </div></fieldset>
         <p className="detail-description">{variant ? "Pack prices are proportional to the listed litre or kilogram price, rounded up to the next whole rupee." : "500 g and 1 kg packs are listed. The base quantity for pricing needs confirmation; this item cannot be added to your bag yet."}</p>
+        <Link href={productPath(product)} className="text-link detail-save" onClick={onClose}>Full product details <ArrowUpRight size={16} /></Link>
         <button className="button button-green full-width" disabled={!ready || !variant} onClick={() => { addItem(product.id, variant?.id); onClose(); }}><ShoppingBag size={18} />{variant ? `Add ${variant.size} to bag` : "Pack price to be confirmed"}<ArrowRight size={18} /></button>
         <button className="text-link detail-save" aria-pressed={saved.includes(product.id)} onClick={() => onSave(product.id)}><Heart size={16} fill={saved.includes(product.id) ? "currentColor" : "none"} />{saved.includes(product.id) ? "Saved to your favourites" : "Save to your favourites"}</button>
         <div className="preview-notice"><p>You can prepare your bag and review checkout. Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing.</p></div>

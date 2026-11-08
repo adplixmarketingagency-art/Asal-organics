@@ -155,8 +155,8 @@
   .save-button:hover, .save-button.is-saved { color: var(--green); background: #fff; }
   .product-category { color: #8a9385; font-size: var(--text-caption); letter-spacing: 1.3px; margin-bottom: 6px; }
   .product-info h3 { font-size: 1.5625rem; letter-spacing: -.5px; line-height: 1.25; }
-  .product-info h3 button { font: inherit; text-align: left; padding: 0; }
-  .product-info h3 button:hover { color: var(--green-mid); }
+  .product-info h3 a { display: inline-block; font: inherit; text-align: left; padding: 0; }
+  .product-info h3 a:hover { color: var(--green-mid); }
   .product-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 17px; padding-top: 12px; border-top: 1px solid var(--line); }
   .product-price { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .product-price strong { font-size: var(--text-body); font-weight: 600; }
@@ -282,7 +282,7 @@
   .collection-tabs > button, .filter-button, .sort-label, .sort-label select { font-size: var(--text-body); }
   .product-subtitle, .product-price del, .image-volume { color: #677160; }
   .product-category { font-size: var(--text-caption); }
-  .product-info h3 button { min-height: 30px; }
+  .product-info h3 a { min-height: 30px; }
   .catalogue-note { color: #667260; font-size: var(--text-small); }
   .discovery-top .eyebrow, .discovery-card > p { color: #526f83; }
   .story-copy .eyebrow, .story-copy > p:not(.eyebrow), .process-list p { color: #5a6e51; }
