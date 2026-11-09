@@ -1,4 +1,4 @@
-import { ArrowUpRight, Check, ChevronDown, Droplets, Leaf, Sprout, Wheat } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, Leaf } from "lucide-react";
 import { KolamDivider } from "./Kolam";
 
 const faqs = [
@@ -12,14 +12,20 @@ export function Editorial({ onGuide }: { onGuide: () => void }) {
   return <>
     <section className="story-band" id="our-way">
       <div className="story-inner section-wrap">
-        <figure className="story-photograph"><img src="/images/editorial/kitchen-harvest.webp" alt="Baskets of chillies, carrots, cucumbers and bitter gourds at a vegetable market" width="1000" height="667" loading="lazy" /><figcaption>Colour, flavour, and the joy of cooking.<span>Editorial imagery, not products for sale.</span></figcaption></figure>
-        <div className="story-copy"><p className="eyebrow">FAMILIAR FOOD. EVERYDAY GOODNESS.</p><h2>Some things are<br />better <em>left simple.</em></h2><p>From cold-pressed oils to traditional rice, discover familiar essentials for the meals you love.</p><p className="story-tamil" lang="ta">அன்றாட உணவில், நம் பாரம்பரியம்.</p><button className="text-link" onClick={onGuide}>Get to know the collection <ArrowUpRight size={19} /></button></div>
-      </div>
-      <div className="section-wrap">
-        <div className="process-list">
-          <div><span className="process-number">01</span><div><h3>Oils for your kitchen.</h3><p>Groundnut, sesame and coconut oils, listed by the litre.</p></div><Droplets size={29} strokeWidth={1.3} /></div>
-          <div><span className="process-number">02</span><div><h3>A place in your pantry.</h3><p>Masala flours, grain flours and traditional rice varieties.</p></div><Wheat size={29} strokeWidth={1.3} /></div>
-          <div><span className="process-number">03</span><div><h3>Familiar favourites.</h3><p>Explore Bilona Ghee, Bilona Butter, Palkova, Karuppu Kavuni Halwa and Paneer.</p></div><Sprout size={29} strokeWidth={1.3} /></div>
+        <figure className="story-photograph">
+          <img src="/images/heritage/nammalvar.webp" alt="G. Nammalvar holding a wooden plough in a field" width="778" height="434" loading="lazy" decoding="async" />
+          <figcaption>
+            <strong>G. Nammalvar · 1938–2013</strong>
+            <span>Photo: <a href="https://commons.wikimedia.org/wiki/File:Nammalvar.G.jpg" target="_blank" rel="noreferrer">Voiceoftamil / Wikimedia Commons</a> · <a href="https://creativecommons.org/licenses/by-sa/3.0" target="_blank" rel="noreferrer">CC BY-SA 3.0</a>. Converted to WebP; uncropped.</span>
+          </figcaption>
+        </figure>
+        <div className="story-copy">
+          <p className="eyebrow">REMEMBERING A VOICE FOR THE SOIL</p>
+          <h2>Rooted in the land.<br /><em>Remembered at the table.</em></h2>
+          <p>G. Nammalvar was a Tamil natural-farming advocate who encouraged a closer relationship with the soil. We remember his contribution here as part of Tamil Nadu’s farming heritage.</p>
+          <p className="story-tamil" lang="ta">அன்றாட உணவில், நம் பாரம்பரியம்.</p>
+          <button className="text-link" onClick={onGuide}>Get to know the collection <ArrowUpRight size={19} /></button>
+          <p className="story-context">An editorial remembrance, not an endorsement or affiliation.</p>
         </div>
       </div>
     </section>

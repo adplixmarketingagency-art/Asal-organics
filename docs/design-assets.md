@@ -1,6 +1,6 @@
 # Storefront design assets
 
-Updated November 5, 2026. The reference storefront informed navigation and
+Updated November 9, 2026. The reference storefront informed navigation and
 editorial hierarchy only. No competitor images, branding, certificates or
 testimonials were copied.
 
@@ -54,8 +54,8 @@ at the owner's request. Conversation:
 `https://gemini.google.com/app/0b24719220d694a9`.
 These are AI-generated illustrative category artworks, not photographs of
 Asal products, facilities or evidence of a pressing method or certification.
-The homepage includes a visible illustrative-image note. Product photographs
-remain placeholders.
+The homepage includes a visible illustrative-image note. Matching ingredient
+studies now appear on product surfaces, with explicit illustrative labels.
 
 The matching series uses white porcelain dishes, a warm-white studio background,
 soft diffused light and uncluttered framing, without branding, text, packaging or
@@ -143,3 +143,75 @@ logo, downloadable certificate or verified badge is published without the
 actual document/details. Supply the current certificate, licence number and
 validity dates before adding that section. Do not reuse the reference site's
 certificate.
+
+## Ingredient studies and contextual heritage art — November 9, 2026
+
+Created at the owner's request using Gemini in their signed-in Chrome:
+`https://gemini.google.com/app/638e845e4f132de4`.
+No credentials, private project files or personal reference photos were uploaded.
+
+### Ingredient studies
+
+The new still lifes match the existing warm-white porcelain category series.
+They are not photographs of merchandise, not packaging previews and not proof
+of a production method. The 20 product IDs map to 17 ingredient studies in
+`src/content/product-images.ts`; cold/wood-pressed versions share the same
+ingredient illustration. Ragi/Bajra availability and all prices are unchanged.
+
+| Original download | Complete cells (top-left, top-right, bottom-left, bottom-right) |
+| --- | --- |
+| `Gemini_Generated_Image_ppmaj0ppmaj0ppma.png` | Coconut oil, turmeric, chilli powder, coriander powder |
+| `Gemini_Generated_Image_6snw7m6snw7m6snw.png` | Curry masala, palkova, black-rice halwa, Seera Samba rice |
+| `Gemini_Generated_Image_9j2wep9j2wep9j2w.png` | Black rice, red rice, ragi flour, bajra flour |
+
+Prompt direction: a square 2×2 contact sheet, four complete and generously spaced
+still lifes; accurate ingredient colours/textures; soft studio light; white
+porcelain on warm-white; no packaging, labels, branding or invented endorsements.
+The source PNGs are 2048×2048. Each full quadrant was extracted without repainting
+or watermark removal, then encoded at 240×240 and 800×800, WebP quality 84/effort 6.
+Groundnut oil, sesame oil, ghee, butter and paneer reuse the corresponding existing
+category artwork, with the same two output sizes. Originals remain in the local
+Downloads directory (and category originals in the ignored source-art folder).
+
+`ProductImage` provides dimensions, descriptive illustrative alt text, responsive
+sources and lazy loading (except the main product-page image). Cards and detail
+views carry visible captions. Search/cart use adjacent disclosures instead of
+illegible thumbnail overlays. Unknown future product IDs retain the placeholder.
+Use owner-supplied product photography to replace these when available.
+
+### Heritage illustrations
+
+| Asset | Original download | Subject |
+| --- | --- | --- |
+| `chekku` | `Gemini_Generated_Image_ah1emzah1emzah1e.png` | Bullock-driven wooden press in a shaded Tamil courtyard |
+| `bilona` | `Gemini_Generated_Image_lu12g6lu12g6lu12.png` | Rope-driven wooden churn, curd pot, hands and butter bowl |
+| `cattle` | `Gemini_Generated_Image_ty20fyty20fyty20.png` | White zebu cow and calf beside a cattle shed |
+
+Prompt direction: fine gouache/coloured-pencil editorial illustration, landscape
+3:2, ivory, forest green and ochre, quiet rural composition; no logo or text.
+Originals are 2528×1696, resized without cropping to widths 640/1200 and WebP
+quality 83/effort 6. At the owner's direction there is no standalone gallery:
+chekku sits beside the wood-oils heading, bilona beside the ghee product, and
+cow/calf artwork occupies the breathing room near dairy products. These small,
+varied placements use full images, not background crops. Each has a visible
+AI-illustration caption. The catalogue disclosure and image alt text distinguish
+them from Asal's facilities, cattle or actual production processes.
+
+### Nammalvar photograph — CC BY-SA 3.0
+
+- Source: https://commons.wikimedia.org/wiki/File:Nammalvar.G.jpg
+- Original: https://upload.wikimedia.org/wikipedia/commons/d/d0/Nammalvar.G.jpg
+- Author: **Voiceoftamil**.
+- Licence: **Creative Commons Attribution-ShareAlike 3.0 Unported**,
+  https://creativecommons.org/licenses/by-sa/3.0/.
+- Output: `public/images/heritage/nammalvar.webp`, 778×434, WebP quality 86.
+  Converted from JPEG, not cropped or retouched; this derivative remains
+  available under **CC BY-SA 3.0**. No additional restrictions are imposed.
+- Visible caption credits the author, links the original and licence, and states
+  the encoding change. The complete image remains visible at all viewport sizes.
+
+G. Nammalvar (1938–2013) is presented in a neutral editorial remembrance of his
+natural-farming advocacy. No quote, commercial endorsement or affiliation is
+invented. This real photograph is deliberately distinguished from the generated
+heritage artwork. The unused market-vegetable photo remains available as a legacy
+asset, but is no longer used in the story section.

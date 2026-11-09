@@ -9,18 +9,18 @@ import { canAddToBag, categoryLabel, formatPrice, getProductVariant, productCate
 import { Modal } from "./Modal";
 import { useCart } from "./CartProvider";
 import { productPath } from "@/lib/product-pages";
-import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
+import { ProductImage } from "./ProductImage";
 
 export type DialogState = { type: "search" | "guide" | "ordering" | "about" } | { type: "product"; product: Product } | null;
 
 function ProductResults({ items, onExplore }: { items: Product[]; onExplore: (product: Product) => void }) {
-  return <div className="search-results">
+  return <><p className="image-disclosure">AI-generated ingredient images; not actual product photographs.</p><div className="search-results">
     {items.map((product) => <button key={product.id} onClick={() => onExplore(product)}>
-      <ProductImagePlaceholder compact className="search-image-space" />
+      <ProductImage productId={product.id} compact className="search-image-space" />
       <span><strong>{product.name}</strong><small lang="ta">{product.tamilName}</small><small>{quantityLabel(product)}</small></span>
       <span className="search-price">{canAddToBag(product) ? formatPrice(product.price) : "Price pending"}</span><ArrowUpRight size={18} />
     </button>)}
-  </div>;
+  </div></>;
 }
 
 function CatalogueGuide({ onExplore }: { onExplore: (product: Product) => void }) {
@@ -61,7 +61,7 @@ export function StorefrontDialogs({ dialog, onClose, onExplore, saved, onSave }:
     const variants = productVariantsFor(product);
     const variant = getProductVariant(product.id, selectedVariantId) ?? getProductVariant(product.id);
     return <Modal title={product.name} onClose={onClose} className="product-modal">
-      <ProductImagePlaceholder className="detail-image-space" />
+      <ProductImage productId={product.id} className="detail-image-space" />
       <div className="detail-content">
         <p className="eyebrow">{categoryLabel(product.category)}</p><h2>{product.name}</h2>
         {product.tamilName && <p className="modal-intro" lang="ta">{product.tamilName}</p>}

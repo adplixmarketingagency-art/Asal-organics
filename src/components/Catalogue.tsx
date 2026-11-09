@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, ChevronDown, Grid2X2, Heart, LayoutList, Search, SlidersHorizontal, Sprout, X } from "lucide-react";
 import { products, productCategories, categoryPackSizes, catalogueMaxPrice, catalogueMinPrice, selectProducts, groupProducts, formatPrice, type Category, type Product, type Sort } from "@/content/products";
 import { ProductCard } from "./ProductCard";
+import { HeritageIllustration } from "./HeritageIllustration";
 
 const categories: { id: Category; label: string }[] = [
   { id: "all", label: "All products" },
@@ -75,17 +76,20 @@ export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCateg
         </div>
       </div>}
       {selected.length ? <div className="category-sections">
-        {groups.map((group) => <section className="category-section" key={group.id} aria-labelledby={`category-${group.id}-title`}>
+        {groups.map((group) => <section className={`category-section category-section-${group.id}`} key={group.id} aria-labelledby={`category-${group.id}-title`}>
           <div className="category-section-heading">
-            <div><p className="category-tamil" lang="ta">{group.tamilLabel}</p><h3 id={`category-${group.id}-title`}>{group.label}</h3><p className="category-description">{group.description}</p><p className="category-pack-sizes">Pack sizes: {categoryPackSizes[group.id].join(" · ")}</p></div>
+            <div className="category-heading-copy"><p className="category-tamil" lang="ta">{group.tamilLabel}</p><h3 id={`category-${group.id}-title`}>{group.label}</h3><p className="category-description">{group.description}</p><p className="category-pack-sizes">Pack sizes: {categoryPackSizes[group.id].join(" · ")}</p></div>
             <span className="category-product-count">{group.products.length} {group.products.length === 1 ? "product" : "products"}</span>
+            {group.id === "wood-oils" && <HeritageIllustration subject="chekku" />}
           </div>
           <div className={`product-grid ${view === "list" ? "list-view" : ""}`}>
             {group.products.map((product) => <ProductCard key={product.id} product={product} saved={saved.includes(product.id)} onSave={() => onSave(product.id)} onExplore={() => onExplore(product)} />)}
+            {group.id === "ghee" && <HeritageIllustration subject="bilona" />}
+            {group.id === "milk" && <HeritageIllustration subject="cattle" />}
           </div>
         </section>)}
       </div> : <div className="empty-state"><Sprout size={36} strokeWidth={1.2} /><h3>{category === "saved" && saved.length === 0 ? "Keep your favourites close." : "Let’s find something else."}</h3><p>{category === "saved" && saved.length === 0 ? "Tap the heart on any product to save it here for later." : "No products match these filters. Try a different search or price."}</p><button className="button button-green" onClick={reset}>Explore all products <ArrowRight size={17} /></button></div>}
-      <p className="catalogue-note">Choose a pack on each product. Pack prices are calculated from the listed litre or kilogram price and rounded up to a whole rupee; price filters and sorting use that base pack. Ragi and Bajra prices are pending base-quantity confirmation. Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing.</p>
+      <p className="catalogue-note">Ingredient images are AI-generated illustrations, not actual product photographs or packaging. Heritage artwork illustrates Tamil food culture, not Asal’s farms, cattle or production methods. Choose a pack on each product. Pack prices are calculated from the listed litre or kilogram price and rounded up to a whole rupee; price filters and sorting use that base pack. Ragi and Bajra prices are pending base-quantity confirmation. Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing.</p>
     </section>
   );
 }

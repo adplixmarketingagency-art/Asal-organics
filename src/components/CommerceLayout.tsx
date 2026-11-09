@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 import { categoryLabel, formatPrice } from "@/content/products";
 import { MAX_ITEM_QUANTITY, type CartSummary } from "@/lib/cart";
 import { useCart } from "./CartProvider";
-import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
+import { ProductImage } from "./ProductImage";
 
 export function CommerceLayout({ step, children }: { step: 1 | 2 | 3; children: ReactNode }) {
   const { summary } = useCart();
@@ -45,9 +45,9 @@ export function EmptyBag() {
 export function CartLines({ compact = false, summary: suppliedSummary }: { compact?: boolean; summary?: CartSummary }) {
   const { summary: browserSummary, updateQuantity } = useCart();
   const summary = suppliedSummary ?? browserSummary;
-  return <ul className={`cart-lines ${compact ? "compact-lines" : ""}`}>
+  return <><p className="image-disclosure">Ingredient images are illustrative, not actual product photographs.</p><ul className={`cart-lines ${compact ? "compact-lines" : ""}`}>
     {summary.lines.map(({ product, productId, variant, variantId, quantity, unitPricePaise, lineTotalPaise }) => <li key={variantId} className="cart-line">
-      <ProductImagePlaceholder compact className="cart-image-space" />
+      <ProductImage productId={product.id} compact className="cart-image-space" />
       <div className="cart-line-description">
         {!compact && <p className="eyebrow">{categoryLabel(product.category)}</p>}
         <h3>{product.name}</h3><p className="cart-line-tamil" lang="ta">{product.tamilName}</p>
@@ -63,7 +63,7 @@ export function CartLines({ compact = false, summary: suppliedSummary }: { compa
       </div>
       <strong className="cart-line-total">{formatPrice(lineTotalPaise / 100)}</strong>
     </li>)}
-  </ul>;
+  </ul></>;
 }
 
 export function OrderSummary({ summary, children, showItems = false }: { summary: CartSummary; children?: ReactNode; showItems?: boolean }) {

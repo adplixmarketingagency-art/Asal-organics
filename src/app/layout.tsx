@@ -6,6 +6,7 @@ import { homeDescription, homeTitle, siteName, siteUrl } from "@/lib/seo";
 import "./globals.css";
 import "./commerce.css";
 import "./heritage.css";
+import "./imagery.css";
 
 const manrope = localFont({
   src: [{ path: "../../public/fonts/manrope-variable.ttf", weight: "200 800" }],

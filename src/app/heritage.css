@@ -1,4 +1,4 @@
-/* Asal's editorial layer. Product photography remains intentionally absent. */
+/* Asal's editorial layer. See imagery.css for the illustrative image system. */
 @layer base {
   :root {
     --paper: #fffdf8;

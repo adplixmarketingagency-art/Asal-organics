@@ -75,19 +75,22 @@ test("sorting preserves the source order and includes the full price range", () 
   assert.deepEqual(products.map(({ id }) => id), original);
 });
 
-test("removed brand, products and photos cannot return through storefront components", () => {
+test("removed brand and products cannot return; only reviewed image assets are shipped", () => {
   const files = readdirSync(new URL("../src/components/", import.meta.url)).filter((name) => name.endsWith(".tsx"));
   for (const file of files) {
     const source = readFileSync(new URL(`../src/components/${file}`, import.meta.url), "utf8");
-    assert.doesNotMatch(source, /aishw(?:a|ari)|sunflower|castor|almond|product\.image|originalPrice|images\/products|images\/hero/i, file);
+    assert.doesNotMatch(source, /aishw(?:a|ari)|sunflower|castor|almond|product\.image|originalPrice|images\/hero/i, file);
   }
   const assets = readdirSync(new URL("../public/", import.meta.url), { recursive: true });
-  // Brand marks/previews, editorial and category art only; product photos stay absent.
+  // Brand marks, credited editorial photos and the reviewed illustrative series.
   assert.deepEqual(assets.filter((name) => /\.(jpg|jpeg|png|webp)$/i.test(name)).sort(),
     [
       "apple-touch-icon.png", "brand-icon.png", "images/asal-logo.png", "images/asal-social.png",
       ...["oils", "wood-oils", "ghee", "masala", "milk", "paneer", "rice", "grain"].map((id) => `images/categories/${id}.webp`),
       "images/editorial/fields.webp", "images/editorial/kitchen-harvest.webp",
+      "images/heritage/nammalvar.webp",
+      ...["chekku", "bilona", "cattle"].flatMap((id) => [640, 1200].map((width) => `images/heritage/${id}-${width}.webp`)),
+      ...["groundnut", "sesame", "coconut", "turmeric", "curry-masala", "chilli-powder", "coriander-powder", "ragi", "bajra", "bilona-ghee", "bilona-butter", "palkova", "karuppu-kavuni-halwa", "paneer", "karuppu-kavuni", "mapillai-samba", "seera-samba"].flatMap((id) => [240, 800].map((width) => `images/products/${id}-${width}.webp`)),
     ].sort());
 });
 
@@ -96,10 +99,10 @@ test("prices use Indian rupee formatting", () => {
   assert.equal(formatPrice(1930), "₹1,930");
 });
 
-test("image spaces remain available without restoring the old photographs", () => {
+test("image spaces use the shared illustrative renderer and retain a future fallback", () => {
   for (const file of ["ProductCard", "StorefrontDialogs", "CommerceLayout"]) {
     const source = readFileSync(new URL(`../src/components/${file}.tsx`, import.meta.url), "utf8");
-    assert.match(source, /<ProductImagePlaceholder/, file);
+    assert.match(source, /<ProductImage productId=\{product.id\}/, file);
   }
   const placeholder = readFileSync(new URL("../src/components/ProductImagePlaceholder.tsx", import.meta.url), "utf8");
   assert.match(placeholder, /Photo coming soon/);

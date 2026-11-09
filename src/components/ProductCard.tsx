@@ -6,7 +6,7 @@ import { useState } from "react";
 import { categoryLabel, formatPrice, getProductVariant, productVariantsFor, quantityLabel, type Product } from "@/content/products";
 import { useCart } from "./CartProvider";
 import { productPath } from "@/lib/product-pages";
-import { ProductImagePlaceholder } from "./ProductImagePlaceholder";
+import { ProductImage } from "./ProductImage";
 
 export function ProductCard({ product, saved, onSave, onExplore }: {
   product: Product;
@@ -22,7 +22,7 @@ export function ProductCard({ product, saved, onSave, onExplore }: {
     <article className="product-card" data-product={product.id}>
       <div className="product-media">
         <button className="product-media-open" onClick={onExplore} aria-label={`View ${product.name} details`}>
-          <ProductImagePlaceholder />
+          <ProductImage productId={product.id} />
         </button>
         <button className={`icon-button save-button ${saved ? "is-saved" : ""}`} aria-label={`${saved ? "Unsave" : "Save"} ${product.name}`} aria-pressed={saved} onClick={onSave}>
           <Heart size={18} fill={saved ? "currentColor" : "none"} />

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ShoppingBag } from "lucide-react";
 import { BrandWordmark } from "@/components/BrandWordmark";
 import { ProductPurchase } from "@/components/ProductPurchase";
+import { ProductImage } from "@/components/ProductImage";
 import { categoryLabel, formatPrice, productPackSizes, products, productVariantsFor } from "@/content/products";
 import { productBreadcrumbs, productDescription, productPath } from "@/lib/product-pages";
 import { publicPageMetadata, serializeJsonLd, siteName, woodOilsPath } from "@/lib/seo";
@@ -54,6 +55,8 @@ export default async function ProductPage({ params }: Props) {
           <p className="eyebrow">{categoryLabel(product.category)}</p>
           <h1 id="product-heading">{product.name}</h1>
           <p className="product-page-tamil" lang="ta">{product.tamilName}</p>
+          <ProductImage productId={product.id} className="product-page-artwork" priority />
+          <p className="image-disclosure">AI-generated ingredient study, not a photograph of the product or its packaging.</p>
           <p className="product-page-intro">{product.name} from {siteName}. Compare the listed packs and prices below before preparing your bag.</p>
           <table className="product-page-packs">
             <caption>Pack sizes and listed prices</caption>

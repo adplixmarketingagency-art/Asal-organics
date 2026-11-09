@@ -1,25 +1,40 @@
 # Asal — design direction
 
-White, forest-green and powder-blue surfaces, with local Fraunces headings and DM Sans UI. The existing navigation, filters, saved favourites, cart and pre-payment checkout remain available.
+Updated November 9, 2026.
+
+Cream paper, forest-green ink, muted sage and warm brass, with self-hosted Lora,
+Manrope and Noto Sans Tamil. Retain restrained kolam dividers and bilingual labels.
+See `design-assets.md` for provenance, licences and image-use limitations.
 
 ## Current catalogue
 
-- 17 products across five categories, transcribed from the two owner-provided handwritten lists.
-- Only listed selling prices and quantities; no production costs, comparison prices or crossed-out products.
-- Ragi and Bajra have prices but no stated quantities. Show that explicitly and reject these items in both browser cart and server checkout until confirmed.
-- Reserved image spaces in product cards, search results, detail dialogs and cart lines, ready for merchant photography. The hero also retains an image space. No old product or editorial photographs; the brand credit icon is retained.
-- No added certifications, delivery promises or ingredient/process claims.
+- 20 owner-listed products across eight categories.
+- Only approved selling prices and quantities; pack prices round up proportionally.
+- Ragi/Bajra remain unavailable with “Price pending” until base quantities are confirmed.
+- Coordinated, explicitly illustrative ingredient images in cards, quick views,
+  search, product pages and bag lines. No invented packaging or actual-product claims.
+- No added certifications, endorsements, farm ownership or delivery promises.
 
 ## Layout
 
-- Existing 1440px content width, forest-green / powder-blue palette and restrained borders.
-- Split hero and four-column product grid with neutral photo placeholders; three columns on tablet and one on phones to accommodate full product names and prices.
-- Search, category filters, price filters, sorting, details, category guide, FAQs and responsive navigation.
+- Split landscape hero, compact category strip, four-column desktop catalogue,
+  three columns on tablet and two on mobile; search/filter/list views preserved.
+- Square desktop image spaces and 4:3 mobile compositions, full subjects contained,
+  self-hosted 240/800px WebP, stable dimensions, lazy loading below the fold.
+- Credited, uncropped Nammalvar photograph with a neutral editorial remembrance.
+- Heritage illustrations are scattered through existing content, not a gallery:
+  a small wooden-chekku scene beside the wood-oils heading, bilona churning in the
+  breathing room beside ghee, and cow/calf artwork tucked beside dairy products.
+  Different sizes and alignments keep the placement informal; responsive layouts
+  preserve complete subjects and keep product controls unobstructed.
+- Accessible focus, descriptive alt text, visible AI-image disclosures and
+  reduced-motion treatment. No new animation or carousel dependencies.
 
 ## Verification and deployment
 
-- `npm test`, `npm run typecheck`, `npm run build:cloudflare`.
-- `/` and the retained legacy `/collections/wood-pressed-oils` URL show the collection.
-- `/cart` and `/checkout` provide a review only; payments remain disabled.
-- Deploy to the existing Cloudflare Worker with `npm run deploy`; preserve its Custom Domain configuration.
-- Stock, missing grain quantities, delivery rules and taxes must be confirmed before live ordering. Preview pages remain `noindex`.
+- `npm test`, `npm run typecheck`, isolated `npm run build:cloudflare`.
+- Public homepage, wood-oils collection and 20 product URLs remain indexable.
+  Cart/checkout remain noindex; actual ordering and payments remain unavailable.
+- Browser QA at desktop and mobile widths, including modal, search, list and bag.
+- Push to the existing GitHub repository to trigger Cloudflare Workers Builds.
+  No platform migration or environment/secret files included in the build.
