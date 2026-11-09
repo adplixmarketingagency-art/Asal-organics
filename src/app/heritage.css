@@ -152,14 +152,20 @@
     .process-list { gap: 18px; }
   }
   @media (max-width: 700px) {
+    /* Match the mobile placement before hydration and when JavaScript is unavailable. */
+    .storefront-main { display: flex; flex-direction: column; }
+    .storefront-main > .story-band { order: 1; }
     .hero { grid-template-columns: 1fr; min-height: 0; }
-    .hero-copy { padding: 142px 27px 32px; }
+    .hero-copy { padding: 108px 24px 24px; }
+    .hero-description { display: none; }
+    .hero .button { margin-top: 8px; }
+    .hero-footnote { margin-top: 14px; }
     .hero-kolam { width: 52px; height: 52px; right: 16px; top: 16px; }
     .hero-copy > .eyebrow, .hero-tamil { padding-right: 0; }
     .hero h1 { font-size: clamp(36px, 9vw, 49px); letter-spacing: -1.3px; line-height: 1.18; }
     /* Keep a clear view of the palms above the copy within the same full-card background. */
-    .hero-backdrop > img { inset: -110px 0 0; width: 100%; height: calc(100% + 110px); object-position: 54% top; filter: none; }
-    .hero-backdrop::after { background: linear-gradient(180deg, #f8f7e80a 0, #f8f7e829 80px, #f8f7e8d9 160px, #f8f7e8e6 260px, #f8f7e8d9 100%); }
+    .hero-backdrop > img { inset: -60px 0 0; width: 100%; height: calc(100% + 60px); object-position: 54% top; filter: none; }
+    .hero-backdrop::after { background: linear-gradient(180deg, #f8f7e80a 0, #f8f7e829 48px, #f8f7e8d9 118px, #f8f7e8e6 220px, #f8f7e8d9 100%); }
     .category-shelf { padding-block: 26px 8px; }
     .category-shelf-heading { display: block; margin-bottom: 12px; }
     .category-shelf-heading p { margin-top: 6px; font-size: .75rem; }

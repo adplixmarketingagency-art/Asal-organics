@@ -61,9 +61,12 @@ products, sourcing or certifications.
   not a separate right-hand image panel. Desktop uses a slight 0.6px blur and
   a directional cream overlay: stronger behind the copy, clearer on the right.
   Mobile removes blur entirely and centres the cover crop on the coconut palms.
-  A 142px top inset for the copy leaves the palm canopy visible; the cream wash
-  increases below it to protect text and controls. The photograph still spans
-  the entire card, rather than becoming a separate image panel.
+  On phones (up to 700px), the long description is hidden and the copy starts
+  at 108px with tighter button/footnote spacing, keeping the hero compact.
+  A 60px upward image offset leaves the palm canopy visible; the cream wash
+  increases below it to protect text and controls. Desktop copy and spacing
+  are unchanged. The photograph still spans the entire card, rather than
+  becoming a separate image panel.
   Its wrapper is aria-hidden with empty alt.
   This replaces the previous Unsplash sunset image, which has been removed.
   Original photographer, location and licence were not supplied; no authorship,
@@ -230,10 +233,13 @@ layers sit outside the product grid, with a light 1px desktop blur, 0.86 opacity
 and a directional cream wash. Chekku and cattle use a 400px-high scene aligned
 right, with 310px of heading space so the product rows do not hide the press or
 animals. Bilona spans its shorter, single-product section.
-Mobile uses a bounded `clamp(320px, 84vw, 480px)` scene instead of stretching
-the landscape over the entire product list. Heading space tracks that height
-minus 60px, revealing the subject before fading behind the first product row.
-Mobile art uses only 0.6px blur, 0.9 opacity and a top-to-bottom readability wash.
+Mobile retains the landscape's natural aspect ratio (`width: 100%; height: auto;
+object-fit: contain`) instead of a fixed-height cover crop. The decorative layer
+shares a grid cell with the category heading, aligned to its bottom; proportional
+54% heading padding reveals the complete subject immediately above the cards.
+It stays a section background, never a gallery or a product-grid item.
+Mobile art uses only 0.35px blur and full opacity. The readability wash fades
+out at 45% of the image, leaving the lower scene clear, with a soft bottom edge.
 Only background images are softened; product cards, headings, prices and
 controls remain sharp. Background wrappers clip artwork, not controls or focus
 rings. Existing responsive WebP assets are reused; no new images were generated.
@@ -254,9 +260,13 @@ not as labels on the shopping surfaces.
 - The caption now shows only Nammalvar's name and dates. Attribution, source,
   licence and encoding details live on `/credits`, linked from the storefront
   footer. The complete image remains visible at all viewport sizes.
-- The remembrance now appears directly after the hero, before category
-  shortcuts and products. The FAQ stays below the catalogue, and the existing
-  `#our-way` navigation still targets the remembrance.
+- Desktop retains the remembrance directly after the hero, before category
+  shortcuts and products. On phones (up to 700px), it is the last main section,
+  after the catalogue, FAQ and closing note, before the footer.
+  A subscribed media query moves a single rendered section so keyboard and
+  reading order match the layout, including after resizing. A mobile-only CSS
+  fallback places it last before hydration or without JavaScript. The existing
+  `#our-way` navigation still targets the unique remembrance.
 
 G. Nammalvar (1938–2013) is presented in a neutral editorial remembrance of his
 natural-farming advocacy. No quote, commercial endorsement or affiliation is

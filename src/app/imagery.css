@@ -46,13 +46,13 @@
     .product-media { aspect-ratio: 4 / 3; }
     .product-artwork.detail-image-space { min-height: 240px; height: 240px; }
     .product-artwork.cart-image-space { height: 86px; }
-    /* Size the scene independently of the product count: no tall, unrecognizable cover crop.
-       It fades behind the heading and first row, within the existing category section. */
-    .category-section:has(> .category-backdrop) { --heritage-scene-height: clamp(320px, 84vw, 480px); }
-    .category-section:has(> .category-backdrop) .category-section-heading { min-height: calc(var(--heritage-scene-height) - 60px); }
-    .category-backdrop { inset: -16px -12px; }
-    .category-backdrop > img { inset: 0; width: 100%; height: var(--heritage-scene-height); object-fit: cover; object-position: center; filter: blur(.6px) saturate(.9); opacity: .9; mask-image: linear-gradient(180deg, #000 72%, transparent); }
-    .category-backdrop::after { height: var(--heritage-scene-height); background: linear-gradient(180deg, #fffdf8ed, #fffdf8c9 110px, #fffdf826 230px, transparent 320px), linear-gradient(90deg, #fffdf833, transparent 65%); }
+    /* Share the heading's grid cell: a natural-ratio scene, not a tall cover crop.
+       Copy reserves room for the subject; only the top is washed for readability. */
+    .category-section:has(> .category-backdrop) { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .category-section:has(> .category-backdrop) .category-section-heading { grid-area: 1 / 1; min-height: 0; padding-bottom: 54%; }
+    .category-backdrop { grid-area: 1 / 1; position: relative; inset: auto; align-self: end; margin-inline: -12px; }
+    .category-backdrop > img { position: relative; inset: auto; width: 100%; height: auto; object-fit: contain; object-position: center; filter: blur(.35px) saturate(.95); opacity: 1; mask-image: linear-gradient(180deg, #000 88%, transparent); }
+    .category-backdrop::after { background: linear-gradient(180deg, var(--paper), #fffdf8cc 16%, #fffdf800 45%); }
     .story-photograph > img { height: auto; }
     .story-copy > .story-context { font-size: .6875rem; }
   }

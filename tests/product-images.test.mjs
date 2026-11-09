@@ -88,21 +88,23 @@ test("heritage images are decorative section backgrounds, never gallery or produ
 test("mobile heritage scenes stay recognizable independently of product-grid height", () => {
   const css = source("src/app/imagery.css");
   const mobile = css.slice(css.indexOf("@media (max-width: 700px)"), css.indexOf("@media (prefers-reduced-motion: reduce)"));
-  assert.match(mobile, /--heritage-scene-height: clamp\(320px, 84vw, 480px\)/);
-  assert.match(mobile, /\.category-backdrop > img \{[^}]*height: var\(--heritage-scene-height\)/);
-  assert.match(mobile, /\.category-backdrop > img \{[^}]*filter: blur\(\.6px\)[^}]*opacity: \.9/);
+  assert.match(mobile, /\.category-section:has\(> \.category-backdrop\) \{[^}]*display: grid/);
+  assert.match(mobile, /\.category-backdrop \{[^}]*grid-area: 1 \/ 1;[^}]*position: relative;[^}]*align-self: end/);
+  assert.match(mobile, /\.category-backdrop > img \{[^}]*width: 100%; height: auto; object-fit: contain/);
+  assert.match(mobile, /\.category-backdrop > img \{[^}]*filter: blur\(\.35px\)[^}]*opacity: 1/);
   assert.match(mobile, /\.category-backdrop > img \{[^}]*mask-image: linear-gradient/);
-  assert.match(mobile, /\.category-backdrop::after \{[^}]*height: var\(--heritage-scene-height\)/);
-  // Heading space follows the scene on wide phones too, rather than covering its subjects.
-  assert.match(mobile, /\.category-section-heading \{[^}]*min-height: calc\(var\(--heritage-scene-height\) - 60px\)/);
-  assert.doesNotMatch(mobile, /\.category-backdrop > img \{[^}]*height: (?:100%|calc\(100%)/);
+  assert.match(mobile, /\.category-backdrop::after \{[^}]*#fffdf800 45%/);
+  // Artwork and copy share a cell. Proportional space reveals the subject above the cards.
+  assert.match(mobile, /\.category-section-heading \{[^}]*grid-area: 1 \/ 1; min-height: 0; padding-bottom: 54%/);
+  assert.doesNotMatch(mobile, /--heritage-scene-height|object-fit: cover/);
+  assert.doesNotMatch(mobile, /\.category-backdrop > img \{[^}]*height: (?:100%|calc\(100%|\d+px)/);
   const desktop = css.slice(css.indexOf("@media (min-width: 701px)"), css.indexOf("@media (max-width: 700px)"));
   assert.match(desktop, /\.category-backdrop-chekku\) \.category-section-heading/);
   assert.match(desktop, /\.category-backdrop-cattle\) \.category-section-heading \{ min-height: 310px/);
   assert.match(desktop, /\.category-backdrop-cattle > img \{[^}]*height: 400px/);
 });
 
-test("the supplied green field replaces the sunset and Nammalvar appears before shopping sections", () => {
+test("the supplied green field remains and Nammalvar moves only on mobile with one accessible section", () => {
   const storefront = source("src/components/Storefront.tsx");
   assert.match(storefront, /src="\/images\/editorial\/paddy-field.webp"[^>]*width="1024" height="683" fetchPriority="high"/);
   assert.doesNotMatch(storefront, /fields.webp|Golden fields|Landscape inspiration|hero-landscape/);
@@ -113,12 +115,23 @@ test("the supplied green field replaces the sunset and Nammalvar appears before 
   assert.match(css, /\.hero-backdrop > img \{[^}]*filter: blur\(\.6px\)/);
   assert.doesNotMatch(css, /\.(?:hero|hero-copy) \{[^}]*filter:/);
   const hero = storefront.indexOf('className="hero"');
-  const story = storefront.indexOf("<NammalvarStory ");
+  const desktopStory = storefront.indexOf("{!mobileLayout && nammalvarStory}");
   const shelf = storefront.indexOf('className="category-shelf ');
   const catalogue = storefront.indexOf("<Catalogue ");
   const editorial = storefront.indexOf("<Editorial ");
-  assert.ok(hero >= 0 && hero < story && story < shelf && shelf < catalogue && catalogue < editorial);
+  const mobileStory = storefront.indexOf("{mobileLayout && nammalvarStory}");
+  assert.ok(hero >= 0 && hero < desktopStory && desktopStory < shelf && shelf < catalogue && catalogue < editorial && editorial < mobileStory);
   assert.equal((storefront.match(/<NammalvarStory /g) || []).length, 1);
+  assert.match(storefront, /useSyncExternalStore\(subscribeToMobileLayout, getMobileLayout, getServerLayout\)/);
+  assert.match(storefront, /mobileLayoutQuery = "\(max-width: 700px\)"/);
+  assert.match(storefront, /query\.addEventListener\("change", onChange\)/);
+  assert.match(storefront, /return \(\) => query\.removeEventListener\("change", onChange\)/);
+  assert.match(storefront, /getServerLayout = \(\) => false/);
+  const mobile = css.slice(css.indexOf("@media (max-width: 700px)"));
+  // CSS puts the SSR story last before hydration, avoiding a large mobile layout shift.
+  assert.match(mobile, /\.storefront-main \{ display: flex; flex-direction: column/);
+  assert.match(mobile, /\.storefront-main > \.story-band \{ order: 1/);
+  assert.doesNotMatch(css.slice(0, css.indexOf("@media (max-width: 700px)")), /\.storefront-main/);
   const sections = source("src/components/Editorial.tsx");
   assert.match(sections, /export function NammalvarStory/);
   assert.doesNotMatch(sections.slice(sections.indexOf("export function Editorial")), /story-band|id="our-way"/);
@@ -132,7 +145,8 @@ test("the supplied green field replaces the sunset and Nammalvar appears before 
 
 test("the mobile hero stays sharp and the kolam is anchored to the whole card", () => {
   const storefront = source("src/components/Storefront.tsx");
-  const hero = storefront.slice(storefront.indexOf('<section className="hero"'), storefront.indexOf("<NammalvarStory "));
+  const heroStart = storefront.indexOf('<section className="hero"');
+  const hero = storefront.slice(heroStart, storefront.indexOf("</section>", heroStart));
   const copy = hero.indexOf('<div className="hero-copy">');
   assert.equal((hero.match(/<Kolam className="hero-kolam"/g) || []).length, 1);
   assert.ok(hero.indexOf('<Kolam className="hero-kolam" />') < copy);
@@ -143,8 +157,12 @@ test("the mobile hero stays sharp and the kolam is anchored to the whole card", 
   const mobile = css.slice(css.indexOf("@media (max-width: 700px)"));
   assert.match(mobile, /\.hero-backdrop > img \{[^}]*filter: none/);
   assert.match(mobile, /\.hero-backdrop > img \{[^}]*object-position: 54% top/);
-  assert.match(mobile, /\.hero-copy \{[^}]*padding: 142px/);
+  assert.match(mobile, /\.hero-copy \{[^}]*padding: 108px 24px 24px/);
+  assert.match(mobile, /\.hero-description \{ display: none/);
+  assert.match(mobile, /\.hero \.button \{ margin-top: 8px/);
+  assert.match(mobile, /\.hero-backdrop > img \{[^}]*inset: -60px 0 0/);
   assert.match(mobile, /\.hero-kolam \{[^}]*right: 16px; top: 16px/);
+  assert.doesNotMatch(css.slice(0, css.indexOf("@media (max-width: 700px)")), /\.hero-description \{[^}]*display: none/);
   assert.doesNotMatch(css, /\.(?:hero|hero-copy|hero-description) \{[^}]*filter:/);
 });
 
