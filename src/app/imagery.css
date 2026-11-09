@@ -25,7 +25,8 @@
   /* Related section backgrounds, never product-grid items or a separate gallery. */
   .category-section { position: relative; isolation: isolate; }
   .category-backdrop { position: absolute; inset: -20px -24px; z-index: -1; overflow: hidden; border-radius: 4px; pointer-events: none; user-select: none; }
-  .category-backdrop > img { display: block; position: absolute; inset: -3px; width: calc(100% + 6px); max-width: none; height: calc(100% + 6px); object-fit: cover; object-position: center; filter: blur(1px) saturate(.9); opacity: .86; }
+  /* All desktop scenes fill the whole section, like bilona. Bleed hides softened edges. */
+  .category-backdrop > img { display: block; position: absolute; inset: -9px; width: calc(100% + 18px); max-width: none; height: calc(100% + 18px); object-fit: cover; object-position: center; filter: blur(3px) saturate(.9); opacity: .86; }
   .category-backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #fffdf8ed 0%, #fffdf8a6 34%, #fffdf81a 70%), linear-gradient(0deg, var(--paper), transparent 12%, transparent 88%, var(--paper)); }
   .category-section:has(> .category-backdrop) .category-section-heading { min-height: 210px; }
   .category-section:has(> .category-backdrop) .category-heading-copy { max-width: 510px; }
@@ -35,13 +36,6 @@
 }
 
 @layer responsive {
-  @media (min-width: 701px) {
-    /* Keep the press and cattle above the multi-card rows instead of hiding the subjects. */
-    .category-section:has(> .category-backdrop-chekku) .category-section-heading,
-    .category-section:has(> .category-backdrop-cattle) .category-section-heading { min-height: 310px; }
-    .category-backdrop-chekku > img,
-    .category-backdrop-cattle > img { inset: -3px -3px auto auto; width: 76%; height: 400px; object-position: center 68%; mask-image: linear-gradient(180deg, #000 72%, transparent); }
-  }
   @media (max-width: 700px) {
     .product-media { aspect-ratio: 4 / 3; }
     .product-artwork.detail-image-space { min-height: 240px; height: 240px; }

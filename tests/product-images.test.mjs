@@ -81,7 +81,7 @@ test("heritage images are decorative section backgrounds, never gallery or produ
   assert.doesNotMatch(css, /\.heritage-gallery|\.heritage-studies|\.catalogue-art/);
   assert.match(css, /\.category-section \{[^}]*isolation: isolate/);
   assert.match(css, /\.category-backdrop \{[^}]*position: absolute;[^}]*z-index: -1;[^}]*pointer-events: none/);
-  assert.match(css, /\.category-backdrop > img \{[^}]*filter: blur\(1px\)[^}]*opacity: \.86/);
+  assert.match(css, /\.category-backdrop > img \{[^}]*filter: blur\(3px\)[^}]*opacity: \.86/);
   assert.doesNotMatch(css, /\.(?:category-section|product-grid|category-section-heading|category-heading-copy|product-card) \{[^}]*filter:/);
 });
 
@@ -117,10 +117,17 @@ test("mobile artwork blends beside heading copy without a separate banner or str
   assert.doesNotMatch(mobile, /padding-bottom: \d+%/);
   assert.doesNotMatch(mobile, /--heritage-scene-height|object-fit: cover/);
   assert.doesNotMatch(mobile, /\.category-backdrop > img \{[^}]*height: (?:100%|calc\(100%|\d+px)/);
-  const desktop = css.slice(css.indexOf("@media (min-width: 701px)"), css.indexOf("@media (max-width: 700px)"));
-  assert.match(desktop, /\.category-backdrop-chekku\) \.category-section-heading/);
-  assert.match(desktop, /\.category-backdrop-cattle\) \.category-section-heading \{ min-height: 310px/);
-  assert.match(desktop, /\.category-backdrop-cattle > img \{[^}]*height: 400px/);
+});
+
+test("desktop heritage backgrounds fill every illustrated section with the same soft treatment", () => {
+  const css = source("src/app/imagery.css");
+  const desktop = css.slice(0, css.indexOf("@media (max-width: 700px)"));
+  assert.match(desktop, /\.category-backdrop \{[^}]*inset: -20px -24px/);
+  assert.match(desktop, /\.category-backdrop > img \{[^}]*inset: -9px;[^}]*width: calc\(100% \+ 18px\);[^}]*height: calc\(100% \+ 18px\);[^}]*object-fit: cover;[^}]*filter: blur\(3px\)/);
+  assert.match(desktop, /\.category-section:has\(> \.category-backdrop\) \.category-section-heading \{ min-height: 210px/);
+  // No subject-specific short banners or extra heading gaps on oils/dairy.
+  assert.doesNotMatch(desktop, /\.category-backdrop-(?:chekku|bilona|cattle)[^{]*\{[^}]*(?:width|height|inset|filter|mask-image):/);
+  assert.doesNotMatch(desktop, /mask-image:|height: 400px|width: 76%|min-height: 310px/);
 });
 
 test("the supplied green field remains and Nammalvar moves only on mobile with one accessible section", () => {

@@ -229,12 +229,15 @@ Originals are 2528×1696, resized without cropping to widths 640/1200 and WebP
 quality 83/effort 6. At the owner's direction there is no standalone gallery or
 freestanding artwork: chekku is the wood-oils section background, bilona the
 ghee background, and cow/calf the milk-products background. Absolute decorative
-layers sit outside the product grid, with a light 1px desktop blur, 0.86 opacity
-and a directional cream wash. Chekku and cattle use a 400px-high scene aligned
-right, with 310px of heading space so the product rows do not hide the press or
-animals. Bilona spans its shorter, single-product section.
+layers sit outside the product grid, with a soft 3px desktop blur, 0.86 opacity
+and a directional cream wash. All three landscapes fill their entire section,
+behind both the heading and product rows, matching the owner's preferred bilona
+composition. A 9px image bleed prevents hard blur edges; `object-fit: cover`
+preserves proportions. They share a 210px heading minimum, with no short
+right-aligned banners or extra heading gaps for chekku/cattle.
 Mobile uses separately generated square vignettes, selected by a native
-`picture` source at up to 700px. The desktop landscapes and layout are unchanged.
+`picture` source at up to 700px. This desktop adjustment leaves the mobile
+artwork and layout unchanged.
 The vignette shares the heading's grid cell, tucked to its upper right at
 `min(48vw, 240px)`, rather than filling a banner below the text. Copy uses a
 separate column and the pack-size line spans both columns. The old 54% bottom
