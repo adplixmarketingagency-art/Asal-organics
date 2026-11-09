@@ -46,13 +46,16 @@
     .product-media { aspect-ratio: 4 / 3; }
     .product-artwork.detail-image-space { min-height: 240px; height: 240px; }
     .product-artwork.cart-image-space { height: 86px; }
-    /* Share the heading's grid cell: a natural-ratio scene, not a tall cover crop.
-       Copy reserves room for the subject; only the top is washed for readability. */
+    /* Small mobile-only vignettes blend into the heading, never a banner below it.
+       The shared cell bounds the artwork independently of the product rows. */
     .category-section:has(> .category-backdrop) { display: grid; grid-template-columns: minmax(0, 1fr); }
-    .category-section:has(> .category-backdrop) .category-section-heading { grid-area: 1 / 1; min-height: 0; padding-bottom: 54%; }
-    .category-backdrop { grid-area: 1 / 1; position: relative; inset: auto; align-self: end; margin-inline: -12px; }
-    .category-backdrop > img { position: relative; inset: auto; width: 100%; height: auto; object-fit: contain; object-position: center; filter: blur(.35px) saturate(.95); opacity: 1; mask-image: linear-gradient(180deg, #000 88%, transparent); }
-    .category-backdrop::after { background: linear-gradient(180deg, var(--paper), #fffdf8cc 16%, #fffdf800 45%); }
+    .category-section:has(> .category-backdrop) .category-section-heading { grid-area: 1 / 1; min-height: 194px; padding-bottom: 24px; }
+    .category-section:has(> .category-backdrop) .category-heading-copy { width: 100%; max-width: none; display: grid; grid-template-columns: minmax(0, 1fr) min(36%, 190px); }
+    .category-section:has(> .category-backdrop) .category-heading-copy > * { grid-column: 1; }
+    .category-section:has(> .category-backdrop) .category-pack-sizes { grid-column: 1 / -1; }
+    .category-backdrop { grid-area: 1 / 1; position: relative; inset: auto; align-self: start; justify-self: end; width: min(48vw, 240px); margin: 0 -14px 0 0; mix-blend-mode: multiply; }
+    .category-backdrop > img { position: relative; inset: auto; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; object-position: center; filter: blur(.25px) saturate(.9); opacity: .88; mask-image: radial-gradient(ellipse at center, #000 48%, transparent 72%); }
+    .category-backdrop::after { content: none; }
     .story-photograph > img { height: auto; }
     .story-copy > .story-context { font-size: .6875rem; }
   }

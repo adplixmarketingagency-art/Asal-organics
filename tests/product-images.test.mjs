@@ -85,17 +85,36 @@ test("heritage images are decorative section backgrounds, never gallery or produ
   assert.doesNotMatch(css, /\.(?:category-section|product-grid|category-section-heading|category-heading-copy|product-card) \{[^}]*filter:/);
 });
 
-test("mobile heritage scenes stay recognizable independently of product-grid height", () => {
+test("mobile heritage vignettes are art-directed without downloading desktop scenes", () => {
+  const illustration = source("src/components/HeritageIllustration.tsx");
+  assert.match(illustration, /return <picture className=\{`category-backdrop/);
+  assert.match(illustration, /<source media="\(max-width: 700px\)" srcSet=\{`\$\{path\}-mobile\.webp`\} width="640" height="640"/);
+  assert.match(illustration, /<\/picture>/);
+  for (const asset of ["chekku", "bilona", "cattle"]) {
+    const bytes = readFileSync(new URL(`../public/images/heritage/${asset}-mobile.webp`, import.meta.url));
+    assert.equal(bytes.toString("ascii", 0, 4), "RIFF");
+    assert.equal(bytes.toString("ascii", 8, 12), "WEBP");
+    assert.equal(bytes.readUInt16LE(26) & 0x3fff, 640);
+    assert.equal(bytes.readUInt16LE(28) & 0x3fff, 640);
+    assert.ok(bytes.byteLength < 40_000, `${asset} mobile art exceeds budget`);
+  }
+});
+
+test("mobile artwork blends beside heading copy without a separate banner or stretching", () => {
   const css = source("src/app/imagery.css");
   const mobile = css.slice(css.indexOf("@media (max-width: 700px)"), css.indexOf("@media (prefers-reduced-motion: reduce)"));
   assert.match(mobile, /\.category-section:has\(> \.category-backdrop\) \{[^}]*display: grid/);
-  assert.match(mobile, /\.category-backdrop \{[^}]*grid-area: 1 \/ 1;[^}]*position: relative;[^}]*align-self: end/);
-  assert.match(mobile, /\.category-backdrop > img \{[^}]*width: 100%; height: auto; object-fit: contain/);
-  assert.match(mobile, /\.category-backdrop > img \{[^}]*filter: blur\(\.35px\)[^}]*opacity: 1/);
-  assert.match(mobile, /\.category-backdrop > img \{[^}]*mask-image: linear-gradient/);
-  assert.match(mobile, /\.category-backdrop::after \{[^}]*#fffdf800 45%/);
-  // Artwork and copy share a cell. Proportional space reveals the subject above the cards.
-  assert.match(mobile, /\.category-section-heading \{[^}]*grid-area: 1 \/ 1; min-height: 0; padding-bottom: 54%/);
+  assert.match(mobile, /\.category-backdrop \{[^}]*grid-area: 1 \/ 1;[^}]*position: relative;[^}]*align-self: start; justify-self: end/);
+  assert.match(mobile, /\.category-backdrop \{[^}]*width: min\(48vw, 240px\)[^}]*mix-blend-mode: multiply/);
+  assert.match(mobile, /\.category-backdrop > img \{[^}]*width: 100%; height: auto; aspect-ratio: 1; object-fit: contain/);
+  assert.match(mobile, /\.category-backdrop > img \{[^}]*filter: blur\(\.25px\)[^}]*opacity: \.88/);
+  assert.match(mobile, /\.category-backdrop > img \{[^}]*mask-image: radial-gradient/);
+  assert.match(mobile, /\.category-backdrop::after \{ content: none/);
+  // Art is bounded to the heading, and copy keeps its own readable column.
+  assert.match(mobile, /\.category-section-heading \{[^}]*grid-area: 1 \/ 1; min-height: 194px; padding-bottom: 24px/);
+  assert.match(mobile, /\.category-heading-copy \{[^}]*grid-template-columns: minmax\(0, 1fr\) min\(36%, 190px\)/);
+  assert.match(mobile, /\.category-pack-sizes \{ grid-column: 1 \/ -1/);
+  assert.doesNotMatch(mobile, /padding-bottom: \d+%/);
   assert.doesNotMatch(mobile, /--heritage-scene-height|object-fit: cover/);
   assert.doesNotMatch(mobile, /\.category-backdrop > img \{[^}]*height: (?:100%|calc\(100%|\d+px)/);
   const desktop = css.slice(css.indexOf("@media (min-width: 701px)"), css.indexOf("@media (max-width: 700px)"));

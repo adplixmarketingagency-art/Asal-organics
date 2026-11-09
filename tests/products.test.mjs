@@ -93,7 +93,7 @@ test("removed brand and products cannot return; only reviewed image assets are s
       ...["oils", "wood-oils", "ghee", "masala", "milk", "paneer", "rice", "grain"].map((id) => `images/categories/${id}.webp`),
       "images/editorial/paddy-field.webp", "images/editorial/kitchen-harvest.webp",
       "images/heritage/nammalvar.webp",
-      ...["chekku", "bilona", "cattle"].flatMap((id) => [640, 1200].map((width) => `images/heritage/${id}-${width}.webp`)),
+      ...["chekku", "bilona", "cattle"].flatMap((id) => [640, 1200, "mobile"].map((variant) => `images/heritage/${id}-${variant}.webp`)),
       ...["groundnut", "sesame", "coconut", "turmeric", "curry-masala", "chilli-powder", "coriander-powder", "ragi", "bajra", "bilona-ghee", "bilona-butter", "palkova", "karuppu-kavuni-halwa", "paneer", "karuppu-kavuni", "mapillai-samba", "seera-samba"].flatMap((id) => [240, 800].map((width) => `images/products/${id}-${width}.webp`)),
     ].sort());
 });

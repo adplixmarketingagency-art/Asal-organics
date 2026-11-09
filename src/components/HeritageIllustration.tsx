@@ -1,6 +1,7 @@
 export function HeritageIllustration({ subject }: { subject: "chekku" | "bilona" | "cattle" }) {
   const path = `/images/heritage/${subject}`;
-  return <div className={`category-backdrop category-backdrop-${subject}`} aria-hidden="true">
+  return <picture className={`category-backdrop category-backdrop-${subject}`} aria-hidden="true">
+    <source media="(max-width: 700px)" srcSet={`${path}-mobile.webp`} width="640" height="640" />
     <img
       src={`${path}-640.webp`}
       srcSet={`${path}-640.webp 640w, ${path}-1200.webp 1200w`}
@@ -9,5 +10,5 @@ export function HeritageIllustration({ subject }: { subject: "chekku" | "bilona"
       loading="lazy" decoding="async"
       alt=""
     />
-  </div>;
+  </picture>;
 }

@@ -233,19 +233,40 @@ layers sit outside the product grid, with a light 1px desktop blur, 0.86 opacity
 and a directional cream wash. Chekku and cattle use a 400px-high scene aligned
 right, with 310px of heading space so the product rows do not hide the press or
 animals. Bilona spans its shorter, single-product section.
-Mobile retains the landscape's natural aspect ratio (`width: 100%; height: auto;
-object-fit: contain`) instead of a fixed-height cover crop. The decorative layer
-shares a grid cell with the category heading, aligned to its bottom; proportional
-54% heading padding reveals the complete subject immediately above the cards.
-It stays a section background, never a gallery or a product-grid item.
-Mobile art uses only 0.35px blur and full opacity. The readability wash fades
-out at 45% of the image, leaving the lower scene clear, with a soft bottom edge.
+Mobile uses separately generated square vignettes, selected by a native
+`picture` source at up to 700px. The desktop landscapes and layout are unchanged.
+The vignette shares the heading's grid cell, tucked to its upper right at
+`min(48vw, 240px)`, rather than filling a banner below the text. Copy uses a
+separate column and the pack-size line spans both columns. The old 54% bottom
+padding is removed; headings use a compact 194px minimum with 24px bottom padding.
+Images preserve their square aspect ratio with `height: auto` and `object-fit:
+contain`, independent of product-grid height. A soft radial edge, multiply blend,
+0.25px blur and 0.88 opacity merge the paper into the section without rectangular
+edges. It stays a section background, never a gallery or a product-grid item.
 Only background images are softened; product cards, headings, prices and
 controls remain sharp. Background wrappers clip artwork, not controls or focus
-rings. Existing responsive WebP assets are reused; no new images were generated.
+rings.
 Decorative images have empty alt text and an aria-hidden wrapper, with no
 captions. The generated provenance remains in this record and on `/credits`,
 not as labels on the shopping surfaces.
+
+#### Mobile vignettes — Gemini, November 9, 2026
+
+Generated through Gemini in the owner's Chrome at their request, in one
+conversation for a consistent style. Original PNGs are 2048×2048; output files
+are 640×640 WebP, quality 84/effort 6, each under 40KB. No crop or distortion.
+
+| Output in `public/images/heritage/` | Original Gemini filename | Subject |
+| --- | --- | --- |
+| `bilona-mobile.webp` | `Gemini_Generated_Image_3sxen73sxen73sxe.png` | Terracotta churn, wooden spindle and brass ghee bowl |
+| `chekku-mobile.webp` | `Gemini_Generated_Image_s9j6sqs9j6sqs9j6.png` | Compact wooden press, oil bowl and sesame |
+| `cattle-mobile.webp` | `Gemini_Generated_Image_c6rmdfc6rmdfc6rm.png` | White zebu cow with a light-brown calf |
+
+Shared prompt direction: square isolated watercolor-and-ink editorial vignette,
+warm ivory `#fffdf8` paper, central subject occupying 65–70%, generous blank edges,
+muted olive, terracotta and gold, soft ground shadow, recognizable at 140–150px.
+No room, landscape, frame, lettering, logo or UI. These are decorative
+illustrations, not evidence of the store's facilities, animals or production.
 
 ### Nammalvar photograph — CC BY-SA 3.0
 
