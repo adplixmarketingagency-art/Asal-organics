@@ -18,11 +18,19 @@ No visitor requests are made to Google's font service.
 ## Wordmark and opening animation
 
 `BrandWordmark.tsx` shares the Tamil அசல் logo across the header, footer, about
-dialog, cart/checkout and page intro. Its vector paths are outlines of the bundled
-Noto Sans Tamil at weight 600 (SIL OFL). The final ல் keeps its original letter
-shape; only its pulli/dot is replaced by a pointed oil-drop shape. The artwork is
+dialog, product pages, cart/checkout and page intro. Its custom vector paths live
+in `src/content/brand-artwork.ts`: fuller bowls, tapered joins, a scooped crown,
+cut terminals and a fine closing stroke. The final ல் uses a pointed oil-drop
+pulli in the original position. The artwork is
 independent of font loading, retains an accessible Tamil label and has no raster
 scaling. It is not a new registration or certification claim.
+
+Run `node --experimental-strip-types scripts/generate-brand-assets.mjs` to
+regenerate the logo, social preview and icons from this same source.
+This includes both the public icon URLs and Next's file-based `app/icon.png`
+and `app/apple-icon.png`, so automatic metadata cannot serve the old mark.
+The wordmark uses the existing forest green with warm-gold details; the footer
+uses a lighter gold for contrast. Small icons retain the oil-drop device.
 
 `BrandIntro.tsx` mounts once per full page load in the root layout: a white
 background and centred wordmark. One warm-gold drop falls vertically from above
@@ -213,8 +221,9 @@ the artwork from Asal's facilities, cattle or actual production processes.
 - Output: `public/images/heritage/nammalvar.webp`, 778×434, WebP quality 86.
   Converted from JPEG, not cropped or retouched; this derivative remains
   available under **CC BY-SA 3.0**. No additional restrictions are imposed.
-- Visible caption credits the author, links the original and licence, and states
-  the encoding change. The complete image remains visible at all viewport sizes.
+- The caption now shows only Nammalvar's name and dates. Attribution, source,
+  licence and encoding details live on `/credits`, linked from the storefront
+  footer. The complete image remains visible at all viewport sizes.
 
 G. Nammalvar (1938–2013) is presented in a neutral editorial remembrance of his
 natural-farming advocacy. No quote, commercial endorsement or affiliation is

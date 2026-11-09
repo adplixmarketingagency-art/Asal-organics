@@ -161,7 +161,7 @@ test("wood-pressed order creation uses canonical pack prices without conflating 
 });
 
 test("create revalidates customers and unpurchasable or empty bags", async () => {
-  for (const body of [{ ...checkout, customer: {} }, { ...checkout, items: [] }, { ...checkout, items: [{ productId: "ragi", quantity: 1 }] }]) {
+  for (const body of [{ ...checkout, customer: {} }, { ...checkout, items: [] }, { ...checkout, items: [{ productId: "ragi", variantId: "ragi:100g", quantity: 1 }] }]) {
     const api = fixture();
     assert.equal((await api.createOrder(request(body))).status, 422);
     assert.deepEqual(api.calls, []);

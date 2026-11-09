@@ -57,7 +57,7 @@ test("visible AI-image labels are absent across all shopping surfaces", () => {
   assert.doesNotMatch(css, /product-artwork-caption|image-disclosure|catalogue-art figcaption span/);
   // The owner's visual cleanup must not remove buying guidance.
   const catalogue = source("src/components/Catalogue.tsx");
-  assert.match(catalogue, /Ragi and Bajra prices are pending/);
+  assert.doesNotMatch(catalogue, /Ragi and Bajra prices are pending/);
   assert.match(catalogue, /Real payments and delivery orders are not yet available/);
 });
 
@@ -81,9 +81,12 @@ test("heritage images are scattered in relevant categories, not a separate galle
 
 test("heritage assets preserve full subjects and credit the real photograph", () => {
   const editorial = source("src/components/Editorial.tsx");
-  assert.match(editorial, /Voiceoftamil \/ Wikimedia Commons/);
-  assert.match(editorial, /creativecommons.org\/licenses\/by-sa\/3.0/);
-  assert.match(editorial, /Converted to WebP; uncropped/);
+  const credits = source("src/app/credits/page.tsx");
+  assert.doesNotMatch(editorial, /Photo:|Voiceoftamil|CC BY-SA|Converted to WebP/);
+  assert.match(credits, /Voiceoftamil \/ Wikimedia Commons/);
+  assert.match(credits, /creativecommons.org\/licenses\/by-sa\/3.0/);
+  assert.match(credits, /Converted to WebP; uncropped/);
+  assert.match(source("src/components/Storefront.tsx"), /href="\/credits">Image credits<\/a>/);
   assert.match(editorial, /not an endorsement or affiliation/);
   for (const asset of ["chekku", "bilona", "cattle"]) {
     for (const width of [640, 1200]) {

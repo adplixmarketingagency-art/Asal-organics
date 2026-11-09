@@ -79,10 +79,20 @@ test("checkout API rejects invalid content, JSON, sizes and details", async () =
 });
 
 
-test("server rejects retired and missing-unit products even with a forged size", () => {
-  for (const productId of ["sunflower", "almond", "castor", "ragi", "bajra"]) {
+test("server rejects retired products even with a forged size", () => {
+  for (const productId of ["sunflower", "almond", "castor"]) {
     assert.equal(prepareCheckoutReview({ customer, items: [{ productId, quantity: 1, size: "1 kg" }] }).ok, false);
   }
+});
+
+test("review prices confirmed grain packs on the server, ignoring forged prices", () => {
+  const result = prepareCheckoutReview({ customer, items: [
+    { productId: "ragi", variantId: "ragi:500g", quantity: 2, price: 1 },
+    { productId: "bajra", variantId: "bajra:500g", quantity: 1, price: 1 },
+  ] });
+  assert.equal(result.ok, true);
+  assert.equal(result.review.summary.subtotalPaise, 13300);
+  assert.deepEqual(result.review.summary.lines.map(({ variant }) => variant.size), ["500 g", "500 g"]);
 });
 
 test("review accepts distinct packs, uses server prices and returns canonical variants", () => {

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
+import { brandLetterPaths, brandFlourishPath, oilDropPath } from "../src/content/brand-artwork.ts";
 
 const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
@@ -9,11 +10,36 @@ test("shared Tamil wordmark uses vector lettering and an oil-drop pulli on every
   assert.match(wordmark, /aria-label="அசல்" lang="ta"/);
   assert.match(wordmark, /className="brand-oil-drop"/);
   assert.match(wordmark, /viewBox="0 0 3040 1110"/);
+  assert.match(wordmark, /brandLetterPaths\.map/);
+  assert.match(wordmark, /d=\{brandFlourishPath\}/);
   assert.doesNotMatch(wordmark, /<image|<script|https?:\/\//);
   for (const component of ["Storefront", "StorefrontDialogs", "CommerceLayout"]) {
     assert.match(source(`src/components/${component}.tsx`), /<BrandWordmark \/>/, component);
   }
   assert.match(source("src/components/BrandIntro.tsx"), /<BrandWordmark animateDrop \/>/);
+});
+
+test("custom artwork and raster generator share the same lettering and stable oil-drop anchor", () => {
+  assert.equal(brandLetterPaths.length, 3);
+  for (const path of [...brandLetterPaths, brandFlourishPath, oilDropPath]) {
+    assert.match(path, /^M[\d. ]+[CLHVZ\d.,\sM-]+Z$/);
+  }
+  assert.match(oilDropPath, /^M2461 10/);
+  assert.match(source("scripts/generate-brand-assets.mjs"), /import \{ brandLetterPaths, brandFlourishPath, oilDropPath \} from "\.\.\/src\/content\/brand-artwork.ts"/);
+  assert.doesNotMatch(source("src/content/brand-artwork.ts"), /<text|font-family|https?:\/\//);
+});
+
+test("file-based Next icons stay in sync with the generated brand assets", () => {
+  const apple = readFileSync(new URL("../src/app/apple-icon.png", import.meta.url));
+  const publicApple = readFileSync(new URL("../public/apple-touch-icon.png", import.meta.url));
+  assert.deepEqual(apple, publicApple);
+  for (const [path, size] of [["src/app/icon.png", 512], ["src/app/apple-icon.png", 180]]) {
+    const icon = readFileSync(new URL(`../${path}`, import.meta.url));
+    assert.equal(icon.subarray(1, 4).toString(), "PNG");
+    assert.equal(icon.readUInt32BE(16), size);
+    assert.equal(icon.readUInt32BE(20), size);
+    assert.ok(source("scripts/generate-brand-assets.mjs").includes(`["${path}", ${size}]`));
+  }
 });
 
 test("intro drop falls from above the viewport into the final Tamil pulli without drifting below the wordmark", () => {

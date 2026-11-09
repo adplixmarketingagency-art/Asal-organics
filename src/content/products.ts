@@ -34,8 +34,8 @@ export type Product = {
 
 // Transcribed from the owner's two handwritten lists, November 2026.
 // Selling prices only: exclude production costs and crossed-out entries.
-// The later size list does not tie the old grain prices to a specific pack.
-// Keep those grain prices unassigned until the base quantity is confirmed.
+// The owner confirmed Ragi at ₹95/kg and Bajra at ₹73/kg on November 9,
+// including 500 g packs under the existing whole-rupee rounding rule.
 // On November 5, the owner also requested all three oils as wood-pressed
 // products. Keep distinct IDs and use the same listed prices and pack sizes.
 export const products: Product[] = [
@@ -49,8 +49,8 @@ export const products: Product[] = [
   { id: "curry-masala", name: "South Indian All Purpose Curry Masala", tamilName: "தென்னிந்திய பல்வகை குழம்பு மசாலா", size: "1 kg", price: 478, category: "masala" },
   { id: "chilli-powder", name: "Chilli Powder", tamilName: "மிளகாய்த் தூள்", size: "1 kg", price: 560, category: "masala" },
   { id: "coriander-powder", name: "Coriander Powder", tamilName: "மல்லித் தூள்", size: "1 kg", price: 410, category: "masala" },
-  { id: "ragi", name: "Ragi", tamilName: "கேழ்வரகு மாவு", size: null, price: 95, category: "grain" },
-  { id: "bajra", name: "Bajra", tamilName: "கம்பு மாவு", size: null, price: 73, category: "grain" },
+  { id: "ragi", name: "Ragi", tamilName: "கேழ்வரகு மாவு", size: "1 kg", price: 95, category: "grain" },
+  { id: "bajra", name: "Bajra", tamilName: "கம்பு மாவு", size: "1 kg", price: 73, category: "grain" },
   { id: "bilona-ghee", name: "Bilona Ghee", tamilName: "பிலோனா நெய்", size: "1 Litre", price: 1930, category: "ghee" },
   { id: "bilona-butter", name: "Bilona Butter", tamilName: "பிலோனா வெண்ணெய்", size: "1 kg", price: 1820, category: "milk" },
   { id: "palkova", name: "Palkova", tamilName: "பால்கோவா", size: "1 kg", price: 650, category: "milk" },

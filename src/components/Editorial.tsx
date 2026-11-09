@@ -4,7 +4,7 @@ import { KolamDivider } from "./Kolam";
 const faqs = [
   { question: "What can I find in the collection?", answer: "Browse cold-pressed and wood-pressed oils, ghee, masala and grain flours, milk products, paneer, and traditional rice varieties. Each product shows its available packs and prices." },
   { question: "Which pack sizes are listed?", answer: "Oils: 500 ml, 1, 2 and 5 litres. Ghee: 200 ml, 500 ml and 1 litre. Masala: 100 g, 250 g, 500 g and 1 kg. Milk products and paneer: 200 g, 500 g and 1 kg. Rice, Ragi and Bajra: 500 g and 1 kg. Product details show which pack has a confirmed price." },
-  { question: "How are different pack sizes priced?", answer: "Pack prices are proportional to the listed litre or kilogram price and rounded up to a whole rupee. Choose a pack on the product card or in its details. Ragi and Bajra remain unavailable until their base pricing quantities are confirmed." },
+  { question: "How are different pack sizes priced?", answer: "Pack prices are proportional to the listed litre or kilogram price and rounded up to a whole rupee. Ragi is ₹95 per kg (₹48 for 500 g); Bajra is ₹73 per kg (₹37 for 500 g). Choose your pack on the product card or in its details." },
   { question: "Can I place an order on this website?", answer: "You can prepare your bag and review delivery details at checkout. Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing. Delivery availability, charges and tax settings still need to be confirmed." },
 ];
 
@@ -16,7 +16,6 @@ export function Editorial({ onGuide }: { onGuide: () => void }) {
           <img src="/images/heritage/nammalvar.webp" alt="G. Nammalvar holding a wooden plough in a field" width="778" height="434" loading="lazy" decoding="async" />
           <figcaption>
             <strong>G. Nammalvar · 1938–2013</strong>
-            <span>Photo: <a href="https://commons.wikimedia.org/wiki/File:Nammalvar.G.jpg" target="_blank" rel="noreferrer">Voiceoftamil / Wikimedia Commons</a> · <a href="https://creativecommons.org/licenses/by-sa/3.0" target="_blank" rel="noreferrer">CC BY-SA 3.0</a>. Converted to WebP; uncropped.</span>
           </figcaption>
         </figure>
         <div className="story-copy">

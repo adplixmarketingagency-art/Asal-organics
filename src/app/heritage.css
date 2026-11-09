@@ -17,6 +17,8 @@
   .kolam { display: block; object-fit: contain; flex: 0 0 auto; pointer-events: none; user-select: none; }
   .brand-word-tamil { font-family: var(--font-tamil), "Tamil Sangam MN", sans-serif; font-weight: 600; letter-spacing: -2px; line-height: 1.2; }
   .brand-lettering { display: block; width: 2.98em; height: auto; overflow: visible; }
+  .brand-oil-drop, .brand-flourish { fill: var(--brand-accent, #a47b31); }
+  .footer-brand-mark { --brand-accent: #c9ae70; }
   .brand-word > .brand-registration { top: .55em; }
   .brand-intro { position: fixed; inset: 0; z-index: 180; display: grid; place-items: center; background: #fff; color: var(--green); pointer-events: none; animation: intro-dismiss 1.4s ease-in forwards; }
   .brand-intro-lockup { --intro-word-size: clamp(4.5rem, 17vw, 5.5rem); position: relative; }

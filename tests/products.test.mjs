@@ -14,7 +14,7 @@ const expected = [
   ["curry-masala", "South Indian All Purpose Curry Masala", 478, "1 kg", "masala"],
   ["chilli-powder", "Chilli Powder", 560, "1 kg", "masala"],
   ["coriander-powder", "Coriander Powder", 410, "1 kg", "masala"],
-  ["ragi", "Ragi", 95, null, "grain"], ["bajra", "Bajra", 73, null, "grain"],
+  ["ragi", "Ragi", 95, "1 kg", "grain"], ["bajra", "Bajra", 73, "1 kg", "grain"],
   ["bilona-ghee", "Bilona Ghee", 1930, "1 Litre", "ghee"],
   ["bilona-butter", "Bilona Butter", 1820, "1 kg", "milk"],
   ["palkova", "Palkova", 650, "1 kg", "milk"],
@@ -39,13 +39,16 @@ test("the owner-confirmed categories keep cold-pressed and wood-pressed oils sep
   assert.equal(productCategories.find(({ id }) => id === "wood-oils").tamilLabel, "மரச்செக்கு எண்ணெய்");
 });
 
-test("grain pack sizes do not invent a price-to-size mapping", () => {
+test("Ragi and Bajra use the owner's confirmed kilogram prices and offer 500 g packs", () => {
   for (const product of products.filter(({ category }) => category === "grain")) {
     assert.deepEqual(productPackSizes(product), ["500 g", "1 kg"]);
-    assert.equal(quantityLabel(product), "Pack price to be confirmed");
-    assert.equal(canAddToBag(product), false);
+    assert.equal(quantityLabel(product), "1 kg");
+    assert.equal(canAddToBag(product), true);
+    assert.equal(getProductVariant(product.id).price, product.price);
   }
-  assert.equal(products.filter(canAddToBag).length, 18);
+  assert.equal(getProductVariant("ragi", "ragi:500g").price, 48);
+  assert.equal(getProductVariant("bajra", "bajra:500g").price, 37);
+  assert.equal(products.filter(canAddToBag).length, 20);
 });
 
 test("search handles names, Tamil names and categories without hiding higher prices", () => {
@@ -210,11 +213,8 @@ test("wood-pressed oils mirror the corresponding cold-pressed packs without reus
   assert.doesNotMatch(source, /Product details are being confirmed|preparation is verified/);
 });
 
-test("unpriced grain and dimension-mismatched packs cannot gain variants", () => {
-  for (const product of products.filter(({ category }) => category === "grain")) {
-    assert.deepEqual(productVariantsFor(product), []);
-    assert.equal(getProductVariant(product.id), undefined);
-  }
+test("missing-base and dimension-mismatched packs cannot gain variants", () => {
+  assert.deepEqual(productVariantsFor({ ...products[0], size: null }), []);
   assert.deepEqual(productVariantsFor({ ...products[0], size: "1 kg" }), []);
   for (const price of [0, -1, NaN, Infinity, 1.2]) {
     assert.deepEqual(productVariantsFor({ ...products[0], price }), []);
