@@ -13,7 +13,7 @@ const vector = (body, width, height) => Buffer.from(
   `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${body}</svg>`,
 );
 const lettering = (x, y, width, ink, accent) =>
-  `<svg x="${x}" y="${y}" width="${width}" height="${width * 1110 / 3040}" viewBox="0 0 3040 1110"><g fill="${ink}">${brandLetterPaths.map((d) => `<path d="${d}"/>`).join("")}</g><g fill="${accent}"><path d="${oilDropPath}"/><path d="${brandFlourishPath}"/></g></svg>`;
+  `<svg x="${x}" y="${y}" width="${width}" height="${width * 1240 / 3040}" viewBox="0 0 3040 1240"><g fill="${ink}">${brandLetterPaths.map((d) => `<path d="${d}"/>`).join("")}</g><g fill="${accent}"><path d="${oilDropPath}"/><path d="${brandFlourishPath}"/></g></svg>`;
 
 async function textOverlay(text, font, file, size, color, top, canvasWidth) {
   const { data, info } = await sharp({ text: {

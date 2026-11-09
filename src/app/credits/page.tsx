@@ -25,6 +25,14 @@ export default function CreditsPage() {
         <p>Converted to WebP; uncropped. The photograph remains available under the same licence. Its use does not imply endorsement or affiliation.</p>
         <a className="text-link" href="/images/heritage/nammalvar.webp">View the photograph</a>
       </section>
+      <section aria-labelledby="landscape-credit">
+        <h2 id="landscape-credit">Paddy-field photograph</h2>
+        <p>The green paddy-field photograph was supplied by the site owner for this website and converted to WebP. It is used as an editorial landscape, not as a claim about farm ownership or product sourcing.</p>
+      </section>
+      <section aria-labelledby="heritage-credit">
+        <h2 id="heritage-credit">Heritage artwork</h2>
+        <p>The wooden press, bilona churn, and cow-and-calf backgrounds are AI-generated editorial illustrations. They are not photographs of Asal’s facilities, cattle, or production processes.</p>
+      </section>
     </main>
   </div>;
 }

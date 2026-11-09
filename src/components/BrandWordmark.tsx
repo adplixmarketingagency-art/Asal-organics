@@ -4,7 +4,7 @@ import { brandFlourishPath, brandLetterPaths, oilDropPath } from "@/content/bran
 export function BrandWordmark({ animateDrop = false }: { animateDrop?: boolean } = {}) {
   return <>
     <span className="brand-word brand-word-tamil" role="img" aria-label="அசல்" lang="ta">
-      <svg className="brand-lettering" viewBox="0 0 3040 1110" aria-hidden="true" focusable="false" fill="currentColor">
+      <svg className="brand-lettering" viewBox="0 0 3040 1240" aria-hidden="true" focusable="false" fill="currentColor">
         {brandLetterPaths.map((path, index) => <path key={index} d={path} />)}
         <path className="brand-flourish" d={brandFlourishPath} />
         <path className="brand-oil-drop" d={oilDropPath} />

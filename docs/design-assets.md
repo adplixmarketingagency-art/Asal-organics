@@ -20,7 +20,12 @@ No visitor requests are made to Google's font service.
 `BrandWordmark.tsx` shares the Tamil அசல் logo across the header, footer, about
 dialog, product pages, cart/checkout and page intro. Its custom vector paths live
 in `src/content/brand-artwork.ts`: fuller bowls, tapered joins, a scooped crown,
-cut terminals and a fine closing stroke. The final ல் uses a pointed oil-drop
+cut terminals and a full-width tapered gold curve beneath all three letters.
+The ச and ல are enlarged vertically to share அ's optical baseline, rather
+than sitting smaller and higher. The curved underline starts at அ's left edge
+and finishes at ல்'s right edge, with clear space beneath the lettering.
+The taller 3040×1240 canvas prevents clipping, and the intro drop's proportional
+bounds are updated with it. The final ல் uses a pointed oil-drop
 pulli in the original position. The artwork is
 independent of font loading, retains an accessible Tamil label and has no raster
 scaling. It is not a new registration or certification claim.
@@ -46,17 +51,27 @@ animation, not a real progress indicator or payment/loading gate.
 
 ## Editorial photographs
 
-Downloaded from Unsplash's image CDN as WebP. They illustrate landscape and
-food culture, not Asal's farm, facilities, products, sourcing or certifications.
+These illustrate landscape and food culture, not Asal's farm, facilities,
+products, sourcing or certifications.
 
-- `public/images/editorial/fields.webp`: golden agricultural landscape at sunset.
-  Source: `https://images.unsplash.com/photo-1500382017468-9049fed747ef`
-- `public/images/editorial/kitchen-harvest.webp`: market vegetable baskets.
+- `public/images/editorial/paddy-field.webp`: the green paddy-field photo supplied
+  by the owner on November 9, 2026 (`codex-clipboard-19054a9c-4e42-4685-8fdc-57e4279a42dd.png`).
+  Converted to WebP quality 85/effort 6, 1024×683, without cropping the stored
+  image. The photograph covers the entire hero card as a decorative background,
+  not a separate right-hand image panel. It has a 3px blur, reduced saturation
+  and a continuous translucent cream overlay behind sharp text and controls.
+  The responsive cover crop is centred on the coconut palms, with a stronger
+  readability overlay on mobile. Its wrapper is aria-hidden with empty alt.
+  This replaces the previous Unsplash sunset image, which has been removed.
+  Original photographer, location and licence were not supplied; no authorship,
+  licence or ownership claim is added. Provenance is recorded on `/credits`.
+- `public/images/editorial/kitchen-harvest.webp`: unused legacy market vegetable
+  baskets, downloaded from Unsplash's image CDN.
   Source: `https://images.unsplash.com/photo-1464226184884-fa280b87c399`
 - Licence reference: `https://unsplash.com/license`
 
-Replace these with owner-supplied lifestyle photographs when available. Do not
-use them on product cards or imply that the vegetables are in the catalogue.
+Do not use editorial landscapes on product cards or imply that the legacy
+vegetable photograph depicts products in the catalogue.
 
 ## Category photographs
 
@@ -203,13 +218,16 @@ Use owner-supplied product photography to replace these when available.
 Prompt direction: fine gouache/coloured-pencil editorial illustration, landscape
 3:2, ivory, forest green and ochre, quiet rural composition; no logo or text.
 Originals are 2528×1696, resized without cropping to widths 640/1200 and WebP
-quality 83/effort 6. At the owner's direction there is no standalone gallery:
-chekku sits beside the wood-oils heading, bilona beside the ghee product, and
-cow/calf artwork occupies the breathing room near dairy products. These small,
-varied placements use full images, not background crops. Captions name only the
-subject; AI-illustration labels and the catalogue image disclosure are removed
-at the owner's request. Image alt text and this provenance record distinguish
-the artwork from Asal's facilities, cattle or actual production processes.
+quality 83/effort 6. At the owner's direction there is no standalone gallery or
+freestanding artwork: chekku is the wood-oils section background, bilona the
+ghee background, and cow/calf the milk-products background. Absolute decorative
+layers sit outside the product grid, with cover crops, a 3px blur, reduced
+saturation and a cream wash. Only the background image is blurred; product
+cards, headings, prices and controls remain sharp. Mobile uses a softer wash
+and clipped background layers without clipping controls or focus rings.
+Decorative images have empty alt text and an aria-hidden wrapper, with no
+captions. The generated provenance remains in this record and on `/credits`,
+not as labels on the shopping surfaces.
 
 ### Nammalvar photograph — CC BY-SA 3.0
 
@@ -224,6 +242,9 @@ the artwork from Asal's facilities, cattle or actual production processes.
 - The caption now shows only Nammalvar's name and dates. Attribution, source,
   licence and encoding details live on `/credits`, linked from the storefront
   footer. The complete image remains visible at all viewport sizes.
+- The remembrance now appears directly after the hero, before category
+  shortcuts and products. The FAQ stays below the catalogue, and the existing
+  `#our-way` navigation still targets the remembrance.
 
 G. Nammalvar (1938–2013) is presented in a neutral editorial remembrance of his
 natural-farming advocacy. No quote, commercial endorsement or affiliation is

@@ -77,15 +77,15 @@ export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCateg
       </div>}
       {selected.length ? <div className="category-sections">
         {groups.map((group) => <section className={`category-section category-section-${group.id}`} key={group.id} aria-labelledby={`category-${group.id}-title`}>
+          {group.id === "wood-oils" && <HeritageIllustration subject="chekku" />}
+          {group.id === "ghee" && <HeritageIllustration subject="bilona" />}
+          {group.id === "milk" && <HeritageIllustration subject="cattle" />}
           <div className="category-section-heading">
             <div className="category-heading-copy"><p className="category-tamil" lang="ta">{group.tamilLabel}</p><h3 id={`category-${group.id}-title`}>{group.label}</h3><p className="category-description">{group.description}</p><p className="category-pack-sizes">Pack sizes: {categoryPackSizes[group.id].join(" · ")}</p></div>
             <span className="category-product-count">{group.products.length} {group.products.length === 1 ? "product" : "products"}</span>
-            {group.id === "wood-oils" && <HeritageIllustration subject="chekku" />}
           </div>
           <div className={`product-grid ${view === "list" ? "list-view" : ""}`}>
             {group.products.map((product) => <ProductCard key={product.id} product={product} saved={saved.includes(product.id)} onSave={() => onSave(product.id)} onExplore={() => onExplore(product)} />)}
-            {group.id === "ghee" && <HeritageIllustration subject="bilona" />}
-            {group.id === "milk" && <HeritageIllustration subject="cattle" />}
           </div>
         </section>)}
       </div> : <div className="empty-state"><Sprout size={36} strokeWidth={1.2} /><h3>{category === "saved" && saved.length === 0 ? "Keep your favourites close." : "Let’s find something else."}</h3><p>{category === "saved" && saved.length === 0 ? "Tap the heart on any product to save it here for later." : "No products match these filters. Try a different search or price."}</p><button className="button button-green" onClick={reset}>Explore all products <ArrowRight size={17} /></button></div>}

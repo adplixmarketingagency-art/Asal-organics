@@ -8,9 +8,8 @@ const faqs = [
   { question: "Can I place an order on this website?", answer: "You can prepare your bag and review delivery details at checkout. Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing. Delivery availability, charges and tax settings still need to be confirmed." },
 ];
 
-export function Editorial({ onGuide }: { onGuide: () => void }) {
-  return <>
-    <section className="story-band" id="our-way">
+export function NammalvarStory({ onGuide }: { onGuide: () => void }) {
+  return <section className="story-band" id="our-way" aria-labelledby="nammalvar-title">
       <div className="story-inner section-wrap">
         <figure className="story-photograph">
           <img src="/images/heritage/nammalvar.webp" alt="G. Nammalvar holding a wooden plough in a field" width="778" height="434" loading="lazy" decoding="async" />
@@ -20,14 +19,18 @@ export function Editorial({ onGuide }: { onGuide: () => void }) {
         </figure>
         <div className="story-copy">
           <p className="eyebrow">REMEMBERING A VOICE FOR THE SOIL</p>
-          <h2>Rooted in the land.<br /><em>Remembered at the table.</em></h2>
+          <h2 id="nammalvar-title">Rooted in the land.<br /><em>Remembered at the table.</em></h2>
           <p>G. Nammalvar was a Tamil natural-farming advocate who encouraged a closer relationship with the soil. We remember his contribution here as part of Tamil Nadu’s farming heritage.</p>
           <p className="story-tamil" lang="ta">அன்றாட உணவில், நம் பாரம்பரியம்.</p>
           <button className="text-link" onClick={onGuide}>Get to know the collection <ArrowUpRight size={19} /></button>
           <p className="story-context">An editorial remembrance, not an endorsement or affiliation.</p>
         </div>
       </div>
-    </section>
+    </section>;
+}
+
+export function Editorial() {
+  return <>
     <KolamDivider className="editorial-divider" />
     <section className="faq-section section-wrap" id="questions">
       <div className="faq-intro"><p className="eyebrow">A LITTLE CLARITY</p><h2>Good questions.<br />Simple answers.</h2><span className="faq-leaf" aria-hidden="true"><Leaf size={54} strokeWidth={1} /></span></div>

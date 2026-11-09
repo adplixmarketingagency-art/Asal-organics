@@ -8,7 +8,7 @@ import { ArrowDown, ArrowRight, ArrowUpRight, Check, ChevronRight, Droplets, Hea
 import { products, productCategories, type Category, type Product } from "@/content/products";
 import { categoryImages } from "@/content/category-images";
 import { Catalogue } from "./Catalogue";
-import { Editorial } from "./Editorial";
+import { Editorial, NammalvarStory } from "./Editorial";
 import { StorefrontDialogs, type DialogState } from "./StorefrontDialogs";
 import { useCart } from "./CartProvider";
 import { Kolam, KolamDivider } from "./Kolam";
@@ -70,10 +70,11 @@ export default function Storefront({ initialCategory = "all" }: { initialCategor
     <main id="main">
       <div className="section-wrap"><nav className="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><ChevronRight size={12} /><span aria-current="page">{isWoodOilsPage ? "Wood-pressed Oils" : "Our products"}</span></nav>
         <section className="hero" aria-labelledby="hero-title">
+          <div className="hero-backdrop" aria-hidden="true"><img src="/images/editorial/paddy-field.webp" alt="" width="1024" height="683" fetchPriority="high" /></div>
           <div className="hero-copy"><Kolam className="hero-kolam" /><p className="eyebrow">{isWoodOilsPage ? siteName : "FROM OUR PANTRY TO YOURS"}</p><p className="hero-tamil" lang="ta">அசல் இயற்கை அங்காடி</p><h1 id="hero-title">{isWoodOilsPage ? <>Wood-pressed oils.<br /><em>Rooted in tradition.</em></> : <>Asal Iyarkai<br /><em>Angadi.</em></>}</h1><p className="hero-description">{isWoodOilsPage ? "Wood-pressed groundnut, sesame and coconut oils, prepared using a wooden press. Explore listed prices and packs from 500 ml to 5 litres." : "Asal Iyarkai Angadi (Asaliyarkaiangadi) brings together cold-pressed and wood-pressed oils, ghee, masala and traditional rice. Everyday essentials with a little taste of home."}</p><a href="#collection" className="button button-green" onClick={() => setCategory(initialCategory)}>Explore the collection <ArrowDown size={17} /></a><div className="hero-footnote"><span className="small-leaf"><Leaf size={16} strokeWidth={1.4} /></span><span>Simple ingredients. Familiar rituals.</span></div></div>
-          <figure className="hero-landscape"><img src="/images/editorial/fields.webp" alt="Golden fields in the soft light of the setting sun" width="1400" height="788" fetchPriority="high" /><figcaption>Rooted in the everyday.<span>Landscape inspiration</span></figcaption></figure>
         </section>
       </div>
+      <NammalvarStory onGuide={guide} />
       <section className="category-shelf section-wrap" aria-labelledby="categories-title">
         <div className="category-shelf-heading"><h2 id="categories-title">Shop by category</h2><p>Find your everyday favourites.</p></div>
         <nav className="category-shortcuts" aria-label="Shop by category">
@@ -89,7 +90,7 @@ export default function Storefront({ initialCategory = "all" }: { initialCategor
       <div className="qualities section-wrap"><div><Sprout /><span>Cold-pressed oils</span></div><span className="quality-divider" /><div><Droplets /><span>Traditional rice varieties</span></div><span className="quality-divider" /><div><Sun /><span>Everyday kitchen essentials</span></div><span className="quality-divider" /><div><Heart /><span>Goodness, kept simple</span></div></div>
       <KolamDivider className="collection-divider" />
       <Catalogue saved={saved} onSave={toggleSaved} onExplore={explore} onGuide={guide} category={category} onCategory={setCategory} />
-      <Editorial onGuide={guide} />
+      <Editorial />
     </main>
     <footer className="site-footer"><div className="footer-inner section-wrap"><div className="footer-brand"><a href="/" className="brand footer-brand-mark" aria-label={`${siteName} home`}><BrandWordmark /></a><p>{siteName}<br />Nature, uncomplicated.</p><span className="footer-leaf"><Leaf size={17} /> Back to what’s real.</span></div><div className="footer-links"><h3>Find your goodness</h3>{productCategories.map(({ id, label }) => id === "wood-oils" ? <a key={id} href={woodOilsPath}>{label}</a> : <button key={id} onClick={() => goToCollection(id)}>{label}</button>)}</div><div className="footer-links"><h3>A little about us</h3><a href="#our-way">The Asal way</a><a href="#questions">Good to know</a><button onClick={() => setDialog({ type: "about" })}>About this store</button><button onClick={() => setDialog({ type: "ordering" })}>Ordering & delivery</button><a href="/credits">Image credits</a></div><div className="footer-signoff"><Kolam /><p>Good food.<br />Simple rituals.<br /><em>A little more real.</em></p></div></div><div className="footer-bottom section-wrap"><span>© 2026 {siteName}. A fresh beginning.</span><span>Thoughtfully designed. Rooted in nature.</span><span className="preview-tag"><span />Store preview</span><span className="footer-credit">Powered by <strong>Adplix Media</strong><img src="/adplix.svg" alt="" width="18" height="18" /></span></div></footer>
     <div className="sr-only" aria-live="polite">{announcement}</div>

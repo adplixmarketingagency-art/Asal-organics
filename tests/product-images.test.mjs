@@ -61,22 +61,56 @@ test("visible AI-image labels are absent across all shopping surfaces", () => {
   assert.match(catalogue, /Real payments and delivery orders are not yet available/);
 });
 
-test("heritage images are scattered in relevant categories, not a separate gallery", () => {
+test("heritage images are decorative section backgrounds, never gallery or product-grid items", () => {
   const catalogue = source("src/components/Catalogue.tsx");
   const illustration = source("src/components/HeritageIllustration.tsx");
   assert.match(catalogue, /group.id === "wood-oils" && <HeritageIllustration subject="chekku"/);
   assert.match(catalogue, /group.id === "ghee" && <HeritageIllustration subject="bilona"/);
   assert.match(catalogue, /group.id === "milk" && <HeritageIllustration subject="cattle"/);
-  assert.match(illustration, /AI-generated heritage artwork/);
-  assert.match(illustration, /<figcaption>\{label\}<\/figcaption>/);
-  assert.doesNotMatch(illustration, /<span>AI illustration/);
+  assert.match(illustration, /className=\{`category-backdrop category-backdrop-\$\{subject\}`\} aria-hidden="true"/);
+  assert.match(illustration, /alt=""/);
+  assert.doesNotMatch(illustration, /figcaption|<figure|AI illustration|label:/);
   assert.match(illustration, /loading="lazy"/);
   assert.match(illustration, /width="2528" height="1696"/);
+  const section = catalogue.slice(catalogue.indexOf('className={`category-section category-section-'));
+  const headingStart = section.indexOf('className="category-section-heading"');
+  assert.equal((section.slice(0, headingStart).match(/<HeritageIllustration/g) || []).length, 3);
+  assert.doesNotMatch(section.slice(headingStart), /<HeritageIllustration/);
   assert.doesNotMatch(source("src/components/Editorial.tsx"), /heritage-gallery|heritage-studies|traditions\.map/);
   const css = source("src/app/imagery.css");
-  assert.doesNotMatch(css, /\.heritage-gallery|\.heritage-studies/);
-  assert.match(css, /\.catalogue-art-bilona \{ grid-column: auto/);
-  assert.match(css, /\.list-view \.catalogue-art/);
+  assert.doesNotMatch(css, /\.heritage-gallery|\.heritage-studies|\.catalogue-art/);
+  assert.match(css, /\.category-section \{[^}]*isolation: isolate/);
+  assert.match(css, /\.category-backdrop \{[^}]*position: absolute;[^}]*z-index: -1;[^}]*pointer-events: none/);
+  assert.match(css, /\.category-backdrop > img \{[^}]*filter: blur\(3px\)/);
+  assert.doesNotMatch(css, /\.(?:category-section|product-grid|category-section-heading) \{[^}]*filter:/);
+});
+
+test("the supplied green field replaces the sunset and Nammalvar appears before shopping sections", () => {
+  const storefront = source("src/components/Storefront.tsx");
+  assert.match(storefront, /src="\/images\/editorial\/paddy-field.webp"[^>]*width="1024" height="683" fetchPriority="high"/);
+  assert.doesNotMatch(storefront, /fields.webp|Golden fields|Landscape inspiration|hero-landscape/);
+  assert.match(storefront, /className="hero-backdrop" aria-hidden="true"><img[^>]*alt=""/);
+  const css = source("src/app/heritage.css");
+  assert.match(css, /\.hero \{[^}]*position: relative;[^}]*isolation: isolate/);
+  assert.match(css, /\.hero-backdrop \{[^}]*position: absolute; inset: 0/);
+  assert.match(css, /\.hero-backdrop > img \{[^}]*filter: blur\(3px\)/);
+  assert.doesNotMatch(css, /\.(?:hero|hero-copy) \{[^}]*filter:/);
+  const hero = storefront.indexOf('className="hero"');
+  const story = storefront.indexOf("<NammalvarStory ");
+  const shelf = storefront.indexOf('className="category-shelf ');
+  const catalogue = storefront.indexOf("<Catalogue ");
+  const editorial = storefront.indexOf("<Editorial ");
+  assert.ok(hero >= 0 && hero < story && story < shelf && shelf < catalogue && catalogue < editorial);
+  assert.equal((storefront.match(/<NammalvarStory /g) || []).length, 1);
+  const sections = source("src/components/Editorial.tsx");
+  assert.match(sections, /export function NammalvarStory/);
+  assert.doesNotMatch(sections.slice(sections.indexOf("export function Editorial")), /story-band|id="our-way"/);
+  const bytes = readFileSync(new URL("../public/images/editorial/paddy-field.webp", import.meta.url));
+  assert.equal(bytes.toString("ascii", 8, 12), "WEBP");
+  assert.equal(bytes.readUInt16LE(26) & 0x3fff, 1024);
+  assert.equal(bytes.readUInt16LE(28) & 0x3fff, 683);
+  assert.ok(bytes.byteLength < 150_000);
+  assert.match(source("src/app/credits/page.tsx"), /supplied by the site owner/);
 });
 
 test("heritage assets preserve full subjects and credit the real photograph", () => {

@@ -91,7 +91,7 @@ test("removed brand and products cannot return; only reviewed image assets are s
       "apple-touch-icon.png", "brand-icon.png", "images/asal-logo.png", "images/asal-social.png",
       "icons/owner-180.png", "icons/owner-192.png", "icons/owner-512.png", "icons/owner-maskable-512.png",
       ...["oils", "wood-oils", "ghee", "masala", "milk", "paneer", "rice", "grain"].map((id) => `images/categories/${id}.webp`),
-      "images/editorial/fields.webp", "images/editorial/kitchen-harvest.webp",
+      "images/editorial/paddy-field.webp", "images/editorial/kitchen-harvest.webp",
       "images/heritage/nammalvar.webp",
       ...["chekku", "bilona", "cattle"].flatMap((id) => [640, 1200].map((width) => `images/heritage/${id}-${width}.webp`)),
       ...["groundnut", "sesame", "coconut", "turmeric", "curry-masala", "chilli-powder", "coriander-powder", "ragi", "bajra", "bilona-ghee", "bilona-butter", "palkova", "karuppu-kavuni-halwa", "paneer", "karuppu-kavuni", "mapillai-samba", "seera-samba"].flatMap((id) => [240, 800].map((width) => `images/products/${id}-${width}.webp`)),
