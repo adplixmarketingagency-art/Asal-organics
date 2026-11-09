@@ -39,8 +39,8 @@ try {
   // An allowlist includes current source edits, but excludes .env*, .dev.vars*,
   // credentials, local config/, Git history, and old generated bundles.
   for (const name of [
-    "src", "public", "package.json", "package-lock.json", "tsconfig.json",
-    "next-env.d.ts", "next.config.ts", "open-next.config.ts", "wrangler.jsonc",
+    "src", "public", "migrations", "package.json", "package-lock.json", "tsconfig.json",
+    "next-env.d.ts", "next.config.ts", "open-next.config.ts", "wrangler.jsonc", "worker.js",
   ]) {
     await cp(join(root, name), join(staging, name), { recursive: true });
   }

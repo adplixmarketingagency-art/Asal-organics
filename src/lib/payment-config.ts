@@ -6,6 +6,7 @@ export function paymentConfig() {
   const keySecret = process.env.RAZORPAY_KEY_SECRET?.trim() ?? "";
   const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET?.trim() ?? "";
   const databaseUrl = process.env.DATABASE_URL?.trim() ?? "";
+  const storageConfigured = process.env.ORDER_STORAGE === "d1" || Boolean(databaseUrl);
   const enabled = process.env.PAYMENTS_ENABLED === "true";
   const catalogueApproved = process.env.CATALOGUE_APPROVED === "true";
   const purchaseTotalApproved = process.env.PURCHASE_TOTAL_APPROVED === "true";
@@ -16,7 +17,7 @@ export function paymentConfig() {
     purchaseTotalApproved,
     // Sandbox checkout needs no merchant database. Live checkout remains fail-closed.
     enabled: enabled && credentialsMatchMode && (mode === "test" || (
-      catalogueApproved && purchaseTotalApproved && Boolean(webhookSecret && databaseUrl)
+      catalogueApproved && purchaseTotalApproved && Boolean(webhookSecret) && storageConfigured
     )),
     keyId, keySecret, webhookSecret, databaseUrl,
   };

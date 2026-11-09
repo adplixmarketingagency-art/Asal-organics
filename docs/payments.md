@@ -69,6 +69,6 @@ After deployment, `GET /api/payments/config` should return `{"enabled":true,"mod
 
 ## Seller notifications
 
-The existing order store inserts one `seller_order_paid` notification-outbox row on the first successful paid transition. An email/WhatsApp sender, seller dashboard and retry worker are not implemented. No seller notification is sent yet. Fulfilment and notifications must rely on verified server records, never the browser success screen.
+The order store inserts one `seller_order_paid` notification-outbox row on the first successful paid transition. The protected `/admin/orders` owner desk now lists stored orders, customer/item details, fulfilment history and notification status. A Resend email outbox processor runs through a Cloudflare cron every five minutes when configured. Optional browser alerts work while the dashboard is open. WhatsApp and closed-browser push are not implemented. See [Owner desk setup](admin-orders.md) for required owner login, database and email configuration. No email is sent without an explicitly configured recipient and sender. Fulfilment and notifications rely on verified server records, never the browser success screen.
 
 Reference: https://razorpay.com/docs/payments/payment-gateway/web-integration/standard/integration-steps/

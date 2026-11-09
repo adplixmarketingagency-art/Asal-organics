@@ -86,6 +86,7 @@ test("removed brand and products cannot return; only reviewed image assets are s
   assert.deepEqual(assets.filter((name) => /\.(jpg|jpeg|png|webp)$/i.test(name)).sort(),
     [
       "apple-touch-icon.png", "brand-icon.png", "images/asal-logo.png", "images/asal-social.png",
+      "icons/owner-180.png", "icons/owner-192.png", "icons/owner-512.png", "icons/owner-maskable-512.png",
       ...["oils", "wood-oils", "ghee", "masala", "milk", "paneer", "rice", "grain"].map((id) => `images/categories/${id}.webp`),
       "images/editorial/fields.webp", "images/editorial/kitchen-harvest.webp",
       "images/heritage/nammalvar.webp",

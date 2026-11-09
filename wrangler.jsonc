@@ -2,7 +2,14 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "asal-organics",
   "account_id": "65446830387918c7b7a15450c724e9e2",
-  "main": ".open-next/worker.js",
+  "main": "worker.js",
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "d1_databases": [{
+    "binding": "ASAL_DB",
+    "database_name": "asal-orders",
+    "database_id": "a0adcf18-177a-4261-851c-06e0351858e9",
+    "migrations_dir": "migrations"
+  }],
   "compatibility_date": "2026-11-02",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "workers_dev": false,
@@ -28,6 +35,7 @@
     }
   ],
   "vars": {
+    "ORDER_STORAGE": "d1",
     "PAYMENTS_ENABLED": "true",
     "PAYMENT_MODE": "test",
     "CATALOGUE_APPROVED": "false",

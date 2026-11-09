@@ -44,6 +44,11 @@ const config: NextConfig = {
         { key: "Cache-Control", value: "no-store" },
         { key: "X-Robots-Tag", value: "noindex, nofollow" },
       ] },
+      { source: "/admin/:path*", headers: [
+        { key: "Cache-Control", value: "private, no-store" },
+        { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        { key: "Referrer-Policy", value: "no-referrer" },
+      ] },
     ];
   },
 };
