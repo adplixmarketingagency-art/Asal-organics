@@ -21,6 +21,5 @@ export function ProductImage({ productId, className = "", compact = false, prior
       fetchPriority={priority ? "high" : undefined}
       decoding="async"
     />
-    {!compact && <span className="product-artwork-caption">Illustrative image</span>}
   </span>;
 }

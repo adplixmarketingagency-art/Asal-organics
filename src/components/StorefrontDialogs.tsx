@@ -14,13 +14,13 @@ import { ProductImage } from "./ProductImage";
 export type DialogState = { type: "search" | "guide" | "ordering" | "about" } | { type: "product"; product: Product } | null;
 
 function ProductResults({ items, onExplore }: { items: Product[]; onExplore: (product: Product) => void }) {
-  return <><p className="image-disclosure">AI-generated ingredient images; not actual product photographs.</p><div className="search-results">
+  return <div className="search-results">
     {items.map((product) => <button key={product.id} onClick={() => onExplore(product)}>
       <ProductImage productId={product.id} compact className="search-image-space" />
       <span><strong>{product.name}</strong><small lang="ta">{product.tamilName}</small><small>{quantityLabel(product)}</small></span>
       <span className="search-price">{canAddToBag(product) ? formatPrice(product.price) : "Price pending"}</span><ArrowUpRight size={18} />
     </button>)}
-  </div></>;
+  </div>;
 }
 
 function CatalogueGuide({ onExplore }: { onExplore: (product: Product) => void }) {

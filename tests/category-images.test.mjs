@@ -27,7 +27,7 @@ test("homepage category shortcuts retain bilingual navigation, not product image
   assert.match(source, /aria-pressed=\{category === id\} aria-controls="collection"/);
   assert.match(source, /src=\{categoryImages\[id\]\} alt="" width="800" height="800" loading="lazy" decoding="async"/);
   assert.match(source, /<strong>\{label\}<\/strong><span lang="ta">\{tamilLabel\}<\/span>/);
-  assert.match(source, /Category images are illustrative\./);
+  assert.doesNotMatch(source, /Category images are illustrative\.|category-image-note/);
   assert.match(source, /setCategory\(next\)/);
   assert.match(source, /getElementById\("collection"\)\?\.scrollIntoView/);
   assert.match(source, /prefers-reduced-motion: reduce/);

@@ -25,6 +25,6 @@ export function HeritageIllustration({ subject }: { subject: keyof typeof illust
       loading="lazy" decoding="async"
       alt={`${alt}. AI-generated heritage artwork, not a photograph of Asal’s production.`}
     />
-    <figcaption>{label}<span>AI illustration</span></figcaption>
+    <figcaption>{label}</figcaption>
   </figure>;
 }

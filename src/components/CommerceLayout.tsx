@@ -45,7 +45,7 @@ export function EmptyBag() {
 export function CartLines({ compact = false, summary: suppliedSummary }: { compact?: boolean; summary?: CartSummary }) {
   const { summary: browserSummary, updateQuantity } = useCart();
   const summary = suppliedSummary ?? browserSummary;
-  return <><p className="image-disclosure">Ingredient images are illustrative, not actual product photographs.</p><ul className={`cart-lines ${compact ? "compact-lines" : ""}`}>
+  return <ul className={`cart-lines ${compact ? "compact-lines" : ""}`}>
     {summary.lines.map(({ product, productId, variant, variantId, quantity, unitPricePaise, lineTotalPaise }) => <li key={variantId} className="cart-line">
       <ProductImage productId={product.id} compact className="cart-image-space" />
       <div className="cart-line-description">
@@ -63,7 +63,7 @@ export function CartLines({ compact = false, summary: suppliedSummary }: { compa
       </div>
       <strong className="cart-line-total">{formatPrice(lineTotalPaise / 100)}</strong>
     </li>)}
-  </ul></>;
+  </ul>;
 }
 
 export function OrderSummary({ summary, children, showItems = false }: { summary: CartSummary; children?: ReactNode; showItems?: boolean }) {

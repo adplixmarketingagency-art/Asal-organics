@@ -89,7 +89,7 @@ export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCateg
           </div>
         </section>)}
       </div> : <div className="empty-state"><Sprout size={36} strokeWidth={1.2} /><h3>{category === "saved" && saved.length === 0 ? "Keep your favourites close." : "Let’s find something else."}</h3><p>{category === "saved" && saved.length === 0 ? "Tap the heart on any product to save it here for later." : "No products match these filters. Try a different search or price."}</p><button className="button button-green" onClick={reset}>Explore all products <ArrowRight size={17} /></button></div>}
-      <p className="catalogue-note">Ingredient images are AI-generated illustrations, not actual product photographs or packaging. Heritage artwork illustrates Tamil food culture, not Asal’s farms, cattle or production methods. Choose a pack on each product. Pack prices are calculated from the listed litre or kilogram price and rounded up to a whole rupee; price filters and sorting use that base pack. Ragi and Bajra prices are pending base-quantity confirmation. Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing.</p>
+      <p className="catalogue-note">Choose a pack on each product. Pack prices are calculated from the listed litre or kilogram price and rounded up to a whole rupee; price filters and sorting use that base pack. Ragi and Bajra prices are pending base-quantity confirmation. Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing.</p>
     </section>
   );
 }

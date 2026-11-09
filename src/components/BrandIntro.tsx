@@ -25,11 +25,7 @@ export function BrandIntro() {
   if (!visible) return null;
   return <div className="brand-intro" aria-hidden="true" inert>
     <div className="brand-intro-lockup">
-      <div className="brand"><BrandWordmark /></div>
-      <svg className="intro-oil-drip" viewBox="0 0 20 30" focusable="false">
-        <path d="M10 0C8 8 1 15 1 21a9 9 0 0 0 18 0C19 15 12 8 10 0Z" fill="currentColor" />
-      </svg>
-      <span className="intro-oil-ripple" />
+      <div className="brand"><BrandWordmark animateDrop /></div>
     </div>
   </div>;
 }

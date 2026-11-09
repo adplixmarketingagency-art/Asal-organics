@@ -84,7 +84,7 @@ export default function Storefront({ initialCategory = "all" }: { initialCategor
             </button>
           ))}
         </nav>
-        <div className="category-shelf-footnote"><p className="category-image-note">Category images are illustrative.</p><p className="category-scroll-hint">Scroll to browse <ArrowRight size={13} aria-hidden="true" /></p></div>
+        <p className="category-scroll-hint">Scroll to browse <ArrowRight size={13} aria-hidden="true" /></p>
       </section>
       <div className="qualities section-wrap"><div><Sprout /><span>Cold-pressed oils</span></div><span className="quality-divider" /><div><Droplets /><span>Traditional rice varieties</span></div><span className="quality-divider" /><div><Sun /><span>Everyday kitchen essentials</span></div><span className="quality-divider" /><div><Heart /><span>Goodness, kept simple</span></div></div>
       <KolamDivider className="collection-divider" />

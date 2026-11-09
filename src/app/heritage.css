@@ -21,20 +21,15 @@
   .brand-intro { position: fixed; inset: 0; z-index: 180; display: grid; place-items: center; background: #fff; color: var(--green); pointer-events: none; animation: intro-dismiss 1.4s ease-in forwards; }
   .brand-intro-lockup { --intro-word-size: clamp(4.5rem, 17vw, 5.5rem); position: relative; }
   .brand-intro .brand-word { font-size: var(--intro-word-size); }
-  .brand-intro .brand-oil-drop { fill: #a47b31; }
+  .brand-intro .brand-lettering .brand-oil-drop { visibility: hidden; }
   .brand-intro .brand-tagline { margin-top: 13px; font-size: .875rem; letter-spacing: 1px; }
-  .intro-oil-drip { position: absolute; top: calc(var(--intro-word-size) * .94); left: calc(88.8% - 6px); width: 12px; height: 18px; color: #a47b31; opacity: 0; transform-origin: top center; animation: intro-drip 900ms 100ms cubic-bezier(.4, 0, .8, .5) both; }
-  .intro-oil-ripple { position: absolute; top: calc(var(--intro-word-size) * .94 + 60px); left: calc(88.8% - 14px); width: 28px; height: 5px; border-radius: 50%; background: #a47b31; opacity: 0; animation: intro-ripple 360ms 840ms ease-out both; }
+  /* Match the pulli's bounds in the 3040 × 1110 wordmark, not the wider lockup. */
+  .intro-oil-drip { position: absolute; top: calc(10 / 1110 * 100%); left: calc(2383 / 3040 * 100%); width: calc(156 / 3040 * 100%); height: calc(240 / 1110 * 100%); color: #a47b31; overflow: visible; transform-box: border-box; transform-origin: center bottom; animation: intro-drip 900ms 50ms both; }
   @keyframes intro-drip {
-    0% { opacity: 0; transform: translateY(-5px) scale(.45, .3); }
-    22% { opacity: 1; transform: translateY(-3px) scale(.7, 1.1); }
-    82% { opacity: 1; transform: translateY(36px) scale(.8, 1.1); }
-    100% { opacity: 0; transform: translateY(48px) scale(1.1, .4); }
-  }
-  @keyframes intro-ripple {
-    0% { opacity: 0; transform: scaleX(.35); }
-    25% { opacity: .35; }
-    100% { opacity: 0; transform: scaleX(1.5); }
+    0% { transform: translateY(calc(-50vh - 100%)); animation-timing-function: cubic-bezier(.4, 0, .8, .5); }
+    78% { transform: translateY(0) scale(1); animation-timing-function: ease-out; }
+    88% { transform: translateY(0) scale(1.12, .86); animation-timing-function: ease-out; }
+    100% { transform: translateY(0) scale(1); }
   }
   /* CSS also dismisses the screen if JavaScript fails or is disabled. */
   @keyframes intro-dismiss {
@@ -43,7 +38,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .brand-intro { display: none; animation: none; }
-    .intro-oil-drip, .intro-oil-ripple { animation: none; }
+    .intro-oil-drip { animation: none; }
   }
   .site-header { background: #fffdf8f7; }
   .hero { grid-template-columns: 1.05fr 1fr; min-height: 490px; background: #f2eddf; border-radius: 4px; }
@@ -75,8 +70,7 @@
   .category-shortcut-caption { display: block; width: 100%; overflow-wrap: anywhere; text-wrap: balance; }
   .category-shortcuts strong { display: grid; align-items: center; min-height: 2.8em; font-size: .8125rem; font-weight: 600; line-height: 1.4; }
   .category-shortcuts [lang="ta"] { display: block; margin-top: 3px; color: #64705f; font-size: .6875rem; }
-  .category-shelf-footnote { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; margin-top: 8px; color: var(--muted); font-size: .6875rem; }
-  .category-scroll-hint { display: none; align-items: center; gap: 6px; }
+  .category-scroll-hint { display: none; align-items: center; gap: 6px; margin-top: 8px; color: var(--muted); font-size: .6875rem; }
   .qualities { min-height: 80px; }
   .collection::before { display: none; }
   .collection-divider { margin-top: 18px; }

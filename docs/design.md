@@ -11,8 +11,9 @@ See `design-assets.md` for provenance, licences and image-use limitations.
 - 20 owner-listed products across eight categories.
 - Only approved selling prices and quantities; pack prices round up proportionally.
 - Ragi/Bajra remain unavailable with “Price pending” until base quantities are confirmed.
-- Coordinated, explicitly illustrative ingredient images in cards, quick views,
-  search, product pages and bag lines. No invented packaging or actual-product claims.
+- Coordinated ingredient artwork in cards, quick views, search, product pages
+  and bag lines. Descriptive alt text retains illustrative context; no visible
+  AI-image labels or repeated disclaimers. No invented packaging or actual-product claims.
 - No added certifications, endorsements, farm ownership or delivery promises.
 
 ## Layout
@@ -27,7 +28,7 @@ See `design-assets.md` for provenance, licences and image-use limitations.
   breathing room beside ghee, and cow/calf artwork tucked beside dairy products.
   Different sizes and alignments keep the placement informal; responsive layouts
   preserve complete subjects and keep product controls unobstructed.
-- Accessible focus, descriptive alt text, visible AI-image disclosures and
+- Accessible focus, descriptive alt text, unobtrusive subject captions and
   reduced-motion treatment. No new animation or carousel dependencies.
 
 ## Verification and deployment

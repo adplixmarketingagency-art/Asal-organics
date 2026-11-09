@@ -25,8 +25,11 @@ independent of font loading, retains an accessible Tamil label and has no raster
 scaling. It is not a new registration or certification claim.
 
 `BrandIntro.tsx` mounts once per full page load in the root layout: a white
-background, centred wordmark, one warm-gold oil drip and a small dissipating
-ripple. It fades out within 1.4 seconds and is removed after 1.5 seconds.
+background and centred wordmark. One warm-gold drop falls vertically from above
+the viewport and settles into the final ல் pulli. Its endpoint uses the same
+path and exact proportional bounds as the static wordmark, so it stays aligned
+on phones and desktops. No extra drop or ripple appears below the logo.
+It fades out within 1.4 seconds and is removed after 1.5 seconds.
 Internal navigation does not replay it. A key or pointer press dismisses it
 immediately; it is inert, hidden from assistive technology and never intercepts
 interaction. Reduced-motion visitors skip the intro entirely. A CSS-only exit
@@ -54,8 +57,9 @@ at the owner's request. Conversation:
 `https://gemini.google.com/app/0b24719220d694a9`.
 These are AI-generated illustrative category artworks, not photographs of
 Asal products, facilities or evidence of a pressing method or certification.
-The homepage includes a visible illustrative-image note. Matching ingredient
-studies now appear on product surfaces, with explicit illustrative labels.
+Matching ingredient studies now appear on product surfaces. At the owner's
+request, visible illustrative-image labels and notes are omitted; provenance
+remains documented here and in descriptive alt text.
 
 The matching series uses white porcelain dishes, a warm-white studio background,
 soft diffused light and uncluttered framing, without branding, text, packaging or
@@ -175,8 +179,9 @@ Downloads directory (and category originals in the ignored source-art folder).
 
 `ProductImage` provides dimensions, descriptive illustrative alt text, responsive
 sources and lazy loading (except the main product-page image). Cards and detail
-views carry visible captions. Search/cart use adjacent disclosures instead of
-illegible thumbnail overlays. Unknown future product IDs retain the placeholder.
+views no longer carry AI/illustrative labels, and repeated image disclosures in
+search/cart/category pages are removed at the owner's request. Descriptive alt
+text retains the artwork context. Unknown future product IDs retain the placeholder.
 Use owner-supplied product photography to replace these when available.
 
 ### Heritage illustrations
@@ -193,9 +198,10 @@ Originals are 2528×1696, resized without cropping to widths 640/1200 and WebP
 quality 83/effort 6. At the owner's direction there is no standalone gallery:
 chekku sits beside the wood-oils heading, bilona beside the ghee product, and
 cow/calf artwork occupies the breathing room near dairy products. These small,
-varied placements use full images, not background crops. Each has a visible
-AI-illustration caption. The catalogue disclosure and image alt text distinguish
-them from Asal's facilities, cattle or actual production processes.
+varied placements use full images, not background crops. Captions name only the
+subject; AI-illustration labels and the catalogue image disclosure are removed
+at the owner's request. Image alt text and this provenance record distinguish
+the artwork from Asal's facilities, cattle or actual production processes.
 
 ### Nammalvar photograph — CC BY-SA 3.0
 

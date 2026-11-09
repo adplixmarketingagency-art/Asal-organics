@@ -26,11 +26,11 @@ test("all 20 product IDs have appropriate self-hosted ingredient images", () => 
   assert.notEqual(productImages["karuppu-kavuni"].asset, productImages["karuppu-kavuni-halwa"].asset);
 });
 
-test("shared image rendering discloses illustrative status and controls loading", () => {
+test("shared image rendering preserves descriptive alt text and controls loading without visible labels", () => {
   const component = source("src/components/ProductImage.tsx");
   assert.match(component, /Illustrative image:/);
   assert.match(component, /Not an actual product photograph/);
-  assert.match(component, /product-artwork-caption">Illustrative image/);
+  assert.doesNotMatch(component, /product-artwork-caption/);
   assert.match(component, /srcSet=/);
   assert.match(component, /width="800" height="800"/);
   assert.match(component, /priority \? "eager" : "lazy"/);
@@ -41,7 +41,24 @@ test("shared image rendering discloses illustrative status and controls loading"
   const page = source("src/app/products/[id]/page.tsx");
   assert.match(page, /<ProductImage productId=\{product.id\}[^>]*priority/);
   assert.doesNotMatch(page, /"use client"/);
-  assert.match(source("src/components/Catalogue.tsx"), /AI-generated illustrations/);
+});
+
+test("visible AI-image labels are absent across all shopping surfaces", () => {
+  for (const path of [
+    "src/components/Storefront.tsx",
+    "src/components/Catalogue.tsx",
+    "src/components/StorefrontDialogs.tsx",
+    "src/components/CommerceLayout.tsx",
+    "src/app/products/[id]/page.tsx",
+  ]) {
+    assert.doesNotMatch(source(path), /image-disclosure|category-image-note|AI-generated|AI illustration|images are illustrative|not actual product photographs/, path);
+  }
+  const css = source("src/app/imagery.css");
+  assert.doesNotMatch(css, /product-artwork-caption|image-disclosure|catalogue-art figcaption span/);
+  // The owner's visual cleanup must not remove buying guidance.
+  const catalogue = source("src/components/Catalogue.tsx");
+  assert.match(catalogue, /Ragi and Bajra prices are pending/);
+  assert.match(catalogue, /Real payments and delivery orders are not yet available/);
 });
 
 test("heritage images are scattered in relevant categories, not a separate gallery", () => {
@@ -50,9 +67,9 @@ test("heritage images are scattered in relevant categories, not a separate galle
   assert.match(catalogue, /group.id === "wood-oils" && <HeritageIllustration subject="chekku"/);
   assert.match(catalogue, /group.id === "ghee" && <HeritageIllustration subject="bilona"/);
   assert.match(catalogue, /group.id === "milk" && <HeritageIllustration subject="cattle"/);
-  assert.match(catalogue, /not Asal’s farms, cattle or production methods/);
   assert.match(illustration, /AI-generated heritage artwork/);
-  assert.match(illustration, /AI illustration/);
+  assert.match(illustration, /<figcaption>\{label\}<\/figcaption>/);
+  assert.doesNotMatch(illustration, /<span>AI illustration/);
   assert.match(illustration, /loading="lazy"/);
   assert.match(illustration, /width="2528" height="1696"/);
   assert.doesNotMatch(source("src/components/Editorial.tsx"), /heritage-gallery|heritage-studies|traditions\.map/);
