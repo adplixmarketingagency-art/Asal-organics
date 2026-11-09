@@ -58,10 +58,13 @@ products, sourcing or certifications.
   by the owner on November 9, 2026 (`codex-clipboard-19054a9c-4e42-4685-8fdc-57e4279a42dd.png`).
   Converted to WebP quality 85/effort 6, 1024×683, without cropping the stored
   image. The photograph covers the entire hero card as a decorative background,
-  not a separate right-hand image panel. It has a 3px blur, reduced saturation
-  and a continuous translucent cream overlay behind sharp text and controls.
-  The responsive cover crop is centred on the coconut palms, with a stronger
-  readability overlay on mobile. Its wrapper is aria-hidden with empty alt.
+  not a separate right-hand image panel. Desktop uses a slight 0.6px blur and
+  a directional cream overlay: stronger behind the copy, clearer on the right.
+  Mobile removes blur entirely and centres the cover crop on the coconut palms.
+  A 142px top inset for the copy leaves the palm canopy visible; the cream wash
+  increases below it to protect text and controls. The photograph still spans
+  the entire card, rather than becoming a separate image panel.
+  Its wrapper is aria-hidden with empty alt.
   This replaces the previous Unsplash sunset image, which has been removed.
   Original photographer, location and licence were not supplied; no authorship,
   licence or ownership claim is added. Provenance is recorded on `/credits`.
@@ -148,7 +151,9 @@ The kolam is a Tamil heritage accent, not a repeating page texture.
 
 Use only two short (maximum 344 px desktop / 272 px mobile) ornamental separators:
 before the collection and before the FAQ. Hero and footer use a small standalone
-motif. Category headings align directly with their product grids and use vertical
+motif. The hero motif is anchored to the whole card's top-right corner, not its
+narrower text column: 72px with 24px insets on desktop, 52px with 16px insets on
+mobile. Category headings align directly with their product grids and use vertical
 spacing, not ornamental rules or repeated icons. Checkout has no decorative
 separator. The story's background and photograph supply its visual distinction.
 
@@ -221,10 +226,17 @@ Originals are 2528×1696, resized without cropping to widths 640/1200 and WebP
 quality 83/effort 6. At the owner's direction there is no standalone gallery or
 freestanding artwork: chekku is the wood-oils section background, bilona the
 ghee background, and cow/calf the milk-products background. Absolute decorative
-layers sit outside the product grid, with cover crops, a 3px blur, reduced
-saturation and a cream wash. Only the background image is blurred; product
-cards, headings, prices and controls remain sharp. Mobile uses a softer wash
-and clipped background layers without clipping controls or focus rings.
+layers sit outside the product grid, with a light 1px desktop blur, 0.86 opacity
+and a directional cream wash. Chekku and cattle use a 400px-high scene aligned
+right, with 310px of heading space so the product rows do not hide the press or
+animals. Bilona spans its shorter, single-product section.
+Mobile uses a bounded `clamp(320px, 84vw, 480px)` scene instead of stretching
+the landscape over the entire product list. Heading space tracks that height
+minus 60px, revealing the subject before fading behind the first product row.
+Mobile art uses only 0.6px blur, 0.9 opacity and a top-to-bottom readability wash.
+Only background images are softened; product cards, headings, prices and
+controls remain sharp. Background wrappers clip artwork, not controls or focus
+rings. Existing responsive WebP assets are reused; no new images were generated.
 Decorative images have empty alt text and an aria-hidden wrapper, with no
 captions. The generated provenance remains in this record and on `/credits`,
 not as labels on the shopping surfaces.

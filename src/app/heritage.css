@@ -45,10 +45,11 @@
   .site-header { background: #fffdf8f7; }
   .hero { display: block; position: relative; isolation: isolate; min-height: 490px; background: #edf0dc; border-radius: 4px; }
   .hero-backdrop { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; user-select: none; }
-  .hero-backdrop > img { position: absolute; inset: -8px; width: calc(100% + 16px); max-width: none; height: calc(100% + 16px); object-fit: cover; object-position: center 58%; filter: blur(3px) saturate(.82); }
-  .hero-backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #f8f7e8e6 0%, #f8f7e8c9 38%, #f2f2da52 72%, #f2f2da29 100%); }
+  .hero-backdrop > img { position: absolute; inset: -2px; width: calc(100% + 4px); max-width: none; height: calc(100% + 4px); object-fit: cover; object-position: center 58%; filter: blur(.6px) saturate(.9); }
+  .hero-backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #f8f7e8ed 0%, #f8f7e8d9 36%, #f8f7e847 64%, #f8f7e814 100%); }
   .hero-copy { max-width: 610px; padding: 52px 48px 46px; isolation: isolate; }
-  .hero-kolam { position: absolute; width: 88px; height: 88px; right: 24px; top: 18px; z-index: -1; }
+  /* Anchor to the whole card, not the narrower copy column. */
+  .hero-kolam { position: absolute; width: 72px; height: 72px; right: 24px; top: 24px; z-index: 0; opacity: .85; }
   .hero-copy > .eyebrow { color: #77613d; font-size: .7rem; letter-spacing: 1.9px; }
   .hero-tamil { color: #756647; font-size: .85rem; margin-top: 17px; }
   .hero h1 { font-size: clamp(42px, 4.1vw, 60px); line-height: 1.15; letter-spacing: -1.9px; margin-block: 13px 20px; }
@@ -152,12 +153,13 @@
   }
   @media (max-width: 700px) {
     .hero { grid-template-columns: 1fr; min-height: 0; }
-    .hero-copy { padding: 32px 27px; }
-    .hero-kolam { width: 64px; height: 64px; right: 18px; top: 18px; }
-    .hero-copy > .eyebrow, .hero-tamil { padding-right: 64px; }
+    .hero-copy { padding: 142px 27px 32px; }
+    .hero-kolam { width: 52px; height: 52px; right: 16px; top: 16px; }
+    .hero-copy > .eyebrow, .hero-tamil { padding-right: 0; }
     .hero h1 { font-size: clamp(36px, 9vw, 49px); letter-spacing: -1.3px; line-height: 1.18; }
-    .hero-backdrop > img { object-position: 54% center; }
-    .hero-backdrop::after { background: linear-gradient(110deg, #f8f7e8e6, #f8f7e8b8); }
+    /* Keep a clear view of the palms above the copy within the same full-card background. */
+    .hero-backdrop > img { inset: -110px 0 0; width: 100%; height: calc(100% + 110px); object-position: 54% top; filter: none; }
+    .hero-backdrop::after { background: linear-gradient(180deg, #f8f7e80a 0, #f8f7e829 80px, #f8f7e8d9 160px, #f8f7e8e6 260px, #f8f7e8d9 100%); }
     .category-shelf { padding-block: 26px 8px; }
     .category-shelf-heading { display: block; margin-bottom: 12px; }
     .category-shelf-heading p { margin-top: 6px; font-size: .75rem; }

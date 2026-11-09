@@ -22,23 +22,37 @@
   .story-photograph figcaption span { font-size: .6875rem; }
   .story-photograph a { text-decoration: underline; text-underline-offset: 3px; }
   .story-copy > .story-context { font-size: .6875rem; line-height: 1.7; margin-bottom: 0; }
-  /* A quiet wash behind each related section, never a product-grid item. */
+  /* Related section backgrounds, never product-grid items or a separate gallery. */
   .category-section { position: relative; isolation: isolate; }
   .category-backdrop { position: absolute; inset: -20px -24px; z-index: -1; overflow: hidden; border-radius: 4px; pointer-events: none; user-select: none; }
-  .category-backdrop > img { display: block; position: absolute; inset: -8px; width: calc(100% + 16px); max-width: none; height: calc(100% + 16px); object-fit: cover; object-position: center; filter: blur(3px) saturate(.7); opacity: .44; }
-  .category-backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #fffdf8f5 0%, #fffdf8b8 40%, #fffdf830 100%), linear-gradient(0deg, var(--paper), transparent 18%, transparent 82%, var(--paper)); }
+  .category-backdrop > img { display: block; position: absolute; inset: -3px; width: calc(100% + 6px); max-width: none; height: calc(100% + 6px); object-fit: cover; object-position: center; filter: blur(1px) saturate(.9); opacity: .86; }
+  .category-backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #fffdf8ed 0%, #fffdf8a6 34%, #fffdf81a 70%), linear-gradient(0deg, var(--paper), transparent 12%, transparent 88%, var(--paper)); }
+  .category-section:has(> .category-backdrop) .category-section-heading { min-height: 210px; }
+  .category-section:has(> .category-backdrop) .category-heading-copy { max-width: 510px; }
+  .category-section:has(> .category-backdrop) .category-product-count { background: #fffdf8e6; }
   .category-backdrop-bilona > img { object-position: center 58%; }
   .category-backdrop-cattle > img { object-position: center 60%; }
 }
 
 @layer responsive {
+  @media (min-width: 701px) {
+    /* Keep the press and cattle above the multi-card rows instead of hiding the subjects. */
+    .category-section:has(> .category-backdrop-chekku) .category-section-heading,
+    .category-section:has(> .category-backdrop-cattle) .category-section-heading { min-height: 310px; }
+    .category-backdrop-chekku > img,
+    .category-backdrop-cattle > img { inset: -3px -3px auto auto; width: 76%; height: 400px; object-position: center 68%; mask-image: linear-gradient(180deg, #000 72%, transparent); }
+  }
   @media (max-width: 700px) {
     .product-media { aspect-ratio: 4 / 3; }
     .product-artwork.detail-image-space { min-height: 240px; height: 240px; }
     .product-artwork.cart-image-space { height: 86px; }
+    /* Size the scene independently of the product count: no tall, unrecognizable cover crop.
+       It fades behind the heading and first row, within the existing category section. */
+    .category-section:has(> .category-backdrop) { --heritage-scene-height: clamp(320px, 84vw, 480px); }
+    .category-section:has(> .category-backdrop) .category-section-heading { min-height: calc(var(--heritage-scene-height) - 60px); }
     .category-backdrop { inset: -16px -12px; }
-    .category-backdrop > img { opacity: .3; }
-    .category-backdrop::after { background: linear-gradient(90deg, #fffdf8e6, #fffdf866), linear-gradient(0deg, var(--paper), transparent 20%, transparent 80%, var(--paper)); }
+    .category-backdrop > img { inset: 0; width: 100%; height: var(--heritage-scene-height); object-fit: cover; object-position: center; filter: blur(.6px) saturate(.9); opacity: .9; mask-image: linear-gradient(180deg, #000 72%, transparent); }
+    .category-backdrop::after { height: var(--heritage-scene-height); background: linear-gradient(180deg, #fffdf8ed, #fffdf8c9 110px, #fffdf826 230px, transparent 320px), linear-gradient(90deg, #fffdf833, transparent 65%); }
     .story-photograph > img { height: auto; }
     .story-copy > .story-context { font-size: .6875rem; }
   }

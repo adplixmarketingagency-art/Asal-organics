@@ -81,8 +81,25 @@ test("heritage images are decorative section backgrounds, never gallery or produ
   assert.doesNotMatch(css, /\.heritage-gallery|\.heritage-studies|\.catalogue-art/);
   assert.match(css, /\.category-section \{[^}]*isolation: isolate/);
   assert.match(css, /\.category-backdrop \{[^}]*position: absolute;[^}]*z-index: -1;[^}]*pointer-events: none/);
-  assert.match(css, /\.category-backdrop > img \{[^}]*filter: blur\(3px\)/);
-  assert.doesNotMatch(css, /\.(?:category-section|product-grid|category-section-heading) \{[^}]*filter:/);
+  assert.match(css, /\.category-backdrop > img \{[^}]*filter: blur\(1px\)[^}]*opacity: \.86/);
+  assert.doesNotMatch(css, /\.(?:category-section|product-grid|category-section-heading|category-heading-copy|product-card) \{[^}]*filter:/);
+});
+
+test("mobile heritage scenes stay recognizable independently of product-grid height", () => {
+  const css = source("src/app/imagery.css");
+  const mobile = css.slice(css.indexOf("@media (max-width: 700px)"), css.indexOf("@media (prefers-reduced-motion: reduce)"));
+  assert.match(mobile, /--heritage-scene-height: clamp\(320px, 84vw, 480px\)/);
+  assert.match(mobile, /\.category-backdrop > img \{[^}]*height: var\(--heritage-scene-height\)/);
+  assert.match(mobile, /\.category-backdrop > img \{[^}]*filter: blur\(\.6px\)[^}]*opacity: \.9/);
+  assert.match(mobile, /\.category-backdrop > img \{[^}]*mask-image: linear-gradient/);
+  assert.match(mobile, /\.category-backdrop::after \{[^}]*height: var\(--heritage-scene-height\)/);
+  // Heading space follows the scene on wide phones too, rather than covering its subjects.
+  assert.match(mobile, /\.category-section-heading \{[^}]*min-height: calc\(var\(--heritage-scene-height\) - 60px\)/);
+  assert.doesNotMatch(mobile, /\.category-backdrop > img \{[^}]*height: (?:100%|calc\(100%)/);
+  const desktop = css.slice(css.indexOf("@media (min-width: 701px)"), css.indexOf("@media (max-width: 700px)"));
+  assert.match(desktop, /\.category-backdrop-chekku\) \.category-section-heading/);
+  assert.match(desktop, /\.category-backdrop-cattle\) \.category-section-heading \{ min-height: 310px/);
+  assert.match(desktop, /\.category-backdrop-cattle > img \{[^}]*height: 400px/);
 });
 
 test("the supplied green field replaces the sunset and Nammalvar appears before shopping sections", () => {
@@ -93,7 +110,7 @@ test("the supplied green field replaces the sunset and Nammalvar appears before 
   const css = source("src/app/heritage.css");
   assert.match(css, /\.hero \{[^}]*position: relative;[^}]*isolation: isolate/);
   assert.match(css, /\.hero-backdrop \{[^}]*position: absolute; inset: 0/);
-  assert.match(css, /\.hero-backdrop > img \{[^}]*filter: blur\(3px\)/);
+  assert.match(css, /\.hero-backdrop > img \{[^}]*filter: blur\(\.6px\)/);
   assert.doesNotMatch(css, /\.(?:hero|hero-copy) \{[^}]*filter:/);
   const hero = storefront.indexOf('className="hero"');
   const story = storefront.indexOf("<NammalvarStory ");
@@ -111,6 +128,24 @@ test("the supplied green field replaces the sunset and Nammalvar appears before 
   assert.equal(bytes.readUInt16LE(28) & 0x3fff, 683);
   assert.ok(bytes.byteLength < 150_000);
   assert.match(source("src/app/credits/page.tsx"), /supplied by the site owner/);
+});
+
+test("the mobile hero stays sharp and the kolam is anchored to the whole card", () => {
+  const storefront = source("src/components/Storefront.tsx");
+  const hero = storefront.slice(storefront.indexOf('<section className="hero"'), storefront.indexOf("<NammalvarStory "));
+  const copy = hero.indexOf('<div className="hero-copy">');
+  assert.equal((hero.match(/<Kolam className="hero-kolam"/g) || []).length, 1);
+  assert.ok(hero.indexOf('<Kolam className="hero-kolam" />') < copy);
+  assert.doesNotMatch(hero.slice(copy), /<Kolam/);
+  assert.match(hero, /<\/div>\s*<Kolam className="hero-kolam" \/>\s*<div className="hero-copy">/);
+  const css = source("src/app/heritage.css");
+  assert.match(css, /\.hero-kolam \{[^}]*position: absolute;[^}]*right: 24px; top: 24px/);
+  const mobile = css.slice(css.indexOf("@media (max-width: 700px)"));
+  assert.match(mobile, /\.hero-backdrop > img \{[^}]*filter: none/);
+  assert.match(mobile, /\.hero-backdrop > img \{[^}]*object-position: 54% top/);
+  assert.match(mobile, /\.hero-copy \{[^}]*padding: 142px/);
+  assert.match(mobile, /\.hero-kolam \{[^}]*right: 16px; top: 16px/);
+  assert.doesNotMatch(css, /\.(?:hero|hero-copy|hero-description) \{[^}]*filter:/);
 });
 
 test("heritage assets preserve full subjects and credit the real photograph", () => {
