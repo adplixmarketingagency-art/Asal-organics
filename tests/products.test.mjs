@@ -19,7 +19,7 @@ const expected = [
   ["bilona-butter", "Bilona Butter", 1820, "1 kg", "milk"],
   ["palkova", "Palkova", 650, "1 kg", "milk"],
   ["karuppu-kavuni-halwa", "Karuppu Kavuni Halwa", 520, "1 kg", "milk"],
-  ["paneer", "Paneer", 910, "1 kg", "paneer"],
+  ["paneer", "Paneer", 910, "1 kg", "milk"],
   ["karuppu-kavuni", "Karuppu Kavuni", 195, "1 kg", "rice"],
   ["mapillai-samba", "Mapillai Samba", 130, "1 kg", "rice"],
   ["seera-samba", "Seera Samba (Vasanai)", 156, "1 kg", "rice"],
@@ -34,9 +34,32 @@ test("the 20 owner-confirmed products retain their selling prices and quantities
 });
 
 test("the owner-confirmed categories keep cold-pressed and wood-pressed oils separate", () => {
-  assert.deepEqual(productCategories.map(({ id }) => [id, selectProducts(products, { category: id }).length]), [["oils", 3], ["wood-oils", 3], ["ghee", 1], ["masala", 4], ["milk", 3], ["paneer", 1], ["rice", 3], ["grain", 2]]);
+  assert.deepEqual(productCategories.map(({ id }) => [id, selectProducts(products, { category: id }).length]), [["oils", 3], ["wood-oils", 3], ["ghee", 1], ["masala", 4], ["milk", 4], ["rice", 3], ["grain", 2]]);
   assert.equal(productCategories.find(({ id }) => id === "oils").tamilLabel, "செக்கு எண்ணெய்");
   assert.equal(productCategories.find(({ id }) => id === "wood-oils").tamilLabel, "மரச்செக்கு எண்ணெய்");
+});
+
+test("paneer belongs to Milk Products without changing its product identity or packs", () => {
+  const paneer = products.find(({ id }) => id === "paneer");
+  assert.equal(paneer.category, "milk");
+  assert.equal(productCategories.some(({ id }) => id === "paneer"), false);
+  assert.deepEqual(
+    selectProducts(products, { category: "milk" }).map(({ id }) => id),
+    ["bilona-butter", "palkova", "karuppu-kavuni-halwa", "paneer"],
+  );
+  for (const query of ["Paneer", "பனீர்", "Milk Products", "பால் பொருட்கள்"]) {
+    assert.ok(selectProducts(products, { category: "milk", query }).some(({ id }) => id === "paneer"), query);
+  }
+  assert.deepEqual(productVariantsFor(paneer), [
+    { id: "paneer:200g", productId: "paneer", size: "200 g", price: 182 },
+    { id: "paneer:500g", productId: "paneer", size: "500 g", price: 455 },
+    { id: "paneer:1kg", productId: "paneer", size: "1 kg", price: 910 },
+  ]);
+  assert.equal(getProductVariant("paneer").id, "paneer:1kg");
+  assert.deepEqual(
+    groupProducts(products).filter(({ products: items }) => items.some(({ id }) => id === "paneer")).map(({ id }) => id),
+    ["milk"],
+  );
 });
 
 test("Ragi and Bajra use the owner's confirmed kilogram prices and offer 500 g packs", () => {
@@ -148,7 +171,7 @@ test("category sections preserve filters and sort, omit empty groups and never d
     assert.deepEqual(group.products.map(({ price }) => price), group.products.map(({ price }) => price).sort((a, b) => a - b));
   }
   assert.deepEqual(groupProducts([]), []);
-  assert.deepEqual(groupProducts(selectProducts(products, { category: "saved", saved: ["sesame", "paneer"] })).map(({ id }) => id), ["oils", "paneer"]);
+  assert.deepEqual(groupProducts(selectProducts(products, { category: "saved", saved: ["sesame", "paneer"] })).map(({ id }) => id), ["oils", "milk"]);
 });
 
 test("pack sizes match the owner's note and confirmed-base products have selectable variants", () => {
@@ -158,7 +181,6 @@ test("pack sizes match the owner's note and confirmed-base products have selecta
     ghee: ["200 ml", "500 ml", "1 Litre"],
     masala: ["100 g", "250 g", "500 g", "1 kg"],
     milk: ["200 g", "500 g", "1 kg"],
-    paneer: ["200 g", "500 g", "1 kg"],
     rice: ["500 g", "1 kg"],
     grain: ["500 g", "1 kg"],
   });

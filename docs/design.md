@@ -8,7 +8,7 @@ See `design-assets.md` for provenance, licences and image-use limitations.
 
 ## Current catalogue
 
-- 20 owner-listed products across eight categories.
+- 20 owner-listed products across seven categories; Paneer is under Milk Products.
 - Only approved selling prices and quantities; pack prices round up proportionally.
 - Ragi/Bajra remain unavailable with “Price pending” until base quantities are confirmed.
 - Coordinated ingredient artwork in cards, quick views, search, product pages

@@ -6,7 +6,7 @@ import { productCategories } from "../src/content/products.ts";
 const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
 test("category headings show names and pack sizes without repetitive descriptions", () => {
-  assert.equal(productCategories.length, 8);
+  assert.equal(productCategories.length, 7);
   for (const category of productCategories) {
     assert.ok(category.label && category.tamilLabel);
     assert.equal("description" in category, false, category.id);

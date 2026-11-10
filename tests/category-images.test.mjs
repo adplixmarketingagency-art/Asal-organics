@@ -6,7 +6,7 @@ import { productCategories, products, selectProducts } from "../src/content/prod
 
 test("every owner-listed category has a unique self-hosted category image", () => {
   assert.deepEqual(Object.keys(categoryImages), productCategories.map(({ id }) => id));
-  assert.equal(new Set(Object.values(categoryImages)).size, 8);
+  assert.equal(new Set(Object.values(categoryImages)).size, 7);
   for (const [id, src] of Object.entries(categoryImages)) {
     assert.equal(src, `/images/categories/${id}.webp`);
     const image = readFileSync(new URL(`../public${src}`, import.meta.url));
@@ -41,7 +41,7 @@ test("homepage category shortcuts retain bilingual navigation, not product image
 
 test("category shortcuts stay in one compact row with bounded square thumbnails", () => {
   const css = readFileSync(new URL("../src/app/heritage.css", import.meta.url), "utf8");
-  assert.match(css, /\.category-shortcuts \{[^}]*grid-template-columns: repeat\(8, minmax\(0, 1fr\)\)/);
+  assert.match(css, /\.category-shortcuts \{[^}]*grid-template-columns: repeat\(7, minmax\(0, 1fr\)\)/);
   assert.match(css, /\.category-shortcut-photo \{[^}]*width: 6rem;[^}]*aspect-ratio: 1/);
   assert.match(css, /\.category-shortcut \{[^}]*align-items: center;[^}]*border: 0;[^}]*background: transparent;[^}]*text-align: center/);
   assert.doesNotMatch(css, /\.category-shortcuts \{[^}]*repeat\([24],/);

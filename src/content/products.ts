@@ -4,7 +4,6 @@ export const productCategories = [
   { id: "ghee", label: "Ghee", tamilLabel: "நெய்" },
   { id: "masala", label: "Masala & Spices", tamilLabel: "மசாலா வகைகள்" },
   { id: "milk", label: "Milk Products", tamilLabel: "பால் பொருட்கள்" },
-  { id: "paneer", label: "Paneer", tamilLabel: "பனீர்" },
   { id: "rice", label: "Traditional Rice", tamilLabel: "பாரம்பரிய அரிசி வகைகள்" },
   { id: "grain", label: "Ragi & Bajra", tamilLabel: "கேழ்வரகு & கம்பு" },
 ] as const;
@@ -18,7 +17,6 @@ export const categoryPackSizes: Record<ProductCategory, readonly PackSize[]> = {
   ghee: ["200 ml", "500 ml", "1 Litre"],
   masala: ["100 g", "250 g", "500 g", "1 kg"],
   milk: ["200 g", "500 g", "1 kg"],
-  paneer: ["200 g", "500 g", "1 kg"],
   rice: ["500 g", "1 kg"],
   grain: ["500 g", "1 kg"],
 };
@@ -55,7 +53,7 @@ export const products: Product[] = [
   { id: "bilona-butter", name: "Bilona Butter", tamilName: "பிலோனா வெண்ணெய்", size: "1 kg", price: 1820, category: "milk" },
   { id: "palkova", name: "Palkova", tamilName: "பால்கோவா", size: "1 kg", price: 650, category: "milk" },
   { id: "karuppu-kavuni-halwa", name: "Karuppu Kavuni Halwa", tamilName: "கருப்பு கவுனி அல்வா", size: "1 kg", price: 520, category: "milk" },
-  { id: "paneer", name: "Paneer", tamilName: "பனீர்", size: "1 kg", price: 910, category: "paneer" },
+  { id: "paneer", name: "Paneer", tamilName: "பனீர்", size: "1 kg", price: 910, category: "milk" },
   { id: "karuppu-kavuni", name: "Karuppu Kavuni", tamilName: "கருப்பு கவுனி அரிசி", size: "1 kg", price: 195, category: "rice" },
   { id: "mapillai-samba", name: "Mapillai Samba", tamilName: "மாப்பிள்ளை சம்பா அரிசி", size: "1 kg", price: 130, category: "rice" },
   { id: "seera-samba", name: "Seera Samba (Vasanai)", tamilName: "சீரகச் சம்பா அரிசி (வாசனை)", size: "1 kg", price: 156, category: "rice" },
