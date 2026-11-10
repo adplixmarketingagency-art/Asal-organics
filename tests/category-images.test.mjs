@@ -70,6 +70,22 @@ test("category navigation closes overlays, resets stale filters and scrolls afte
   assert.match(css, /html \{[^}]*scroll-padding-top: 90px/);
 });
 
+test("category shortcuts select a scroll destination independently of the product filter", () => {
+  const storefront = readFileSync(new URL("../src/components/Storefront.tsx", import.meta.url), "utf8");
+  const catalogue = readFileSync(new URL("../src/components/Catalogue.tsx", import.meta.url), "utf8");
+  const handler = storefront.slice(storefront.indexOf("const goToCollection"), storefront.indexOf("// Move the actual section"));
+  // Preserve dedicated collection landing pages until the shopper navigates.
+  assert.match(storefront, /const \[filterCategory, setFilterCategory\] = useState<Category>\(initialCategory\)/);
+  assert.match(handler, /setCategory\(next\)/);
+  assert.match(handler, /setFilterCategory\(next === "saved" \? "saved" : "all"\)/);
+  assert.doesNotMatch(handler, /setFilterCategory\(next\)/);
+  assert.match(storefront, /<Catalogue[^>]*category=\{category\} filterCategory=\{filterCategory\}/);
+  assert.match(catalogue, /selectProducts\(products, \{ category: filterCategory, sort, saved, maxPrice, query \}\)/);
+  assert.doesNotMatch(catalogue, /selectProducts\(products, \{ category,/);
+  assert.match(catalogue, /className=\{filterCategory === id \? "active" : ""\} aria-pressed=\{filterCategory === id\}/);
+  assert.match(catalogue, /filterCategory === "saved" && saved.length === 0 \? "No saved favourites"/);
+});
+
 test("category shortcuts stay in one compact row with bounded square thumbnails", () => {
   const css = readFileSync(new URL("../src/app/heritage.css", import.meta.url), "utf8");
   assert.match(css, /\.category-shortcuts \{[^}]*grid-template-columns: repeat\(7, minmax\(0, 1fr\)\)/);

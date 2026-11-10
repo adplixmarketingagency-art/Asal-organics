@@ -12,11 +12,12 @@ const categories: { id: Category; label: string }[] = [
   { id: "saved", label: "Saved favourites" },
 ];
 
-export function Catalogue({ saved, onSave, onExplore, category, onCategory, navigationId }: {
+export function Catalogue({ saved, onSave, onExplore, category, filterCategory, onCategory, navigationId }: {
   saved: string[];
   onSave: (id: string) => void;
   onExplore: (product: Product) => void;
   category: Category;
+  filterCategory: Category;
   onCategory: (category: Category) => void;
   navigationId: number;
 }) {
@@ -27,7 +28,7 @@ export function Catalogue({ saved, onSave, onExplore, category, onCategory, navi
   const [view, setView] = useState<"grid" | "list">("grid");
   const [readyNavigation, setReadyNavigation] = useState(0);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
-  const selected = selectProducts(products, { category, sort, saved, maxPrice, query });
+  const selected = selectProducts(products, { category: filterCategory, sort, saved, maxPrice, query });
   const groups = groupProducts(selected);
   const reset = () => { setQuery(""); setMaxPrice(catalogueMaxPrice); onCategory("all"); };
   // Closing unmounts the panel, so return focus to the control that owns aria-expanded.
@@ -62,7 +63,7 @@ export function Catalogue({ saved, onSave, onExplore, category, onCategory, navi
       <CategorySelector category={category} onCategory={onCategory} />
       <div className="collection-tabs" aria-label="Collection views">
         {categories.map(({ id, label }) => (
-          <button key={id} className={category === id ? "active" : ""} aria-pressed={category === id} onClick={() => onCategory(id)}>
+          <button key={id} className={filterCategory === id ? "active" : ""} aria-pressed={filterCategory === id} onClick={() => onCategory(id)}>
             {id === "saved" && <Heart size={15} />}{label}
             {id === "all" && <span className="tab-count">{products.length}</span>}
             {id === "saved" && saved.length > 0 && <span className="tab-count">{saved.length}</span>}
@@ -110,7 +111,7 @@ export function Catalogue({ saved, onSave, onExplore, category, onCategory, navi
             {group.products.map((product) => <ProductCard key={product.id} product={product} saved={saved.includes(product.id)} onSave={() => onSave(product.id)} onExplore={() => onExplore(product)} />)}
           </div>
         </section>)}
-      </div> : <div className="empty-state"><Sprout size={36} strokeWidth={1.2} /><h3>{category === "saved" && saved.length === 0 ? "No saved favourites" : "No matching products"}</h3><p>{category === "saved" && saved.length === 0 ? "Tap the heart on any product to save it here for later." : "No products match these filters. Try a different search or price."}</p><button className="button button-green" onClick={reset}>View all products <ArrowRight size={17} /></button></div>}
+      </div> : <div className="empty-state"><Sprout size={36} strokeWidth={1.2} /><h3>{filterCategory === "saved" && saved.length === 0 ? "No saved favourites" : "No matching products"}</h3><p>{filterCategory === "saved" && saved.length === 0 ? "Tap the heart on any product to save it here for later." : "No products match these filters. Try a different search or price."}</p><button className="button button-green" onClick={reset}>View all products <ArrowRight size={17} /></button></div>}
       <p className="catalogue-note">Filters and sorting use the base pack price. Real payments and delivery orders are not yet available.</p>
     </section>
   );

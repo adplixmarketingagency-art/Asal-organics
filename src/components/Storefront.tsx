@@ -28,6 +28,7 @@ export default function Storefront({ initialCategory = "all" }: { initialCategor
   const [dialog, setDialog] = useState<DialogState>(null);
   const [saved, setSaved] = useState<string[]>([]);
   const [category, setCategory] = useState<Category>(initialCategory);
+  const [filterCategory, setFilterCategory] = useState<Category>(initialCategory);
   const [navigationId, setNavigationId] = useState(0);
   const isWoodOilsPage = initialCategory === "wood-oils";
   const [menuOpen, setMenuOpen] = useState(false);
@@ -64,6 +65,8 @@ export default function Storefront({ initialCategory = "all" }: { initialCategor
   const guide = () => { setMenuOpen(false); setDialog({ type: "guide" }); };
   const goToCollection = (next: Category = "all") => {
     setCategory(next);
+    // Category shortcuts navigate the full catalogue; only favourites filter it.
+    setFilterCategory(next === "saved" ? "saved" : "all");
     setMenuOpen(false);
     setDialog(null);
     // Increment even when reselecting the current category.
@@ -97,7 +100,7 @@ export default function Storefront({ initialCategory = "all" }: { initialCategor
       </div>
       {!mobileLayout && nammalvarStory}
       <KolamDivider className="collection-divider" />
-      <Catalogue saved={saved} onSave={toggleSaved} onExplore={explore} category={category} onCategory={goToCollection} navigationId={navigationId} />
+      <Catalogue saved={saved} onSave={toggleSaved} onExplore={explore} category={category} filterCategory={filterCategory} onCategory={goToCollection} navigationId={navigationId} />
       <Editorial />
       {mobileLayout && nammalvarStory}
     </main>
