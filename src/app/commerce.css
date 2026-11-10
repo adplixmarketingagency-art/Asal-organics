@@ -53,7 +53,6 @@
   .summary-disclaimer { color: #557083; font-size: var(--text-small); line-height: 1.7; margin-top: 9px; }
   .order-summary > .button { margin-top: 24px; gap: 16px; }
   .payment-caption { text-align: center; font-size: var(--text-small); color: #617365; margin-top: 10px; }
-  .summary-footnote { display: flex; align-items: center; justify-content: center; gap: 10px; border-top: 1px solid #cedee5; padding-top: 22px; margin-top: 25px; font-size: var(--text-small); color: #597262; }
   .commerce-reference { margin-top: 40px; max-width: 660px; font-size: var(--text-small); color: #727a73; line-height: 1.8; }
   .commerce-footer { border-top: 1px solid var(--line); min-height: 74px; display: flex; justify-content: space-between; align-items: center; gap: 20px; font-size: var(--text-small); color: #727a73; }
   .empty-bag { text-align: center; padding: 72px 20px 95px; }

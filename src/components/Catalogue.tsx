@@ -35,7 +35,7 @@ export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCateg
   return (
     <section className="collection section-wrap" id="collection" aria-labelledby="collection-title">
       <div className="collection-heading">
-        <div><p className="eyebrow">THE ASAL COLLECTION</p><h2 id="collection-title">Goodness for your everyday.</h2></div>
+        <div><h2 id="collection-title">Our products</h2></div>
         <button className="text-link guide-link" onClick={onGuide}>Browse by category <ArrowUpRight size={19} /></button>
       </div>
       <div className="collection-tabs" aria-label="Product categories">
@@ -52,7 +52,7 @@ export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCateg
           <button ref={filterToggleRef} className={`filter-button ${filtersOpen ? "active" : ""}`} onClick={() => setFiltersOpen(!filtersOpen)} aria-expanded={filtersOpen} aria-controls="collection-filters">
             <SlidersHorizontal size={16} /> Filters {maxPrice < catalogueMaxPrice || query ? <span className="filter-dot" /> : null}<ChevronDown size={14} />
           </button>
-          <span className="result-count" role="status">{selected.length} {selected.length === 1 ? "product" : "products"} to discover</span>
+          <span className="result-count" role="status">{selected.length} {selected.length === 1 ? "product" : "products"}</span>
         </div>
         <div className="sort-actions">
           <label className="sort-label"><span>Sort within categories:</span><select aria-label="Sort products within each category" value={sort} onChange={(event) => setSort(event.target.value as Sort)}>
@@ -81,15 +81,15 @@ export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCateg
           {group.id === "ghee" && <HeritageIllustration subject="bilona" />}
           {group.id === "milk" && <HeritageIllustration subject="cattle" />}
           <div className="category-section-heading">
-            <div className="category-heading-copy"><p className="category-tamil" lang="ta">{group.tamilLabel}</p><h3 id={`category-${group.id}-title`}>{group.label}</h3><p className="category-description">{group.description}</p><p className="category-pack-sizes">Pack sizes: {categoryPackSizes[group.id].join(" · ")}</p></div>
+            <div className="category-heading-copy"><p className="category-tamil" lang="ta">{group.tamilLabel}</p><h3 id={`category-${group.id}-title`}>{group.label}</h3><p className="category-pack-sizes">Pack sizes: {categoryPackSizes[group.id].join(" · ")}</p></div>
             <span className="category-product-count">{group.products.length} {group.products.length === 1 ? "product" : "products"}</span>
           </div>
           <div className={`product-grid ${view === "list" ? "list-view" : ""}`}>
             {group.products.map((product) => <ProductCard key={product.id} product={product} saved={saved.includes(product.id)} onSave={() => onSave(product.id)} onExplore={() => onExplore(product)} />)}
           </div>
         </section>)}
-      </div> : <div className="empty-state"><Sprout size={36} strokeWidth={1.2} /><h3>{category === "saved" && saved.length === 0 ? "Keep your favourites close." : "Let’s find something else."}</h3><p>{category === "saved" && saved.length === 0 ? "Tap the heart on any product to save it here for later." : "No products match these filters. Try a different search or price."}</p><button className="button button-green" onClick={reset}>Explore all products <ArrowRight size={17} /></button></div>}
-      <p className="catalogue-note">Choose a pack on each product. Pack prices are calculated from the listed litre or kilogram price and rounded up to a whole rupee; price filters and sorting use that base pack. Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing.</p>
+      </div> : <div className="empty-state"><Sprout size={36} strokeWidth={1.2} /><h3>{category === "saved" && saved.length === 0 ? "No saved favourites" : "No matching products"}</h3><p>{category === "saved" && saved.length === 0 ? "Tap the heart on any product to save it here for later." : "No products match these filters. Try a different search or price."}</p><button className="button button-green" onClick={reset}>View all products <ArrowRight size={17} /></button></div>}
+      <p className="catalogue-note">Filters and sorting use the base pack price. Real payments and delivery orders are not yet available.</p>
     </section>
   );
 }

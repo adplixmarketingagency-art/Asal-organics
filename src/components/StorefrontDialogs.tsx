@@ -26,8 +26,7 @@ function ProductResults({ items, onExplore }: { items: Product[]; onExplore: (pr
 function CatalogueGuide({ onExplore }: { onExplore: (product: Product) => void }) {
   const [category, setCategory] = useState<ProductCategory>("oils");
   return <>
-    <p className="eyebrow">THE ASAL COLLECTION</p><h2>A place for every essential.</h2>
-    <p className="modal-intro">Find oils, ghee, spices, milk products, paneer, rice, and Ragi &amp; Bajra in their own sections.</p>
+    <h2>Shop by category</h2>
     <div className="guide-options">
       {productCategories.map(({ id, label }) => <button key={id} className={category === id ? "selected" : ""} aria-pressed={category === id} onClick={() => setCategory(id)}>{label}</button>)}
     </div>
@@ -39,9 +38,9 @@ function SearchContent({ onExplore }: { onExplore: (product: Product) => void })
   const [query, setQuery] = useState("");
   const results = selectProducts(products, { query });
   return <>
-    <p className="eyebrow">A LITTLE DISCOVERY</p><h2>What are you looking for?</h2>
+    <h2>Search products</h2>
     <label className="search-input"><Search size={21} /><input data-autofocus type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try “ghee” or “rice”" aria-label="Search products" /></label>
-    <p className="search-result-label" role="status">{query ? `${results.length} matching ${results.length === 1 ? "product" : "products"}` : "Explore the collection"}</p>
+    <p className="search-result-label" role="status">{query ? `${results.length} matching ${results.length === 1 ? "product" : "products"}` : "All products"}</p>
     <ProductResults items={results} onExplore={onExplore} />
     {!results.length && <div className="search-empty"><Leaf size={28} /><p>No products found. Try another name or category.</p><button className="text-link" onClick={() => setQuery("")}>Clear search <ArrowRight size={16} /></button></div>}
   </>;
@@ -83,7 +82,7 @@ export function StorefrontDialogs({ dialog, onClose, onExplore, saved, onSave }:
   return <Modal title={dialog.type === "search" ? "Search products" : dialog.type === "guide" ? "Catalogue guide" : dialog.type === "about" ? "About Asal" : "Online ordering"} onClose={onClose} className={dialog.type === "guide" ? "guide-modal" : ""}>
     {dialog.type === "search" && <SearchContent onExplore={onExplore} />}
     {dialog.type === "guide" && <CatalogueGuide onExplore={onExplore} />}
-    {dialog.type === "ordering" && <div className="simple-dialog"><span className="modal-symbol"><ShoppingBag size={28} strokeWidth={1.4} /></span><p className="eyebrow">YOUR EVERYDAY ESSENTIALS</p><h2>A little goodness, in your bag.</h2><p>Add products with a listed quantity to your bag and review your delivery details at checkout.</p><p className="muted">Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing. Delivery availability, charges and tax settings are still to be confirmed.</p><Link href="/cart" className="button button-green" onClick={onClose}>Go to your bag <ArrowRight size={18} /></Link></div>}
-    {dialog.type === "about" && <div className="simple-dialog"><span className="brand modal-brand"><BrandWordmark /></span><p className="eyebrow">BACK TO WHAT’S REAL</p><h2>A simpler kind of everyday.</h2><p>Explore Asal’s cold-pressed oils, masala and grain flours, milk products, and traditional rice varieties.</p><p className="muted">Browse the catalogue and prepare your bag. Online ordering is not yet available.</p><button className="button button-green" onClick={onClose}>Back to the collection <ArrowRight size={18} /></button></div>}
+    {dialog.type === "ordering" && <div className="simple-dialog"><span className="modal-symbol"><ShoppingBag size={28} strokeWidth={1.4} /></span><h2>Ordering &amp; delivery</h2><p>Add products with a listed quantity to your bag and review your delivery details at checkout.</p><p className="muted">Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing. Delivery availability, charges and tax settings are still to be confirmed.</p><Link href="/cart" className="button button-green" onClick={onClose}>Go to your bag <ArrowRight size={18} /></Link></div>}
+    {dialog.type === "about" && <div className="simple-dialog"><span className="brand modal-brand"><BrandWordmark /></span><h2>About Asal</h2><p>Asal Iyarkai Angadi offers oils, ghee, spices, dairy products and traditional grains.</p><p className="muted">Browse the catalogue and prepare your bag. Online ordering is not yet available.</p><button className="button button-green" onClick={onClose}>Back to the collection <ArrowRight size={18} /></button></div>}
   </Modal>;
 }

@@ -1,11 +1,10 @@
-import { ArrowUpRight, Check, ChevronDown, Leaf } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Leaf } from "lucide-react";
 import { KolamDivider } from "./Kolam";
 
 const faqs = [
-  { question: "What can I find in the collection?", answer: "Browse cold-pressed and wood-pressed oils, ghee, masala and grain flours, milk products, paneer, and traditional rice varieties. Each product shows its available packs and prices." },
-  { question: "Which pack sizes are listed?", answer: "Oils: 500 ml, 1, 2 and 5 litres. Ghee: 200 ml, 500 ml and 1 litre. Masala: 100 g, 250 g, 500 g and 1 kg. Milk products and paneer: 200 g, 500 g and 1 kg. Rice, Ragi and Bajra: 500 g and 1 kg. Product details show which pack has a confirmed price." },
-  { question: "How are different pack sizes priced?", answer: "Pack prices are proportional to the listed litre or kilogram price and rounded up to a whole rupee. Ragi is ₹95 per kg (₹48 for 500 g); Bajra is ₹73 per kg (₹37 for 500 g). Choose your pack on the product card or in its details." },
-  { question: "Can I place an order on this website?", answer: "You can prepare your bag and review delivery details at checkout. Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing. Delivery availability, charges and tax settings still need to be confirmed." },
+  { question: "Which pack sizes are available?", answer: "Use the pack selector on each product to see its sizes and prices." },
+  { question: "How are pack prices calculated?", answer: "Prices are proportional to the listed litre or kilogram price and rounded up to a whole rupee." },
+  { question: "Can I place an order?", answer: "Real payments and delivery orders are not yet available. You can prepare your bag and review checkout. Sandbox payments are for testing only; delivery charges and tax settings are still to be confirmed." },
 ];
 
 export function NammalvarStory({ onGuide }: { onGuide: () => void }) {
@@ -18,11 +17,10 @@ export function NammalvarStory({ onGuide }: { onGuide: () => void }) {
           </figcaption>
         </figure>
         <div className="story-copy">
-          <p className="eyebrow">REMEMBERING A VOICE FOR THE SOIL</p>
-          <h2 id="nammalvar-title">Rooted in the land.<br /><em>Remembered at the table.</em></h2>
-          <p>G. Nammalvar was a Tamil natural-farming advocate who encouraged a closer relationship with the soil. We remember his contribution here as part of Tamil Nadu’s farming heritage.</p>
+          <h2 id="nammalvar-title">G. Nammalvar</h2>
+          <p>A Tamil natural-farming advocate, remembered for his contribution to Tamil Nadu’s farming heritage.</p>
           <p className="story-tamil" lang="ta">அன்றாட உணவில், நம் பாரம்பரியம்.</p>
-          <button className="text-link" onClick={onGuide}>Get to know the collection <ArrowUpRight size={19} /></button>
+          <button className="text-link" onClick={onGuide}>Shop products <ArrowUpRight size={19} /></button>
           <p className="story-context">An editorial remembrance, not an endorsement or affiliation.</p>
         </div>
       </div>
@@ -33,9 +31,8 @@ export function Editorial() {
   return <>
     <KolamDivider className="editorial-divider" />
     <section className="faq-section section-wrap" id="questions">
-      <div className="faq-intro"><p className="eyebrow">A LITTLE CLARITY</p><h2>Good questions.<br />Simple answers.</h2><span className="faq-leaf" aria-hidden="true"><Leaf size={54} strokeWidth={1} /></span></div>
+      <div className="faq-intro"><h2>Good to know</h2><span className="faq-leaf" aria-hidden="true"><Leaf size={54} strokeWidth={1} /></span></div>
       <div className="faq-list">{faqs.map(({ question, answer }) => <details key={question}><summary>{question}<ChevronDown size={19} /></summary><p>{answer}</p></details>)}</div>
     </section>
-    <div className="closing-note"><Check size={16} /><span>A little closer to nature. A little closer to home.</span><Leaf size={16} /></div>
   </>;
 }

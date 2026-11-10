@@ -32,7 +32,8 @@ test("homepage category shortcuts retain bilingual navigation, not product image
   assert.match(source, /getElementById\("collection"\)\?\.scrollIntoView/);
   assert.match(source, /prefers-reduced-motion: reduce/);
   assert.doesNotMatch(source, /categoryIcons|category-shortcut-icon/);
-  const shelf = source.slice(source.indexOf('<section className="category-shelf'), source.indexOf('<div className="qualities'));
+  const shelfStart = source.indexOf('<section className="category-shelf');
+  const shelf = source.slice(shelfStart, source.indexOf("</section>", shelfStart));
   assert.doesNotMatch(shelf, /<ArrowUpRight/);
   assert.match(shelf, /className="category-scroll-hint"[\s\S]*Scroll to browse/);
   assert.equal(selectProducts(products, { category: "wood-oils" }).length, 3);

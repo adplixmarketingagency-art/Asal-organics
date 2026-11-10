@@ -34,7 +34,7 @@ test("wood-pressed category guide no longer claims the confirmed products are pe
 
 test("catalogue FAQ describes available proportional pack prices", () => {
   const editorial = source("src/components/Editorial.tsx");
-  assert.match(editorial, /cold-pressed and wood-pressed oils/);
-  assert.match(editorial, /Pack prices are proportional/);
+  assert.match(editorial, /Use the pack selector on each product to see its sizes and prices/);
+  assert.match(editorial, /Prices are proportional to the listed litre or kilogram price and rounded up to a whole rupee/);
   assert.doesNotMatch(editorial, /Only the previously priced|Prices for the additional sizes are still being confirmed/);
 });

@@ -184,11 +184,10 @@ test("the mobile hero stays sharp and the kolam is anchored to the whole card", 
   assert.match(mobile, /\.hero-backdrop > img \{[^}]*filter: none/);
   assert.match(mobile, /\.hero-backdrop > img \{[^}]*object-position: 54% top/);
   assert.match(mobile, /\.hero-copy \{[^}]*padding: 108px 24px 24px/);
-  assert.match(mobile, /\.hero-description \{ display: none/);
+  assert.doesNotMatch(hero, /hero-description|hero-footnote/);
   assert.match(mobile, /\.hero \.button \{ margin-top: 8px/);
   assert.match(mobile, /\.hero-backdrop > img \{[^}]*inset: -60px 0 0/);
   assert.match(mobile, /\.hero-kolam \{[^}]*right: 16px; top: 16px/);
-  assert.doesNotMatch(css.slice(0, css.indexOf("@media (max-width: 700px)")), /\.hero-description \{[^}]*display: none/);
   assert.doesNotMatch(css, /\.(?:hero|hero-copy|hero-description) \{[^}]*filter:/);
 });
 

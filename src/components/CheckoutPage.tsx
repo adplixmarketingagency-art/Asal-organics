@@ -234,14 +234,14 @@ export function CheckoutPage() {
       <p>Reference: {paymentSuccess.orderId}</p>
       <Link href="/cart" className="button button-green">Back to your bag <ArrowRight size={18} /></Link>
     </section> : !ready ? <p className="commerce-loading" role="status">Preparing checkout…</p> : !items.length && !currentReview ? <EmptyBag /> : <>
-      <div className="commerce-title"><h1>{currentReview ? <>One last <em>look.</em></> : <>A little closer to <em>home.</em></>}</h1><p>{currentReview ? "Check your details and the essentials in your bag." : "Let’s get your everyday essentials ready."}</p></div>
+      <div className="commerce-title"><h1>{currentReview ? "Review your order" : "Delivery details"}</h1></div>
       {paymentSettings?.enabled && paymentSettings.mode === "test" && <p className="commerce-alert" role="status"><strong>Razorpay test mode.</strong> Use test details only. The items subtotal is used for this sandbox payment; no real money is charged and no delivery order is placed.</p>}
       {storageWarning && <p className="commerce-alert" role="status">{storageWarning}</p>}
       {cartChanged && <p className="commerce-alert" role="status">{paymentPending || confirmation ? "Your bag changed in another tab. This payment still uses the original reviewed items and total." : "Your bag has changed. Please review it again before continuing."}</p>}
       <div className="commerce-grid checkout-grid">
         <div>
           {currentReview ? <section className="checkout-review" ref={reviewRef} tabIndex={-1} aria-label="Checkout review">
-            <div className="checkout-section-heading"><span className="section-icon"><Check size={20} /></span><div><h2>Details, checked.</h2><p>Your checkout review is ready. No order has been placed.</p></div></div>
+            <div className="checkout-section-heading"><span className="section-icon"><Check size={20} /></span><div><h2>Order review</h2><p>Your checkout review is ready. No order has been placed.</p></div></div>
             <div className="review-address">
               <div className="review-address-title"><h3>Delivery details</h3><button className="text-link" disabled={paymentPending || Boolean(confirmation)} onClick={() => setReview(null)}><Pencil size={14} />Edit details</button></div>
               <strong>{currentReview.customer.fullName}</strong>
@@ -263,7 +263,7 @@ export function CheckoutPage() {
               : "Payments are unavailable until the store owner configures Razorpay. Live checkout also requires approved catalogue, shipping and tax settings."}</p>
             <Link href="/cart" className="text-link back-to-bag"><ArrowLeft size={16} />Back to your bag</Link>
           </section> : <form ref={formRef} onSubmit={submit} noValidate className="checkout-form" aria-busy={pending}>
-            <div className="checkout-section-heading"><span className="section-icon"><MapPin size={20} strokeWidth={1.5} /></span><div><h2>Where’s home?</h2><p>Enter your contact and delivery details.</p></div></div>
+            <div className="checkout-section-heading"><span className="section-icon"><MapPin size={20} strokeWidth={1.5} /></span><div><h2>Contact &amp; delivery</h2><p>Enter your contact and delivery details.</p></div></div>
             <p className="form-privacy">Review details stay in memory until you leave. In test mode we do not store a merchant order; in live mode delivery details are saved with your order. Opening Razorpay shares your name, email and phone with the payment provider. Use test details in preview.</p>
             {error && <p className="form-error-banner" role="alert">{error}</p>}
             <fieldset disabled={pending}>

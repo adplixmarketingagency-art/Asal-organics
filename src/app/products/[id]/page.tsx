@@ -56,7 +56,6 @@ export default async function ProductPage({ params }: Props) {
           <h1 id="product-heading">{product.name}</h1>
           <p className="product-page-tamil" lang="ta">{product.tamilName}</p>
           <ProductImage productId={product.id} className="product-page-artwork" priority />
-          <p className="product-page-intro">{product.name} from {siteName}. Compare the listed packs and prices below before preparing your bag.</p>
           <table className="product-page-packs">
             <caption>Pack sizes and listed prices</caption>
             <thead><tr><th scope="col">Pack size</th><th scope="col">Price (INR)</th></tr></thead>

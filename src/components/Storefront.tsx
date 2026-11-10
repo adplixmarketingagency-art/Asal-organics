@@ -4,7 +4,7 @@ import { BrandWordmark } from "./BrandWordmark";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowRight, ArrowUpRight, Check, ChevronRight, Droplets, Heart, Leaf, Menu, Search, ShoppingBag, Sprout, Sun, X } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight, Check, ChevronRight, Heart, Menu, Search, ShoppingBag, X } from "lucide-react";
 import { products, productCategories, type Category, type Product } from "@/content/products";
 import { categoryImages } from "@/content/category-images";
 import { Catalogue } from "./Catalogue";
@@ -68,7 +68,6 @@ export default function Storefront({ initialCategory = "all" }: { initialCategor
 
   return <>
     <a className="skip-link" href="#main">Skip to content</a>
-    <div className="announcement-bar"><Leaf size={13} /><span>A little closer to nature. A little more goodness.</span><a href="#our-way">Discover our way <ArrowUpRight size={13} /></a></div>
     <header className="site-header">
       <div className="header-inner section-wrap">
         <a href="/" className="brand" aria-label={`${siteName} home`}><BrandWordmark /></a>
@@ -83,12 +82,16 @@ export default function Storefront({ initialCategory = "all" }: { initialCategor
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero-backdrop" aria-hidden="true"><img src="/images/editorial/paddy-field.webp" alt="" width="1024" height="683" fetchPriority="high" /></div>
           <Kolam className="hero-kolam" />
-          <div className="hero-copy"><p className="eyebrow">{isWoodOilsPage ? siteName : "FROM OUR PANTRY TO YOURS"}</p><p className="hero-tamil" lang="ta">அசல் இயற்கை அங்காடி</p><h1 id="hero-title">{isWoodOilsPage ? <>Wood-pressed oils.<br /><em>Rooted in tradition.</em></> : <>Asal Iyarkai<br /><em>Angadi.</em></>}</h1><p className="hero-description">{isWoodOilsPage ? "Wood-pressed groundnut, sesame and coconut oils, prepared using a wooden press. Explore listed prices and packs from 500 ml to 5 litres." : "Asal Iyarkai Angadi (Asaliyarkaiangadi) brings together cold-pressed and wood-pressed oils, ghee, masala and traditional rice. Everyday essentials with a little taste of home."}</p><a href="#collection" className="button button-green" onClick={() => setCategory(initialCategory)}>Explore the collection <ArrowDown size={17} /></a><div className="hero-footnote"><span className="small-leaf"><Leaf size={16} strokeWidth={1.4} /></span><span>Simple ingredients. Familiar rituals.</span></div></div>
+          <div className="hero-copy">
+            <p className="hero-tamil" lang="ta">அசல் இயற்கை அங்காடி</p>
+            <h1 id="hero-title">{isWoodOilsPage ? <>Wood-pressed<br /><em>oils</em></> : <>Asal Iyarkai<br /><em>Angadi</em></>}</h1>
+            <a href="#collection" className="button button-green" onClick={() => setCategory(initialCategory)}>Shop products <ArrowDown size={17} /></a>
+          </div>
         </section>
       </div>
       {!mobileLayout && nammalvarStory}
       <section className="category-shelf section-wrap" aria-labelledby="categories-title">
-        <div className="category-shelf-heading"><h2 id="categories-title">Shop by category</h2><p>Find your everyday favourites.</p></div>
+        <div className="category-shelf-heading"><h2 id="categories-title">Shop by category</h2></div>
         <nav className="category-shortcuts" aria-label="Shop by category">
           {productCategories.map(({ id, label, tamilLabel }) => (
             <button key={id} className="category-shortcut" onClick={() => goToCollection(id)} aria-pressed={category === id} aria-controls="collection">
@@ -99,13 +102,12 @@ export default function Storefront({ initialCategory = "all" }: { initialCategor
         </nav>
         <p className="category-scroll-hint">Scroll to browse <ArrowRight size={13} aria-hidden="true" /></p>
       </section>
-      <div className="qualities section-wrap"><div><Sprout /><span>Cold-pressed oils</span></div><span className="quality-divider" /><div><Droplets /><span>Traditional rice varieties</span></div><span className="quality-divider" /><div><Sun /><span>Everyday kitchen essentials</span></div><span className="quality-divider" /><div><Heart /><span>Goodness, kept simple</span></div></div>
       <KolamDivider className="collection-divider" />
       <Catalogue saved={saved} onSave={toggleSaved} onExplore={explore} onGuide={guide} category={category} onCategory={setCategory} />
       <Editorial />
       {mobileLayout && nammalvarStory}
     </main>
-    <footer className="site-footer"><div className="footer-inner section-wrap"><div className="footer-brand"><a href="/" className="brand footer-brand-mark" aria-label={`${siteName} home`}><BrandWordmark /></a><p>{siteName}<br />Nature, uncomplicated.</p><span className="footer-leaf"><Leaf size={17} /> Back to what’s real.</span></div><div className="footer-links"><h3>Find your goodness</h3>{productCategories.map(({ id, label }) => id === "wood-oils" ? <a key={id} href={woodOilsPath}>{label}</a> : <button key={id} onClick={() => goToCollection(id)}>{label}</button>)}</div><div className="footer-links"><h3>A little about us</h3><a href="#our-way">The Asal way</a><a href="#questions">Good to know</a><button onClick={() => setDialog({ type: "about" })}>About this store</button><button onClick={() => setDialog({ type: "ordering" })}>Ordering & delivery</button><a href="/credits">Image credits</a></div><div className="footer-signoff"><Kolam /><p>Good food.<br />Simple rituals.<br /><em>A little more real.</em></p></div></div><div className="footer-bottom section-wrap"><span>© 2026 {siteName}. A fresh beginning.</span><span>Thoughtfully designed. Rooted in nature.</span><span className="preview-tag"><span />Store preview</span><span className="footer-credit">Powered by <strong>Adplix Media</strong><img src="/adplix.svg" alt="" width="18" height="18" /></span></div></footer>
+    <footer className="site-footer"><div className="footer-inner section-wrap"><div className="footer-brand"><a href="/" className="brand footer-brand-mark" aria-label={`${siteName} home`}><BrandWordmark /></a><p>{siteName}</p></div><div className="footer-links"><h3>Categories</h3>{productCategories.map(({ id, label }) => id === "wood-oils" ? <a key={id} href={woodOilsPath}>{label}</a> : <button key={id} onClick={() => goToCollection(id)}>{label}</button>)}</div><div className="footer-links"><h3>Information</h3><a href="#our-way">The Asal way</a><a href="#questions">Good to know</a><button onClick={() => setDialog({ type: "about" })}>About this store</button><button onClick={() => setDialog({ type: "ordering" })}>Ordering & delivery</button><a href="/credits">Image credits</a></div><div className="footer-signoff"><Kolam /></div></div><div className="footer-bottom section-wrap"><span>© 2026 {siteName}</span><span className="preview-tag"><span />Store preview</span><span className="footer-credit">Powered by <strong>Adplix Media</strong><img src="/adplix.svg" alt="" width="18" height="18" /></span></div></footer>
     <div className="sr-only" aria-live="polite">{announcement}</div>
     {announcement && <button className="save-toast" onClick={() => setAnnouncement("")} aria-label={`${announcement} Dismiss notification`}><Check size={16} /><span>{announcement}</span><X size={14} /></button>}
     {dialog && <StorefrontDialogs key={dialog.type === "product" ? dialog.product.id : dialog.type} dialog={dialog} onClose={() => setDialog(null)} onExplore={explore} saved={saved} onSave={toggleSaved} />}

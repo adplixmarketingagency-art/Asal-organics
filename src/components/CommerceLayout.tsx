@@ -3,7 +3,7 @@
 import { BrandWordmark } from "./BrandWordmark";
 
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Check, Leaf, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { categoryLabel, formatPrice } from "@/content/products";
 import { MAX_ITEM_QUANTITY, type CartSummary } from "@/lib/cart";
@@ -14,7 +14,6 @@ export function CommerceLayout({ step, children }: { step: 1 | 2 | 3; children: 
   const { summary } = useCart();
   return <div className="commerce-page">
     <a className="skip-link" href="#main">Skip to content</a>
-    <div className="announcement-bar"><Leaf size={13} /><span>A little closer to nature. A little more goodness.</span></div>
     <header className="commerce-header section-wrap">
       <Link href="/" className="brand" aria-label="Asal Organics home"><BrandWordmark /></Link>
       <Link href="/#collection" className="text-link"><ArrowLeft size={16} />Continue shopping</Link>
@@ -29,16 +28,15 @@ export function CommerceLayout({ step, children }: { step: 1 | 2 | 3; children: 
       </nav>
       {children}
     </main>
-    <footer className="commerce-footer section-wrap"><span>© 2026 Asal. Nature, uncomplicated.</span><span>Secure checkout · Powered by Razorpay</span></footer>
+    <footer className="commerce-footer section-wrap"><span>© 2026 Asal</span><span>Secure checkout · Powered by Razorpay</span></footer>
   </div>;
 }
 
 export function EmptyBag() {
   return <section className="empty-bag">
     <span className="empty-bag-icon"><ShoppingBag size={34} strokeWidth={1.2} /></span>
-    <h1>A little goodness awaits.</h1>
-    <p>Your bag is empty. Find something for your everyday<br />and make a little room for something good.</p>
-    <Link href="/#collection" className="button button-green">Explore the collection <ArrowRight size={18} /></Link>
+    <h1>Your bag is empty</h1>
+    <Link href="/#collection" className="button button-green">Shop products <ArrowRight size={18} /></Link>
   </section>;
 }
 
@@ -68,7 +66,7 @@ export function CartLines({ compact = false, summary: suppliedSummary }: { compa
 
 export function OrderSummary({ summary, children, showItems = false }: { summary: CartSummary; children?: ReactNode; showItems?: boolean }) {
   return <aside className="order-summary" aria-label="Order summary">
-    <div className="summary-heading"><h2>Your everyday essentials</h2><span>{summary.itemCount} {summary.itemCount === 1 ? "item" : "items"}</span></div>
+    <div className="summary-heading"><h2>Order summary</h2><span>{summary.itemCount} {summary.itemCount === 1 ? "item" : "items"}</span></div>
     {showItems && <CartLines compact summary={summary} />}
     <dl className="summary-totals">
       <div><dt>Items subtotal</dt><dd>{formatPrice(summary.subtotalPaise / 100)}</dd></div>
@@ -78,6 +76,5 @@ export function OrderSummary({ summary, children, showItems = false }: { summary
     </dl>
     <p className="summary-disclaimer">Prices are for the listed quantities. Delivery and tax rules must be confirmed before real payments.</p>
     {children}
-    <div className="summary-footnote"><Leaf size={18} strokeWidth={1.3} /><span>A little tradition.<br />A whole lot of goodness.</span></div>
   </aside>;
 }

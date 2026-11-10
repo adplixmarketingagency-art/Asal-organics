@@ -9,7 +9,7 @@ export function CartPage() {
   const { ready, summary, storageWarning } = useCart();
   return <CommerceLayout step={1}>
     {!ready ? <p className="commerce-loading" role="status">Opening your bag…</p> : !summary.lines.length ? <EmptyBag /> : <>
-      <div className="commerce-title"><h1>Your bag of <em>goodness.</em></h1><p>A few good things, chosen by you.</p></div>
+      <div className="commerce-title"><h1>Your bag</h1></div>
       {storageWarning && <p className="commerce-alert" role="status">{storageWarning}</p>}
       <div className="commerce-grid">
         <section aria-label="Items in your bag">

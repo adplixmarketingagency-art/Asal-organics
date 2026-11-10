@@ -1,12 +1,12 @@
 export const productCategories = [
-  { id: "oils", label: "Cold-pressed Oils", tamilLabel: "செக்கு எண்ணெய்", description: "Groundnut, sesame and coconut. Everyday oils for your kitchen." },
-  { id: "wood-oils", label: "Wood-pressed Oils", tamilLabel: "மரச்செக்கு எண்ணெய்", description: "Groundnut, sesame and coconut oils, prepared using a wooden press." },
-  { id: "ghee", label: "Ghee", tamilLabel: "நெய்", description: "Bilona ghee, with a place of its own in your pantry." },
-  { id: "masala", label: "Masala & Spices", tamilLabel: "மசாலா வகைகள்", description: "The familiar flavours at the heart of a home-cooked meal." },
-  { id: "milk", label: "Milk Products", tamilLabel: "பால் பொருட்கள்", description: "Butter, palkova and halwa for the table." },
-  { id: "paneer", label: "Paneer", tamilLabel: "பனீர்", description: "A familiar favourite for everyday cooking." },
-  { id: "rice", label: "Traditional Rice", tamilLabel: "பாரம்பரிய அரிசி வகைகள்", description: "Discover Karuppu Kavuni, Mapillai Samba and Seera Samba." },
-  { id: "grain", label: "Ragi & Bajra", tamilLabel: "கேழ்வரகு & கம்பு", description: "Familiar grain flours for your pantry." },
+  { id: "oils", label: "Cold-pressed Oils", tamilLabel: "செக்கு எண்ணெய்" },
+  { id: "wood-oils", label: "Wood-pressed Oils", tamilLabel: "மரச்செக்கு எண்ணெய்" },
+  { id: "ghee", label: "Ghee", tamilLabel: "நெய்" },
+  { id: "masala", label: "Masala & Spices", tamilLabel: "மசாலா வகைகள்" },
+  { id: "milk", label: "Milk Products", tamilLabel: "பால் பொருட்கள்" },
+  { id: "paneer", label: "Paneer", tamilLabel: "பனீர்" },
+  { id: "rice", label: "Traditional Rice", tamilLabel: "பாரம்பரிய அரிசி வகைகள்" },
+  { id: "grain", label: "Ragi & Bajra", tamilLabel: "கேழ்வரகு & கம்பு" },
 ] as const;
 
 export type ProductCategory = typeof productCategories[number]["id"];
