@@ -262,7 +262,7 @@ are 640×640 WebP, quality 84/effort 6, each under 40KB. No crop or distortion.
 | Output in `public/images/heritage/` | Original Gemini filename | Subject |
 | --- | --- | --- |
 | `bilona-mobile.webp` | `Gemini_Generated_Image_3sxen73sxen73sxe.png` | Terracotta churn, wooden spindle and brass ghee bowl |
-| `chekku-mobile.webp` | `Gemini_Generated_Image_s9j6sqs9j6sqs9j6.png` | Compact wooden press, oil bowl and sesame |
+| `chekku-mobile.webp` | `Gemini_Generated_Image_yf496ayf496ayf49.png` (November 10 replacement) | White Tamil bullock harnessed to a wooden chekku, with brass oil bowl |
 | `cattle-mobile.webp` | `Gemini_Generated_Image_c6rmdfc6rmdfc6rm.png` | White zebu cow with a light-brown calf |
 
 Shared prompt direction: square isolated watercolor-and-ink editorial vignette,
@@ -270,6 +270,17 @@ warm ivory `#fffdf8` paper, central subject occupying 65–70%, generous blank e
 muted olive, terracotta and gold, soft ground shadow, recognizable at 140–150px.
 No room, landscape, frame, lettering, logo or UI. These are decorative
 illustrations, not evidence of the store's facilities, animals or production.
+
+On November 10 the owner requested an animal-driven chekku instead of the
+isolated mobile press. Generated a new square watercolor through Gemini in
+the owner's Chrome: complete white native Tamil bullock, horns and four legs,
+visibly joined by a wooden beam to a traditional cylindrical marachekku and
+upright pestle; brass sesame-oil bowl; muted sage, wood and cream, generous
+ivory margins, no people, scenery or lettering. Source is 2048×2048, resized
+without cropping to the same 640×640 WebP budget. The desktop courtyard scene
+and the shared soft background treatment are unchanged. The mobile wood-oil
+heading reserves space for the full vignette, keeping pack sizes below the
+animal and press instead of crossing them.
 
 ### Nammalvar photograph — CC BY-SA 3.0
 

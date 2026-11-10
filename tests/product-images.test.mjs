@@ -142,11 +142,10 @@ test("the supplied green field remains and Nammalvar moves only on mobile with o
   assert.doesNotMatch(css, /\.(?:hero|hero-copy) \{[^}]*filter:/);
   const hero = storefront.indexOf('className="hero"');
   const desktopStory = storefront.indexOf("{!mobileLayout && nammalvarStory}");
-  const shelf = storefront.indexOf('className="category-shelf ');
   const catalogue = storefront.indexOf("<Catalogue ");
   const editorial = storefront.indexOf("<Editorial ");
   const mobileStory = storefront.indexOf("{mobileLayout && nammalvarStory}");
-  assert.ok(hero >= 0 && hero < desktopStory && desktopStory < shelf && shelf < catalogue && catalogue < editorial && editorial < mobileStory);
+  assert.ok(hero >= 0 && hero < desktopStory && desktopStory < catalogue && catalogue < editorial && editorial < mobileStory);
   assert.equal((storefront.match(/<NammalvarStory /g) || []).length, 1);
   assert.match(storefront, /useSyncExternalStore\(subscribeToMobileLayout, getMobileLayout, getServerLayout\)/);
   assert.match(storefront, /mobileLayoutQuery = "\(max-width: 700px\)"/);

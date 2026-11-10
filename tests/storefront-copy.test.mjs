@@ -13,7 +13,7 @@ test("category headings show names and pack sizes without repetitive description
   }
   const catalogue = source("src/components/Catalogue.tsx");
   assert.doesNotMatch(catalogue, /category-description|group\.description|to discover/);
-  assert.match(catalogue, /<h2 id="collection-title">Our products<\/h2>/);
+  assert.match(catalogue, /<h2 id="collection-title">Shop by category<\/h2>/);
   assert.match(catalogue, /Pack sizes: \{categoryPackSizes\[group.id\]/);
   assert.match(catalogue, /Real payments and delivery orders are not yet available/);
 });

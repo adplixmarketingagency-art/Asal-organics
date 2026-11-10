@@ -5,11 +5,12 @@ import { BrandWordmark } from "./BrandWordmark";
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowRight, ArrowUpRight, Heart, Leaf, Search, ShoppingBag } from "lucide-react";
-import { canAddToBag, categoryLabel, formatPrice, getProductVariant, productCategories, productPackSizes, productVariantsFor, products, quantityLabel, selectProducts, type Product, type ProductCategory } from "@/content/products";
+import { canAddToBag, categoryLabel, formatPrice, getProductVariant, productPackSizes, productVariantsFor, products, quantityLabel, selectProducts, type Category, type Product, type ProductCategory } from "@/content/products";
 import { Modal } from "./Modal";
 import { useCart } from "./CartProvider";
 import { productPath } from "@/lib/product-pages";
 import { ProductImage } from "./ProductImage";
+import { CategorySelector } from "./CategorySelector";
 
 export type DialogState = { type: "search" | "guide" | "ordering" | "about" } | { type: "product"; product: Product } | null;
 
@@ -23,14 +24,10 @@ function ProductResults({ items, onExplore }: { items: Product[]; onExplore: (pr
   </div>;
 }
 
-function CatalogueGuide({ onExplore }: { onExplore: (product: Product) => void }) {
-  const [category, setCategory] = useState<ProductCategory>("oils");
+function CatalogueGuide({ category, onCategory }: { category: Category; onCategory: (category: ProductCategory) => void }) {
   return <>
     <h2>Shop by category</h2>
-    <div className="guide-options">
-      {productCategories.map(({ id, label }) => <button key={id} className={category === id ? "selected" : ""} aria-pressed={category === id} onClick={() => setCategory(id)}>{label}</button>)}
-    </div>
-    <ProductResults items={selectProducts(products, { category })} onExplore={onExplore} />
+    <CategorySelector category={category} onCategory={onCategory} dialog />
   </>;
 }
 
@@ -46,12 +43,14 @@ function SearchContent({ onExplore }: { onExplore: (product: Product) => void })
   </>;
 }
 
-export function StorefrontDialogs({ dialog, onClose, onExplore, saved, onSave }: {
+export function StorefrontDialogs({ dialog, onClose, onExplore, saved, onSave, category, onCategory }: {
   dialog: NonNullable<DialogState>;
   onClose: () => void;
   onExplore: (product: Product) => void;
   saved: string[];
   onSave: (id: string) => void;
+  category: Category;
+  onCategory: (category: ProductCategory) => void;
 }) {
   const { addItem, ready } = useCart();
   const [selectedVariantId, setSelectedVariantId] = useState<string>();
@@ -81,7 +80,7 @@ export function StorefrontDialogs({ dialog, onClose, onExplore, saved, onSave }:
   }
   return <Modal title={dialog.type === "search" ? "Search products" : dialog.type === "guide" ? "Catalogue guide" : dialog.type === "about" ? "About Asal" : "Online ordering"} onClose={onClose} className={dialog.type === "guide" ? "guide-modal" : ""}>
     {dialog.type === "search" && <SearchContent onExplore={onExplore} />}
-    {dialog.type === "guide" && <CatalogueGuide onExplore={onExplore} />}
+    {dialog.type === "guide" && <CatalogueGuide category={category} onCategory={onCategory} />}
     {dialog.type === "ordering" && <div className="simple-dialog"><span className="modal-symbol"><ShoppingBag size={28} strokeWidth={1.4} /></span><h2>Ordering &amp; delivery</h2><p>Add products with a listed quantity to your bag and review your delivery details at checkout.</p><p className="muted">Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing. Delivery availability, charges and tax settings are still to be confirmed.</p><Link href="/cart" className="button button-green" onClick={onClose}>Go to your bag <ArrowRight size={18} /></Link></div>}
     {dialog.type === "about" && <div className="simple-dialog"><span className="brand modal-brand"><BrandWordmark /></span><h2>About Asal</h2><p>Asal Iyarkai Angadi offers oils, ghee, spices, dairy products and traditional grains.</p><p className="muted">Browse the catalogue and prepare your bag. Online ordering is not yet available.</p><button className="button button-green" onClick={onClose}>Back to the collection <ArrowRight size={18} /></button></div>}
   </Modal>;

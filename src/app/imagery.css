@@ -50,6 +50,9 @@
     .category-backdrop { grid-area: 1 / 1; position: relative; inset: auto; align-self: start; justify-self: end; width: min(48vw, 240px); margin: 0 -14px 0 0; mix-blend-mode: multiply; }
     .category-backdrop > img { position: relative; inset: auto; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; object-position: center; filter: blur(.25px) saturate(.9); opacity: .88; mask-image: radial-gradient(ellipse at center, #000 48%, transparent 72%); }
     .category-backdrop::after { content: none; }
+    /* The cow-and-press vignette is wider: place the pack line below its legs. */
+    .category-section-wood-oils .category-heading-copy { min-height: max(176px, min(48vw, 240px)); grid-template-rows: auto auto 1fr; }
+    .category-section-wood-oils .category-pack-sizes { align-self: end; }
     .story-photograph > img { height: auto; }
     .story-copy > .story-context { font-size: .6875rem; }
   }

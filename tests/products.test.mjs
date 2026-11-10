@@ -74,6 +74,16 @@ test("Ragi and Bajra use the owner's confirmed kilogram prices and offer 500 g p
   assert.equal(products.filter(canAddToBag).length, 20);
 });
 
+test("Millets is the bilingual category for Ragi and Bajra without renaming the products", () => {
+  assert.deepEqual(productCategories.find(({ id }) => id === "grain"), {
+    id: "grain", label: "Millets", tamilLabel: "சிறுதானியங்கள்",
+  });
+  for (const query of ["Millets", "சிறுதானியங்கள்"]) {
+    assert.deepEqual(selectProducts(products, { query }).map(({ name }) => name), ["Ragi", "Bajra"]);
+  }
+  assert.deepEqual(groupProducts(selectProducts(products, { category: "grain" })).map(({ label }) => label), ["Millets"]);
+});
+
 test("search handles names, Tamil names and categories without hiding higher prices", () => {
   assert.deepEqual(selectProducts(products, { query: "  COCONUT  " }).map(({ id }) => id), ["coconut", "wood-coconut"]);
   assert.deepEqual(selectProducts(products, { query: "பால்கோவா" }).map(({ id }) => id), ["palkova"]);

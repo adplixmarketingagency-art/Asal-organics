@@ -1,30 +1,31 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, ChevronDown, Grid2X2, Heart, LayoutList, Search, SlidersHorizontal, Sprout, X } from "lucide-react";
-import { products, productCategories, categoryPackSizes, catalogueMaxPrice, catalogueMinPrice, selectProducts, groupProducts, formatPrice, type Category, type Product, type Sort } from "@/content/products";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, ChevronDown, Grid2X2, Heart, LayoutList, Search, SlidersHorizontal, Sprout, X } from "lucide-react";
+import { products, categoryPackSizes, catalogueMaxPrice, catalogueMinPrice, selectProducts, groupProducts, formatPrice, type Category, type Product, type Sort } from "@/content/products";
 import { ProductCard } from "./ProductCard";
 import { HeritageIllustration } from "./HeritageIllustration";
+import { CategorySelector } from "./CategorySelector";
 
 const categories: { id: Category; label: string }[] = [
   { id: "all", label: "All products" },
-  ...productCategories,
   { id: "saved", label: "Saved favourites" },
 ];
 
-export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCategory }: {
+export function Catalogue({ saved, onSave, onExplore, category, onCategory, navigationId }: {
   saved: string[];
   onSave: (id: string) => void;
   onExplore: (product: Product) => void;
-  onGuide: () => void;
   category: Category;
   onCategory: (category: Category) => void;
+  navigationId: number;
 }) {
   const [sort, setSort] = useState<Sort>("featured");
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [maxPrice, setMaxPrice] = useState(catalogueMaxPrice);
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
+  const [readyNavigation, setReadyNavigation] = useState(0);
   const filterToggleRef = useRef<HTMLButtonElement>(null);
   const selected = selectProducts(products, { category, sort, saved, maxPrice, query });
   const groups = groupProducts(selected);
@@ -32,13 +33,34 @@ export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCateg
   // Closing unmounts the panel, so return focus to the control that owns aria-expanded.
   const closeFilters = () => { setFiltersOpen(false); filterToggleRef.current?.focus(); };
 
+  // An explicit category choice must not inherit a search/price filter that hides it.
+  // A separate commit ensures the destination exists before moving focus or scrolling.
+  useEffect(() => {
+    if (!navigationId) return;
+    setQuery("");
+    setMaxPrice(catalogueMaxPrice);
+    setFiltersOpen(false);
+    setReadyNavigation(navigationId);
+  }, [navigationId]);
+
+  useEffect(() => {
+    if (!readyNavigation || readyNavigation !== navigationId) return;
+    const frame = requestAnimationFrame(() => {
+      const targetId = category === "all" || category === "saved" ? "collection" : `category-${category}`;
+      const target = document.getElementById(targetId);
+      target?.focus({ preventScroll: true });
+      target?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [category, navigationId, readyNavigation]);
+
   return (
-    <section className="collection section-wrap" id="collection" aria-labelledby="collection-title">
+    <section className="collection section-wrap" id="collection" tabIndex={-1} aria-labelledby="collection-title">
       <div className="collection-heading">
-        <div><h2 id="collection-title">Our products</h2></div>
-        <button className="text-link guide-link" onClick={onGuide}>Browse by category <ArrowUpRight size={19} /></button>
+        <h2 id="collection-title">Shop by category</h2>
       </div>
-      <div className="collection-tabs" aria-label="Product categories">
+      <CategorySelector category={category} onCategory={onCategory} />
+      <div className="collection-tabs" aria-label="Collection views">
         {categories.map(({ id, label }) => (
           <button key={id} className={category === id ? "active" : ""} aria-pressed={category === id} onClick={() => onCategory(id)}>
             {id === "saved" && <Heart size={15} />}{label}
@@ -76,7 +98,7 @@ export function Catalogue({ saved, onSave, onExplore, onGuide, category, onCateg
         </div>
       </div>}
       {selected.length ? <div className="category-sections">
-        {groups.map((group) => <section className={`category-section category-section-${group.id}`} key={group.id} aria-labelledby={`category-${group.id}-title`}>
+        {groups.map((group) => <section className={`category-section category-section-${group.id}`} key={group.id} id={`category-${group.id}`} tabIndex={-1} aria-labelledby={`category-${group.id}-title`}>
           {group.id === "wood-oils" && <HeritageIllustration subject="chekku" />}
           {group.id === "ghee" && <HeritageIllustration subject="bilona" />}
           {group.id === "milk" && <HeritageIllustration subject="cattle" />}

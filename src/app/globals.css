@@ -231,10 +231,6 @@
   .search-empty { text-align: center; padding: 35px 20px; background: #f5f7f2; }
   .search-empty p { margin: 14px 0; font-size: var(--text-body); color: var(--muted); }
   .guide-modal { width: min(690px, calc(100% - 40px)); }
-  .guide-options { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 25px; }
-  .guide-options > button { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 11px; min-height: 51px; border: 1px solid var(--line); border-radius: 5px; font-size: var(--text-small); flex: 1; }
-  .guide-options > button.selected { background: #eef4e9; border-color: #93ac84; }
-  .guide-options > button.selected > svg:last-child { margin-left: auto; }
   .simple-dialog { text-align: center; padding: 10px; }
   .simple-dialog > p:not(.eyebrow) { font-size: var(--text-body); line-height: 1.9; color: #667763; margin-top: 20px; }
   .simple-dialog > p.muted { font-size: var(--text-small); color: #7d8979; }
@@ -442,8 +438,6 @@
     .search-results strong { font-size: var(--text-body); }
     .search-results small { font-size: var(--text-small); }
     .search-price { font-size: var(--text-body); }
-    .guide-options { flex-direction: column; gap: 8px; }
-    .guide-options > button { justify-content: flex-start; min-height: 48px; font-size: var(--text-small); padding: 12px; }
     .simple-dialog { padding-inline: 0; }
     .simple-dialog > p:not(.eyebrow) { font-size: var(--text-body); }
     .simple-dialog > p.muted { font-size: var(--text-small); }

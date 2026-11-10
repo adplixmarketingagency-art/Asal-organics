@@ -5,7 +5,7 @@ export const productCategories = [
   { id: "masala", label: "Masala & Spices", tamilLabel: "மசாலா வகைகள்" },
   { id: "milk", label: "Milk Products", tamilLabel: "பால் பொருட்கள்" },
   { id: "rice", label: "Traditional Rice", tamilLabel: "பாரம்பரிய அரிசி வகைகள்" },
-  { id: "grain", label: "Ragi & Bajra", tamilLabel: "கேழ்வரகு & கம்பு" },
+  { id: "grain", label: "Millets", tamilLabel: "சிறுதானியங்கள்" },
 ] as const;
 
 export type ProductCategory = typeof productCategories[number]["id"];
