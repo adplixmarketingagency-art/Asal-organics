@@ -1,6 +1,6 @@
 # Storefront design assets
 
-Updated November 9, 2026. The reference storefront informed navigation and
+Updated November 11, 2026. The reference storefront informed navigation and
 editorial hierarchy only. No competitor images, branding, certificates or
 testimonials were copied.
 
@@ -79,6 +79,34 @@ products, sourcing or certifications.
 Do not use editorial landscapes on product cards or imply that the legacy
 vegetable photograph depicts products in the catalogue.
 
+## Owner-supplied oil packaging
+
+On November 11, 2026 the owner supplied these replacement product images:
+
+| Supplied file | Product ID | Delivery asset prefix |
+| --- | --- | --- |
+| `Groundnut_oil.png` (1024×1536) | `groundnut` | `groundnut-bottle` |
+| `Gingelly_oil.png` (1086×1448) | `sesame` | `gingelly-bottle` |
+| `Coconut_oil.png` (1086×1448) | `coconut` | `coconut-bottle` |
+
+Gingelly is sesame oil; the existing product name, ID, prices, and pack choices
+are unchanged. Each supplied label says cold pressed and 1 L, so these replace
+only the matching cold-pressed product images. Wood-pressed oils retain their
+separate ingredient artwork instead of showing differently labelled packaging.
+
+Delivery files live in `public/images/products/` with `-240.webp` and `-800.webp`
+suffixes. Sharp resizes each original with `fit: "contain"` onto a white square,
+WebP quality 88 / effort 6, keeping the whole bottle and label without cropping,
+stretching, repainting or removing anything. All thumbnails are under 7 KB;
+all large versions are under 40 KB. The supplied PNGs remain in the owner's
+Downloads, not in the public bundle. No independent photography or certification
+claim is added.
+
+The shared `ProductImage` component updates cards, quick views, product pages,
+search, bag and checkout together. Packaging gets neutral descriptive alt text
+and a white surround; ingredient illustrations retain their existing alt-text
+disclosure. No new visible labels appear in the shopping UI.
+
 ## Category photographs
 
 Generated with Gemini in the owner's signed-in Chrome on November 5, 2026,
@@ -86,7 +114,7 @@ at the owner's request. Conversation:
 `https://gemini.google.com/app/0b24719220d694a9`.
 These are AI-generated illustrative category artworks, not photographs of
 Asal products, facilities or evidence of a pressing method or certification.
-Matching ingredient studies now appear on product surfaces. At the owner's
+Matching ingredient studies appear on the remaining product surfaces. At the owner's
 request, visible illustrative-image labels and notes are omitted; provenance
 remains documented here and in descriptive alt text.
 

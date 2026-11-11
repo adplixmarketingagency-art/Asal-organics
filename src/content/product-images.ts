@@ -1,9 +1,10 @@
-// Illustrative ingredient artworks, not photographs of Asal merchandise.
-// Provenance and generation details: docs/design-assets.md.
-export const productImages: Record<string, { asset: string; alt: string }> = {
-  groundnut: { asset: "groundnut", alt: "Golden groundnut oil with peanuts in a white dish" },
-  sesame: { asset: "sesame", alt: "Amber sesame oil with sesame seeds in a white dish" },
-  coconut: { asset: "coconut", alt: "Coconut oil in a white bowl beside a coconut wedge" },
+// Owner-supplied packaging images and illustrative ingredient artworks.
+// The supplied cold-pressed labels are not reused for wood-pressed products.
+// Provenance: docs/design-assets.md.
+export const productImages: Record<string, { asset: string; alt: string; kind?: "packaging" }> = {
+  groundnut: { asset: "groundnut-bottle", alt: "Asal Organics cold-pressed groundnut oil, 1 litre bottle with a red cap", kind: "packaging" },
+  sesame: { asset: "gingelly-bottle", alt: "Asal Organics cold-pressed gingelly (sesame) oil, 1 litre bottle with a red cap", kind: "packaging" },
+  coconut: { asset: "coconut-bottle", alt: "Asal Organics cold-pressed coconut oil, 1 litre bottle with a red cap", kind: "packaging" },
   "wood-groundnut": { asset: "groundnut", alt: "Golden groundnut oil with peanuts in a white dish" },
   "wood-sesame": { asset: "sesame", alt: "Amber sesame oil with sesame seeds in a white dish" },
   "wood-coconut": { asset: "coconut", alt: "Coconut oil in a white bowl beside a coconut wedge" },

@@ -6,9 +6,9 @@ import { productImages } from "../src/content/product-images.ts";
 
 const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("all 20 product IDs have appropriate self-hosted ingredient images", () => {
+test("all 20 product IDs have appropriate self-hosted product images", () => {
   assert.deepEqual(Object.keys(productImages).sort(), products.map(({ id }) => id).sort());
-  assert.equal(new Set(Object.values(productImages).map(({ asset }) => asset)).size, 17);
+  assert.equal(new Set(Object.values(productImages).map(({ asset }) => asset)).size, 20);
   for (const { id } of products) {
     const { asset, alt } = productImages[id];
     assert.ok(alt.length > 20);
@@ -21,13 +21,31 @@ test("all 20 product IDs have appropriate self-hosted ingredient images", () => 
       assert.ok(bytes.byteLength < (size === 240 ? 20_000 : 100_000), `${asset} exceeds budget`);
     }
   }
-  assert.equal(productImages.groundnut.asset, productImages["wood-groundnut"].asset);
   assert.notEqual(productImages.palkova.asset, productImages["bilona-butter"].asset);
   assert.notEqual(productImages["karuppu-kavuni"].asset, productImages["karuppu-kavuni-halwa"].asset);
 });
 
+test("owner-supplied bottles match the cold-pressed oils without relabelling wood-pressed products", () => {
+  for (const [id, asset, name] of [
+    ["groundnut", "groundnut-bottle", /groundnut/i],
+    ["sesame", "gingelly-bottle", /gingelly.*sesame/i],
+    ["coconut", "coconut-bottle", /coconut/i],
+  ]) {
+    const image = productImages[id];
+    assert.equal(image.asset, asset);
+    assert.equal(image.kind, "packaging");
+    assert.match(image.alt, name);
+    assert.match(image.alt, /Asal Organics.*cold-pressed.*1 litre/);
+    assert.notEqual(image.asset, productImages[`wood-${id}`].asset);
+    assert.notEqual(productImages[`wood-${id}`].kind, "packaging");
+  }
+});
+
 test("shared image rendering preserves descriptive alt text and controls loading without visible labels", () => {
   const component = source("src/components/ProductImage.tsx");
+  assert.match(component, /alt=\{image.kind === "packaging" \? image.alt :/);
+  assert.match(component, /image.kind === "packaging" \? "product-artwork-packaging"/);
+  assert.match(source("src/app/imagery.css"), /\.product-artwork-packaging \{ background: #fff; \}/);
   assert.match(component, /Illustrative image:/);
   assert.match(component, /Not an actual product photograph/);
   assert.doesNotMatch(component, /product-artwork-caption/);

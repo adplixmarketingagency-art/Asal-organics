@@ -19,6 +19,10 @@ export default function CreditsPage() {
     </header>
     <main id="main" className="credits-content section-wrap">
       <h1>Image credits</h1>
+      <section aria-labelledby="product-credit">
+        <h2 id="product-credit">Oil packaging images</h2>
+        <p>The Asal Organics groundnut, gingelly (sesame), and coconut oil bottle images were supplied by the site owner. They show the cold-pressed 1 litre labels and are resized to WebP without cropping or altering the packaging.</p>
+      </section>
       <section aria-labelledby="nammalvar-credit">
         <h2 id="nammalvar-credit">G. Nammalvar photograph</h2>
         <p>The photograph in our remembrance of G. Nammalvar is by <a href="https://commons.wikimedia.org/wiki/File:Nammalvar.G.jpg" target="_blank" rel="noreferrer">Voiceoftamil / Wikimedia Commons</a>, licensed under <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noreferrer">Creative Commons Attribution-ShareAlike 3.0 (CC BY-SA 3.0)</a>.</p>
