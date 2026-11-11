@@ -25,7 +25,7 @@ test("all 20 product IDs have appropriate self-hosted product images", () => {
   assert.notEqual(productImages["karuppu-kavuni"].asset, productImages["karuppu-kavuni-halwa"].asset);
 });
 
-test("owner-supplied bottles match the cold-pressed oils without relabelling wood-pressed products", () => {
+test("owner-supplied bottles match the cold-pressed oils with separate wood-pressed assets", () => {
   for (const [id, asset, name] of [
     ["groundnut", "groundnut-bottle", /groundnut/i],
     ["sesame", "gingelly-bottle", /gingelly.*sesame/i],
@@ -37,7 +37,22 @@ test("owner-supplied bottles match the cold-pressed oils without relabelling woo
     assert.match(image.alt, name);
     assert.match(image.alt, /Asal Organics.*cold-pressed.*1 litre/);
     assert.notEqual(image.asset, productImages[`wood-${id}`].asset);
-    assert.notEqual(productImages[`wood-${id}`].kind, "packaging");
+  }
+});
+
+test("wood-pressed oils use the matching owner-supplied wood-pressed bottle labels", () => {
+  for (const [id, asset, name] of [
+    ["wood-groundnut", "wood-groundnut-bottle", /groundnut/i],
+    ["wood-sesame", "wood-gingelly-bottle", /gingelly.*sesame/i],
+    ["wood-coconut", "wood-coconut-bottle", /coconut/i],
+  ]) {
+    const image = productImages[id];
+    assert.equal(image.asset, asset);
+    assert.equal(image.kind, "packaging");
+    assert.match(image.alt, name);
+    assert.match(image.alt, /Asal Organics.*wood-pressed.*1 litre/);
+    assert.doesNotMatch(image.alt, /cold-pressed|illustrat/i);
+    assert.notEqual(image.asset, productImages[id.replace("wood-", "")].asset);
   }
 });
 

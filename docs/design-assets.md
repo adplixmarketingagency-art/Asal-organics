@@ -88,19 +88,24 @@ On November 11, 2026 the owner supplied these replacement product images:
 | `Groundnut_oil.png` (1024×1536) | `groundnut` | `groundnut-bottle` |
 | `Gingelly_oil.png` (1086×1448) | `sesame` | `gingelly-bottle` |
 | `Coconut_oil.png` (1086×1448) | `coconut` | `coconut-bottle` |
+| `codex-clipboard-356ab21c-c086-485f-b06d-fddf850c8820.png` (1092×1440) | `wood-groundnut` | `wood-groundnut-bottle` |
+| `codex-clipboard-30032ba9-c050-4395-bb8f-577ef9022aba.png` (1092×1440) | `wood-sesame` | `wood-gingelly-bottle` |
+| `codex-clipboard-19220ed7-3974-486a-afae-366cd5d36eb1.png` (1092×1440) | `wood-coconut` | `wood-coconut-bottle` |
 
 Gingelly is sesame oil; the existing product name, ID, prices, and pack choices
-are unchanged. Each supplied label says cold pressed and 1 L, so these replace
-only the matching cold-pressed product images. Wood-pressed oils retain their
-separate ingredient artwork instead of showing differently labelled packaging.
+are unchanged. The first three labels say cold pressed and 1 L. The owner then
+supplied three separate wood-pressed 1 L labels to replace the wood-pressed
+ingredient artwork. Each bottle is mapped only to its matching pressing method
+and oil; cold-pressed packaging is never reused for wood-pressed products.
 
 Delivery files live in `public/images/products/` with `-240.webp` and `-800.webp`
 suffixes. Sharp resizes each original with `fit: "contain"` onto a white square,
 WebP quality 88 / effort 6, keeping the whole bottle and label without cropping,
 stretching, repainting or removing anything. All thumbnails are under 7 KB;
-all large versions are under 40 KB. The supplied PNGs remain in the owner's
-Downloads, not in the public bundle. No independent photography or certification
-claim is added.
+all large versions are under 40 KB. The original cold-pressed PNGs remain in the
+owner's Downloads; the wood-pressed PNGs were supplied as clipboard attachments.
+Only the optimized WebPs are included in the public bundle. No independent
+photography or certification claim is added.
 
 The shared `ProductImage` component updates cards, quick views, product pages,
 search, bag and checkout together. Packaging gets neutral descriptive alt text
@@ -217,9 +222,11 @@ No credentials, private project files or personal reference photos were uploaded
 
 The new still lifes match the existing warm-white porcelain category series.
 They are not photographs of merchandise, not packaging previews and not proof
-of a production method. The 20 product IDs map to 17 ingredient studies in
-`src/content/product-images.ts`; cold/wood-pressed versions share the same
-ingredient illustration. Ragi/Bajra availability and all prices are unchanged.
+of a production method. Originally, the 20 product IDs mapped to 17 ingredient
+studies in `src/content/product-images.ts`, with cold/wood-pressed versions sharing
+ingredient illustrations. The six oil products now use the separate owner-supplied
+bottles documented above; the other 14 retain their ingredient studies.
+Ragi/Bajra availability and all prices are unchanged.
 
 | Original download | Complete cells (top-left, top-right, bottom-left, bottom-right) |
 | --- | --- |

@@ -21,7 +21,7 @@ export default function CreditsPage() {
       <h1>Image credits</h1>
       <section aria-labelledby="product-credit">
         <h2 id="product-credit">Oil packaging images</h2>
-        <p>The Asal Organics groundnut, gingelly (sesame), and coconut oil bottle images were supplied by the site owner. They show the cold-pressed 1 litre labels and are resized to WebP without cropping or altering the packaging.</p>
+        <p>The Asal Organics groundnut, gingelly (sesame), and coconut oil bottle images were supplied by the site owner. Each oil uses its matching cold-pressed or wood-pressed 1 litre label, resized to WebP without cropping or altering the packaging.</p>
       </section>
       <section aria-labelledby="nammalvar-credit">
         <h2 id="nammalvar-credit">G. Nammalvar photograph</h2>

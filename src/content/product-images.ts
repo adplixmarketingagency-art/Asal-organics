@@ -1,13 +1,13 @@
 // Owner-supplied packaging images and illustrative ingredient artworks.
-// The supplied cold-pressed labels are not reused for wood-pressed products.
+// Cold-pressed and wood-pressed oils each use their own matching bottle labels.
 // Provenance: docs/design-assets.md.
 export const productImages: Record<string, { asset: string; alt: string; kind?: "packaging" }> = {
   groundnut: { asset: "groundnut-bottle", alt: "Asal Organics cold-pressed groundnut oil, 1 litre bottle with a red cap", kind: "packaging" },
   sesame: { asset: "gingelly-bottle", alt: "Asal Organics cold-pressed gingelly (sesame) oil, 1 litre bottle with a red cap", kind: "packaging" },
   coconut: { asset: "coconut-bottle", alt: "Asal Organics cold-pressed coconut oil, 1 litre bottle with a red cap", kind: "packaging" },
-  "wood-groundnut": { asset: "groundnut", alt: "Golden groundnut oil with peanuts in a white dish" },
-  "wood-sesame": { asset: "sesame", alt: "Amber sesame oil with sesame seeds in a white dish" },
-  "wood-coconut": { asset: "coconut", alt: "Coconut oil in a white bowl beside a coconut wedge" },
+  "wood-groundnut": { asset: "wood-groundnut-bottle", alt: "Asal Organics wood-pressed groundnut oil, 1 litre bottle with a red cap", kind: "packaging" },
+  "wood-sesame": { asset: "wood-gingelly-bottle", alt: "Asal Organics wood-pressed gingelly (sesame) oil, 1 litre bottle with a red cap", kind: "packaging" },
+  "wood-coconut": { asset: "wood-coconut-bottle", alt: "Asal Organics wood-pressed coconut oil, 1 litre bottle with a red cap", kind: "packaging" },
   turmeric: { asset: "turmeric", alt: "Yellow turmeric powder with turmeric root" },
   "curry-masala": { asset: "curry-masala", alt: "Warm brown curry masala in a white bowl" },
   "chilli-powder": { asset: "chilli-powder", alt: "Red chilli powder beside a dried chilli" },
