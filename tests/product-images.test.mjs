@@ -27,7 +27,7 @@ test("all 20 product IDs have appropriate self-hosted product images", () => {
 
 test("owner-supplied bottles match the cold-pressed oils with separate wood-pressed assets", () => {
   for (const [id, asset, name] of [
-    ["groundnut", "groundnut-bottle", /groundnut/i],
+    ["groundnut", "groundnut-bottle-v2", /groundnut/i],
     ["sesame", "gingelly-bottle", /gingelly.*sesame/i],
     ["coconut", "coconut-bottle", /coconut/i],
   ]) {

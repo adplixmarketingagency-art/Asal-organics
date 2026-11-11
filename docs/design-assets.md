@@ -85,7 +85,7 @@ On November 11, 2026 the owner supplied these replacement product images:
 
 | Supplied file | Product ID | Delivery asset prefix |
 | --- | --- | --- |
-| `Groundnut_oil.png` (1024×1536) | `groundnut` | `groundnut-bottle` |
+| `codex-clipboard-ebe0d498-0f3d-4450-bb7f-4528f7a5fde1.png` (1092×1440) | `groundnut` | `groundnut-bottle-v2` |
 | `Gingelly_oil.png` (1086×1448) | `sesame` | `gingelly-bottle` |
 | `Coconut_oil.png` (1086×1448) | `coconut` | `coconut-bottle` |
 | `codex-clipboard-356ab21c-c086-485f-b06d-fddf850c8820.png` (1092×1440) | `wood-groundnut` | `wood-groundnut-bottle` |
@@ -98,12 +98,18 @@ supplied three separate wood-pressed 1 L labels to replace the wood-pressed
 ingredient artwork. Each bottle is mapped only to its matching pressing method
 and oil; cold-pressed packaging is never reused for wood-pressed products.
 
+The cold-pressed groundnut bottle was subsequently replaced with the owner's
+new clipboard attachment above. It supersedes `Groundnut_oil.png` (1024×1536),
+previously delivered as `groundnut-bottle`. The `v2` filenames avoid cached old
+imagery; all other product images remain unchanged.
+
 Delivery files live in `public/images/products/` with `-240.webp` and `-800.webp`
 suffixes. Sharp resizes each original with `fit: "contain"` onto a white square,
 WebP quality 88 / effort 6, keeping the whole bottle and label without cropping,
 stretching, repainting or removing anything. All thumbnails are under 7 KB;
 all large versions are under 40 KB. The original cold-pressed PNGs remain in the
-owner's Downloads; the wood-pressed PNGs were supplied as clipboard attachments.
+owner's Downloads; the wood-pressed PNGs and revised cold-pressed groundnut PNG
+were supplied as clipboard attachments.
 Only the optimized WebPs are included in the public bundle. No independent
 photography or certification claim is added.
 

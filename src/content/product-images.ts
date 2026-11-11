@@ -2,7 +2,7 @@
 // Cold-pressed and wood-pressed oils each use their own matching bottle labels.
 // Provenance: docs/design-assets.md.
 export const productImages: Record<string, { asset: string; alt: string; kind?: "packaging" }> = {
-  groundnut: { asset: "groundnut-bottle", alt: "Asal Organics cold-pressed groundnut oil, 1 litre bottle with a red cap", kind: "packaging" },
+  groundnut: { asset: "groundnut-bottle-v2", alt: "Asal Organics cold-pressed groundnut oil, 1 litre bottle with a red cap", kind: "packaging" },
   sesame: { asset: "gingelly-bottle", alt: "Asal Organics cold-pressed gingelly (sesame) oil, 1 litre bottle with a red cap", kind: "packaging" },
   coconut: { asset: "coconut-bottle", alt: "Asal Organics cold-pressed coconut oil, 1 litre bottle with a red cap", kind: "packaging" },
   "wood-groundnut": { asset: "wood-groundnut-bottle", alt: "Asal Organics wood-pressed groundnut oil, 1 litre bottle with a red cap", kind: "packaging" },
