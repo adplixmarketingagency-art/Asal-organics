@@ -168,25 +168,35 @@ test("the supplied green field remains and Nammalvar moves only on mobile with o
   assert.match(source("src/app/credits/page.tsx"), /supplied by the site owner/);
 });
 
-test("the mobile hero stays sharp and the kolam is anchored to the whole card", () => {
+test("the hero kolam sits beside the headline instead of over the farm photograph", () => {
   const storefront = source("src/components/Storefront.tsx");
   const heroStart = storefront.indexOf('<section className="hero"');
   const hero = storefront.slice(heroStart, storefront.indexOf("</section>", heroStart));
   const copy = hero.indexOf('<div className="hero-copy">');
   assert.equal((hero.match(/<Kolam className="hero-kolam"/g) || []).length, 1);
-  assert.ok(hero.indexOf('<Kolam className="hero-kolam" />') < copy);
-  assert.doesNotMatch(hero.slice(copy), /<Kolam/);
-  assert.match(hero, /<\/div>\s*<Kolam className="hero-kolam" \/>\s*<div className="hero-copy">/);
+  assert.ok(hero.indexOf('<Kolam className="hero-kolam" />') > copy);
+  assert.match(hero, /<span className="hero-title-end"><em>\{isWoodOilsPage \? "oils" : "Angadi"\}<\/em><Kolam className="hero-kolam" \/><\/span>/);
   const css = source("src/app/heritage.css");
-  assert.match(css, /\.hero-kolam \{[^}]*position: absolute;[^}]*right: 24px; top: 24px/);
+  assert.match(css, /\.hero-title-end \{ display: flex; align-items: center; gap: 24px; \}/);
+  assert.match(css, /\.hero-kolam \{ width: 72px; height: 72px; \}/);
+  for (const rule of css.matchAll(/\.hero-kolam \{([^}]*)\}/g)) {
+    assert.doesNotMatch(rule[1], /position:|(?:top|right|bottom|left):|opacity:|transform:/);
+  }
+  const mobile = css.slice(css.indexOf("@media (max-width: 700px)"));
+  assert.match(mobile, /\.hero-title-end \{ gap: 20px; \}/);
+  assert.match(mobile, /\.hero-kolam \{ width: 48px; height: 48px; \}/);
+});
+
+test("the mobile hero keeps its clear farm image and compact copy", () => {
+  const storefront = source("src/components/Storefront.tsx");
+  const css = source("src/app/heritage.css");
   const mobile = css.slice(css.indexOf("@media (max-width: 700px)"));
   assert.match(mobile, /\.hero-backdrop > img \{[^}]*filter: none/);
   assert.match(mobile, /\.hero-backdrop > img \{[^}]*object-position: 54% top/);
   assert.match(mobile, /\.hero-copy \{[^}]*padding: 108px 24px 24px/);
-  assert.doesNotMatch(hero, /hero-description|hero-footnote/);
+  assert.doesNotMatch(storefront, /hero-description|hero-footnote/);
   assert.match(mobile, /\.hero \.button \{ margin-top: 8px/);
   assert.match(mobile, /\.hero-backdrop > img \{[^}]*inset: -60px 0 0/);
-  assert.match(mobile, /\.hero-kolam \{[^}]*right: 16px; top: 16px/);
   assert.doesNotMatch(css, /\.(?:hero|hero-copy|hero-description) \{[^}]*filter:/);
 });
 

@@ -97,8 +97,8 @@ test("the collection is distinct at initial render and linked with a crawlable a
   const storefront = source("src/components/Storefront.tsx");
   assert.match(storefront, /useState<Category>\(initialCategory\)/);
   assert.match(storefront, /href=\{woodOilsPath\}/);
-  assert.match(storefront, /Wood-pressed<br \/><em>oils<\/em>/);
-  assert.match(storefront, /Asal Iyarkai<br \/><em>Angadi<\/em>/);
+  assert.match(storefront, /<h1 id="hero-title">\{isWoodOilsPage \? "Wood-pressed" : "Asal Iyarkai"\}/);
+  assert.match(storefront, /<em>\{isWoodOilsPage \? "oils" : "Angadi"\}<\/em>/);
   assert.match(homeDescription, /Asaliyarkaiangadi/);
   assert.match(storefront, /Store preview/);
 });

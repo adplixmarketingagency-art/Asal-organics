@@ -48,8 +48,9 @@
   .hero-backdrop > img { position: absolute; inset: -2px; width: calc(100% + 4px); max-width: none; height: calc(100% + 4px); object-fit: cover; object-position: center 58%; filter: blur(.6px) saturate(.9); }
   .hero-backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #f8f7e8ed 0%, #f8f7e8d9 36%, #f8f7e847 64%, #f8f7e814 100%); }
   .hero-copy { max-width: 610px; padding: 52px 48px 46px; isolation: isolate; }
-  /* Anchor to the whole card, not the narrower copy column. */
-  .hero-kolam { position: absolute; width: 72px; height: 72px; right: 24px; top: 24px; z-index: 0; opacity: .85; }
+  /* Keep the ornament beside the headline, on the light copy side of the image. */
+  .hero-title-end { display: flex; align-items: center; gap: 24px; }
+  .hero-kolam { width: 72px; height: 72px; }
   .hero-tamil { color: #756647; font-size: .85rem; margin-top: 0; }
   .hero h1 { font-size: clamp(42px, 4.1vw, 60px); line-height: 1.15; letter-spacing: -1.9px; margin-block: 13px 20px; }
   .hero h1 em { color: #64744a; }
@@ -154,7 +155,8 @@
     .hero { grid-template-columns: 1fr; min-height: 0; }
     .hero-copy { padding: 108px 24px 24px; }
     .hero .button { margin-top: 8px; }
-    .hero-kolam { width: 52px; height: 52px; right: 16px; top: 16px; }
+    .hero-title-end { gap: 20px; }
+    .hero-kolam { width: 48px; height: 48px; }
     .hero-tamil { padding-right: 0; }
     .hero h1 { font-size: clamp(36px, 9vw, 49px); letter-spacing: -1.3px; line-height: 1.18; }
     /* Keep a clear view of the palms above the copy within the same full-card background. */

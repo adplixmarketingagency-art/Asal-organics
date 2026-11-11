@@ -90,10 +90,9 @@ export default function Storefront({ initialCategory = "all" }: { initialCategor
       <div className="section-wrap"><nav className="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><ChevronRight size={12} /><span aria-current="page">{isWoodOilsPage ? "Wood-pressed Oils" : "Our products"}</span></nav>
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero-backdrop" aria-hidden="true"><img src="/images/editorial/paddy-field.webp" alt="" width="1024" height="683" fetchPriority="high" /></div>
-          <Kolam className="hero-kolam" />
           <div className="hero-copy">
             <p className="hero-tamil" lang="ta">அசல் இயற்கை அங்காடி</p>
-            <h1 id="hero-title">{isWoodOilsPage ? <>Wood-pressed<br /><em>oils</em></> : <>Asal Iyarkai<br /><em>Angadi</em></>}</h1>
+            <h1 id="hero-title">{isWoodOilsPage ? "Wood-pressed" : "Asal Iyarkai"}{" "}<span className="hero-title-end"><em>{isWoodOilsPage ? "oils" : "Angadi"}</em><Kolam className="hero-kolam" /></span></h1>
             <a href="#collection" className="button button-green" onClick={(event) => { event.preventDefault(); goToCollection(initialCategory); }}>Shop products <ArrowDown size={17} /></a>
           </div>
         </section>
