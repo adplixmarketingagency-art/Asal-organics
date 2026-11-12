@@ -252,6 +252,8 @@
   .preview-notice strong { color: var(--blue-ink); font-weight: 500; font-size: var(--text-small); }
   .preview-notice p { margin-top: 5px; }
   .preview-notice .text-link { margin-top: 9px; font-size: var(--text-caption); color: var(--blue-ink); }
+  .product-label-notice { margin-block: 16px 24px; }
+  .product-label-notice summary { min-height: 44px; padding-block: 12px; cursor: pointer; color: var(--blue-ink); }
 
   /* Keep supporting copy readable against the lightly tinted retail surfaces. */
   .desktop-nav > a, .desktop-nav > button, .bag-button { font-size: var(--text-body); }

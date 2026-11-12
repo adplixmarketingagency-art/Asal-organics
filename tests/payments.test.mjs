@@ -43,8 +43,8 @@ function fixture(overrides = {}) {
   return { ...createPaymentHandlers(deps), calls };
 }
 
-test("payment configuration allows test credentials, but fails closed for live prerequisites", () => {
-  const names = ["PAYMENTS_ENABLED", "PAYMENT_MODE", "RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET", "DATABASE_URL", "RAZORPAY_WEBHOOK_SECRET", "CATALOGUE_APPROVED", "PURCHASE_TOTAL_APPROVED"];
+test("payment configuration allows sandbox but cannot sell the catalogue with unverified labels", async () => {
+  const names = ["PAYMENTS_ENABLED", "PAYMENT_MODE", "RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET", "DATABASE_URL", "RAZORPAY_WEBHOOK_SECRET", "CATALOGUE_APPROVED", "PURCHASE_TOTAL_APPROVED", "ORDER_STORAGE"];
   const previous = Object.fromEntries(names.map((name) => [name, process.env[name]]));
   try {
     for (const name of names) delete process.env[name];
@@ -56,7 +56,15 @@ test("payment configuration allows test credentials, but fails closed for live p
     process.env.RAZORPAY_KEY_ID = "rzp_live_dummy";
     assert.equal(paymentConfig().enabled, false);
     Object.assign(process.env, { DATABASE_URL: "postgres://example.invalid/test", RAZORPAY_WEBHOOK_SECRET: "dummy", CATALOGUE_APPROVED: "true", PURCHASE_TOTAL_APPROVED: "true" });
-    assert.equal(paymentConfig().enabled, true);
+    assert.equal(paymentConfig().enabled, false, "environment approvals cannot bypass the pending food-label review");
+    for (const storage of ["postgres", "d1"]) {
+      process.env.ORDER_STORAGE = storage;
+      const api = fixture({ paymentConfig });
+      for (const handler of [api.createOrder, api.verifyPayment]) {
+        assert.equal((await handler(request(checkout))).status, 503);
+      }
+      assert.deepEqual(api.calls, [], "unverified labels must prevent provider and storage calls");
+    }
     process.env.PAYMENTS_ENABLED = "false";
     assert.equal(paymentConfig().enabled, false);
   } finally {

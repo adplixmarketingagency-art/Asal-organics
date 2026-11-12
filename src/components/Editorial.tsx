@@ -1,10 +1,13 @@
 import { ArrowUpRight, ChevronDown, Leaf } from "lucide-react";
 import { KolamDivider } from "./Kolam";
+import { foodLabelReview } from "@/content/food-labels";
 
 const faqs = [
   { question: "Which pack sizes are available?", answer: "Use the pack selector on each product to see its sizes and prices." },
   { question: "How are pack prices calculated?", answer: "Prices are proportional to the listed litre or kilogram price and rounded up to a whole rupee." },
   { question: "Can I place an order?", answer: "Real payments and delivery orders are not yet available. You can prepare your bag and review checkout. Sandbox payments are for testing only; delivery charges and tax settings are still to be confirmed." },
+  { question: "Where can I find product label details?", answer: `${foodLabelReview.notice} ${foodLabelReview.imageNotice}` },
+  { question: "Are the products certified organic?", answer: foodLabelReview.brandNotice },
 ];
 
 export function NammalvarStory({ onGuide }: { onGuide: () => void }) {

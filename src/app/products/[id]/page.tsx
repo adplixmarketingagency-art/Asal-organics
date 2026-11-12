@@ -4,6 +4,7 @@ import { ArrowLeft, ShoppingBag } from "lucide-react";
 import { BrandWordmark } from "@/components/BrandWordmark";
 import { ProductPurchase } from "@/components/ProductPurchase";
 import { ProductImage } from "@/components/ProductImage";
+import { ProductLabelNotice } from "@/components/ProductLabelNotice";
 import { categoryLabel, formatPrice, productPackSizes, products, productVariantsFor } from "@/content/products";
 import { productBreadcrumbs, productDescription, productPath } from "@/lib/product-pages";
 import { publicPageMetadata, serializeJsonLd, siteName, woodOilsPath } from "@/lib/seo";
@@ -70,6 +71,7 @@ export default async function ProductPage({ params }: Props) {
         </section>
         <aside className="product-page-panel" aria-label="Prepare your bag">
           <h2>Prepare your bag</h2>
+          <ProductLabelNotice />
           <ProductPurchase key={product.id} product={product} />
           <div className="preview-notice"><p>Store preview. Real payments and delivery orders are not yet available. Delivery charges and tax settings are still to be confirmed.</p></div>
         </aside>

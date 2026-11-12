@@ -1,4 +1,5 @@
 import "server-only";
+import { foodLabelReview } from "../content/food-labels.ts";
 
 export function paymentConfig() {
   const mode: "live" | "test" = process.env.PAYMENT_MODE === "live" ? "live" : "test";
@@ -17,7 +18,7 @@ export function paymentConfig() {
     purchaseTotalApproved,
     // Sandbox checkout needs no merchant database. Live checkout remains fail-closed.
     enabled: enabled && credentialsMatchMode && (mode === "test" || (
-      catalogueApproved && purchaseTotalApproved && Boolean(webhookSecret) && storageConfigured
+      foodLabelReview.readyForSale && catalogueApproved && purchaseTotalApproved && Boolean(webhookSecret) && storageConfigured
     )),
     keyId, keySecret, webhookSecret, databaseUrl,
   };

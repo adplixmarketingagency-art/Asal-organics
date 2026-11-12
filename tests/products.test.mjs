@@ -10,19 +10,19 @@ const expected = [
   ["wood-groundnut", "Wood-pressed Groundnut Oil", 420, "1 Litre", "wood-oils"],
   ["wood-sesame", "Wood-pressed Sesame Oil", 560, "1 Litre", "wood-oils"],
   ["wood-coconut", "Wood-pressed Coconut Oil", 420, "1 Litre", "wood-oils"],
-  ["turmeric", "Turmeric", 560, "1 kg", "masala"],
+  ["turmeric", "Turmeric Powder", 560, "1 kg", "masala"],
   ["curry-masala", "South Indian All Purpose Curry Masala", 478, "1 kg", "masala"],
   ["chilli-powder", "Chilli Powder", 560, "1 kg", "masala"],
   ["coriander-powder", "Coriander Powder", 410, "1 kg", "masala"],
-  ["ragi", "Ragi", 95, "1 kg", "grain"], ["bajra", "Bajra", 73, "1 kg", "grain"],
+  ["ragi", "Ragi Flour", 95, "1 kg", "grain"], ["bajra", "Bajra Flour", 73, "1 kg", "grain"],
   ["bilona-ghee", "Bilona Ghee", 1930, "1 Litre", "ghee"],
   ["bilona-butter", "Bilona Butter", 1820, "1 kg", "milk"],
   ["palkova", "Palkova", 650, "1 kg", "milk"],
   ["karuppu-kavuni-halwa", "Karuppu Kavuni Halwa", 520, "1 kg", "milk"],
   ["paneer", "Paneer", 910, "1 kg", "milk"],
-  ["karuppu-kavuni", "Karuppu Kavuni", 195, "1 kg", "rice"],
-  ["mapillai-samba", "Mapillai Samba", 130, "1 kg", "rice"],
-  ["seera-samba", "Seera Samba (Vasanai)", 156, "1 kg", "rice"],
+  ["karuppu-kavuni", "Karuppu Kavuni Rice", 195, "1 kg", "rice"],
+  ["mapillai-samba", "Mapillai Samba Rice", 130, "1 kg", "rice"],
+  ["seera-samba", "Seera Samba Rice (Vasanai)", 156, "1 kg", "rice"],
 ];
 
 test("the 20 owner-confirmed products retain their selling prices and quantities", () => {
@@ -74,12 +74,12 @@ test("Ragi and Bajra use the owner's confirmed kilogram prices and offer 500 g p
   assert.equal(products.filter(canAddToBag).length, 20);
 });
 
-test("Millets is the bilingual category for Ragi and Bajra without renaming the products", () => {
+test("Millets remains the bilingual category for Ragi Flour and Bajra Flour", () => {
   assert.deepEqual(productCategories.find(({ id }) => id === "grain"), {
     id: "grain", label: "Millets", tamilLabel: "சிறுதானியங்கள்",
   });
   for (const query of ["Millets", "சிறுதானியங்கள்"]) {
-    assert.deepEqual(selectProducts(products, { query }).map(({ name }) => name), ["Ragi", "Bajra"]);
+    assert.deepEqual(selectProducts(products, { query }).map(({ name }) => name), ["Ragi Flour", "Bajra Flour"]);
   }
   assert.deepEqual(groupProducts(selectProducts(products, { category: "grain" })).map(({ label }) => label), ["Millets"]);
 });
@@ -107,7 +107,7 @@ test("sorting preserves the source order and includes the full price range", () 
   const prices = products.map(({ price }) => price);
   assert.deepEqual(selectProducts(products, { sort: "price-asc" }).map(({ price }) => price), [...prices].sort((a,b) => a-b));
   assert.deepEqual(selectProducts(products, { sort: "price-desc" }).map(({ price }) => price), [...prices].sort((a,b) => b-a));
-  assert.equal(selectProducts(products, { sort: "name" })[0].name, "Bajra");
+  assert.equal(selectProducts(products, { sort: "name" })[0].name, "Bajra Flour");
   assert.deepEqual(products.map(({ id }) => id), original);
 });
 

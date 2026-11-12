@@ -1,8 +1,23 @@
 # Storefront design assets
 
-Updated November 11, 2026. The reference storefront informed navigation and
+Updated November 12, 2026. The reference storefront informed navigation and
 editorial hierarchy only. No competitor images, branding, certificates or
 testimonials were copied.
+
+## Label review; images retained — November 12, 2026
+
+The owner explicitly asked to keep the existing images and will provide
+replacements later. All bottle assets, mappings, sizing and image credits remain
+unchanged. The proposed ingredient-image substitutions were undone before
+release. Embedded packaging claims still require verification; retaining the
+images is not approval of those claims. No new images, label repainting or
+invented certification were used. See [food-label-review.md](food-label-review.md)
+for the supplied FSSAI reference and outstanding owner information.
+
+The shared wordmark no longer shows `®` without registration evidence. The
+owner's Asal Organics name is retained with certification-status clarification
+in About and FAQ. Pending image-claim review is mentioned in the expandable label
+notice on product details; no gallery or repeated image-caption badges were added.
 
 ## Type
 

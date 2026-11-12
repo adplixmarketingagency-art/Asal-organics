@@ -12,7 +12,6 @@ export function BrandWordmark({ animateDrop = false }: { animateDrop?: boolean }
       {animateDrop && <svg className="intro-oil-drip" viewBox="2383 10 156 240" aria-hidden="true" focusable="false" fill="currentColor">
         <path d={oilDropPath} />
       </svg>}
-      <span className="brand-registration" aria-hidden="true">®</span>
     </span>
     <span className="brand-tagline">Asal Organics</span>
   </>;
