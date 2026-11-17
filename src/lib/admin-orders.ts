@@ -51,7 +51,7 @@ export async function getAdminOrder(id: string): Promise<AdminOrderDetail | null
   validOrderId(id);
   if (usesD1()) return d1.getAdminOrder(id);
   return withDatabase(async (client) => {
-    const order = (await client.query<AdminOrderDetail>(`SELECT ${columns}, o.customer, o.items,
+    const order = (await client.query<AdminOrderDetail>(`SELECT ${columns}, o.customer, o.items, o.pricing,
       o.payment_id AS "paymentId", o.razorpay_order_id AS "razorpayOrderId",
       CASE WHEN n.id IS NULL THEN NULL ELSE json_build_object('id', n.id, 'status', n.status,
         'attempts', n.attempts, 'lastError', n.last_error, 'nextAttemptAt', n.next_attempt_at,

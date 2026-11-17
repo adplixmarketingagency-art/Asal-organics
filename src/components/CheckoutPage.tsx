@@ -183,7 +183,7 @@ export function CheckoutPage() {
       if (!mounted.current) { unlockPayment(); return; }
       if (typeof result.order_id !== "string" || typeof result.orderToken !== "string" || typeof result.key_id !== "string" ||
         typeof result.amount !== "number" || result.currency !== "INR" || result.mode !== paymentSettings.mode ||
-        result.amount !== currentReview.summary.subtotalPaise) throw new Error("Payment setup response was incomplete or your bag changed. Review it again.");
+        result.amount !== currentReview.pricing.totalPaise) throw new Error("Payment setup response was incomplete or your bag changed. Review it again.");
       const razorpay = new window.Razorpay({
         key: result.key_id,
         amount: result.amount,
@@ -235,7 +235,7 @@ export function CheckoutPage() {
       <Link href="/cart" className="button button-green">Back to your bag <ArrowRight size={18} /></Link>
     </section> : !ready ? <p className="commerce-loading" role="status">Preparing checkout…</p> : !items.length && !currentReview ? <EmptyBag /> : <>
       <div className="commerce-title"><h1>{currentReview ? "Review your order" : "Delivery details"}</h1></div>
-      {paymentSettings?.enabled && paymentSettings.mode === "test" && <p className="commerce-alert" role="status"><strong>Razorpay test mode.</strong> Use test details only. The items subtotal is used for this sandbox payment; no real money is charged and no delivery order is placed.</p>}
+      {paymentSettings?.enabled && paymentSettings.mode === "test" && <p className="commerce-alert" role="status"><strong>Razorpay test mode.</strong> Use test details only. This sandbox payment uses the displayed total, including oil GST and delivery; no real money is charged and no delivery order is placed.</p>}
       {storageWarning && <p className="commerce-alert" role="status">{storageWarning}</p>}
       {cartChanged && <p className="commerce-alert" role="status">{paymentPending || confirmation ? "Your bag changed in another tab. This payment still uses the original reviewed items and total." : "Your bag has changed. Please review it again before continuing."}</p>}
       <div className="commerce-grid checkout-grid">
@@ -260,7 +260,7 @@ export function CheckoutPage() {
             </button>
             <p id="payment-caption" className="payment-caption">{paymentSettings?.enabled
               ? "Your name, email and mobile number will be shared with Razorpay to open checkout. Never refresh or pay again while verification is pending."
-              : "Payments are unavailable until the store owner configures Razorpay. Live checkout also requires approved catalogue, shipping and tax settings."}</p>
+              : "Live checkout requires verified labels, GST registration and approved catalogue, delivery and tax settings."}</p>
             <Link href="/cart" className="text-link back-to-bag"><ArrowLeft size={16} />Back to your bag</Link>
           </section> : <form ref={formRef} onSubmit={submit} noValidate className="checkout-form" aria-busy={pending}>
             <div className="checkout-section-heading"><span className="section-icon"><MapPin size={20} strokeWidth={1.5} /></span><div><h2>Contact &amp; delivery</h2><p>Enter your contact and delivery details.</p></div></div>
@@ -287,13 +287,13 @@ export function CheckoutPage() {
                 </div>
                 <div className="checkout-field"><label htmlFor="checkout-country">Country</label><input id="checkout-country" name="country" value="India" readOnly /></div>
               </div>
-              <div className="delivery-note"><MapPin size={18} /><p>India addresses only for now. Delivery availability, charges and tax will be confirmed before real payments are enabled.</p></div>
+              <div className="delivery-note"><MapPin size={18} /><p>₹49 delivery per order, including applicable delivery GST. India addresses only; delivery eligibility must be confirmed before live orders.</p></div>
               <button type="submit" className="button button-green full-width">{pending ? "Checking your details…" : "Review checkout"}<ArrowRight size={18} /></button>
             </fieldset>
             <Link href="/cart" className="text-link back-to-bag"><ArrowLeft size={16} />Back to your bag</Link>
           </form>}
         </div>
-        <OrderSummary summary={currentReview?.summary ?? summary} showItems>
+        <OrderSummary summary={currentReview?.summary ?? summary} pricing={currentReview?.pricing} showItems>
           <Link href="/cart" className="text-link summary-edit"><Pencil size={14} />Edit your bag</Link>
         </OrderSummary>
       </div>

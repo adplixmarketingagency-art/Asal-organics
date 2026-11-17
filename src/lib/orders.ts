@@ -44,6 +44,7 @@ async function ensureSchema(client: Client) {
     UNIQUE (order_id, kind)
   );
   ALTER TABLE asal_orders ADD COLUMN IF NOT EXISTS fulfillment_status TEXT NOT NULL DEFAULT 'unfulfilled';
+  ALTER TABLE asal_orders ADD COLUMN IF NOT EXISTS pricing JSONB;
   ALTER TABLE asal_notification_outbox ADD COLUMN IF NOT EXISTS lease_id UUID;
   ALTER TABLE asal_notification_outbox ADD COLUMN IF NOT EXISTS lease_until TIMESTAMPTZ;
   ALTER TABLE asal_notification_outbox ADD COLUMN IF NOT EXISTS first_attempt_at TIMESTAMPTZ;
@@ -68,8 +69,8 @@ export async function createPendingOrder(review: CheckoutReview, receipt: string
   return withDatabase(async (client) => {
     const id = crypto.randomUUID();
     const result = await client.query<StoredOrder>(
-      `INSERT INTO asal_orders (id, receipt, status, amount_paise, currency, customer, items) VALUES ($1,$2,'pending',$3,$4,$5,$6) RETURNING id, receipt, razorpay_order_id AS "razorpayOrderId", amount_paise AS "amountPaise", currency, status`,
-      [id, receipt, review.summary.subtotalPaise, review.currency, review.customer, JSON.stringify(review.summary.lines.map((line) => ({ productId: line.productId, variantId: line.variantId, size: line.variant.size, name: line.product.name, quantity: line.quantity, unitPricePaise: line.unitPricePaise })))],
+      `INSERT INTO asal_orders (id, receipt, status, amount_paise, currency, customer, items, pricing) VALUES ($1,$2,'pending',$3,$4,$5,$6,$7) RETURNING id, receipt, razorpay_order_id AS "razorpayOrderId", amount_paise AS "amountPaise", currency, status`,
+      [id, receipt, review.pricing.totalPaise, review.currency, review.customer, JSON.stringify(review.summary.lines.map((line) => ({ productId: line.productId, variantId: line.variantId, size: line.variant.size, name: line.product.name, quantity: line.quantity, unitPricePaise: line.unitPricePaise }))), review.pricing],
     );
     return result.rows[0];
   });
@@ -82,7 +83,7 @@ export async function attachRazorpayOrder(id: string, razorpayOrderId: string) {
 
 export async function getOrder(id: string) {
   if (usesD1()) return d1.getOrder(id);
-  return withDatabase(async (client) => (await client.query(`SELECT id, receipt, razorpay_order_id AS "razorpayOrderId", status, amount_paise AS "amountPaise", currency, customer, items, payment_id AS "paymentId" FROM asal_orders WHERE id=$1`, [id])).rows[0] ?? null);
+  return withDatabase(async (client) => (await client.query(`SELECT id, receipt, razorpay_order_id AS "razorpayOrderId", status, amount_paise AS "amountPaise", currency, customer, items, pricing, payment_id AS "paymentId" FROM asal_orders WHERE id=$1`, [id])).rows[0] ?? null);
 }
 
 export async function getOrderByRazorpayId(razorpayOrderId: string) {

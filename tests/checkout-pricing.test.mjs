@@ -3,6 +3,7 @@ import test from "node:test";
 import { getCartSummary } from "../src/lib/cart.ts";
 import { products, productVariantsFor } from "../src/content/products.ts";
 import { getCheckoutPricing, formatMoneyPaise } from "../src/lib/checkout-pricing.ts";
+import { readFileSync } from "node:fs";
 
 const price = (items) => getCheckoutPricing(getCartSummary(items));
 
@@ -51,4 +52,18 @@ test("empty bags have no delivery or tax and totals retain exact paise", () => {
   assert.equal(formatMoneyPaise(49000), "₹490");
   assert.equal(formatMoneyPaise(233), "₹2.33");
   assert.equal(formatMoneyPaise(49001), "₹490.01");
+});
+
+test("checkout renders the reviewed breakdown and compares payment to the full total", () => {
+  const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+  const summary = source("src/components/CommerceLayout.tsx");
+  assert.match(summary, /pricing\.oilGstPaise/);
+  assert.match(summary, /pricing\.deliveryPaise/);
+  assert.match(summary, /pricing\.totalPaise/);
+  assert.doesNotMatch(summary, /To be confirmed|Estimated subtotal/);
+  assert.match(source("src/components/CheckoutPage.tsx"), /result\.amount !== currentReview\.pricing\.totalPaise/);
+  assert.match(source("src/components/AdminOrders.tsx"), /detail\.pricing\.oilGstPaise/);
+  for (const file of ["ProductCard.tsx", "ProductPurchase.tsx", "StorefrontDialogs.tsx"]) {
+    assert.match(source(`src/components/${file}`), /oilTaxNote/);
+  }
 });

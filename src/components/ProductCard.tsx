@@ -7,6 +7,7 @@ import { categoryLabel, formatPrice, getProductVariant, productVariantsFor, quan
 import { useCart } from "./CartProvider";
 import { productPath } from "@/lib/product-pages";
 import { ProductImage } from "./ProductImage";
+import { isEdibleOil, oilTaxNote } from "@/lib/checkout-pricing";
 
 export function ProductCard({ product, saved, onSave, onExplore }: {
   product: Product;
@@ -44,6 +45,7 @@ export function ProductCard({ product, saved, onSave, onExplore }: {
             {variant ? <>Add to bag <Plus size={15} /></> : "Unavailable"}
           </button>
         </div>
+        {isEdibleOil(product) && <p className="product-tax-note">{oilTaxNote}</p>}
       </div>
     </article>
   );

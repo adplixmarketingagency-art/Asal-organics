@@ -13,6 +13,7 @@ import { ProductImage } from "./ProductImage";
 import { CategorySelector } from "./CategorySelector";
 import { ProductLabelNotice } from "./ProductLabelNotice";
 import { foodLabelReview } from "@/content/food-labels";
+import { isEdibleOil, oilTaxNote, deliveryNote } from "@/lib/checkout-pricing";
 
 export type DialogState = { type: "search" | "guide" | "ordering" | "about" } | { type: "product"; product: Product } | null;
 
@@ -66,6 +67,7 @@ export function StorefrontDialogs({ dialog, onClose, onExplore, saved, onSave, c
         <p className="eyebrow">{categoryLabel(product.category)}</p><h2>{product.name}</h2>
         {product.tamilName && <p className="modal-intro" lang="ta">{product.tamilName}</p>}
         <div className="detail-price" aria-live="polite"><strong>{variant ? formatPrice(variant.price) : "Price pending"}</strong><span>{variant?.size ?? quantityLabel(product)}</span></div>
+        {isEdibleOil(product) && <p className="product-tax-note">{oilTaxNote}</p>}
         <fieldset className="detail-packs"><legend>Choose your pack</legend><div className="pack-options">
           {variants.length ? variants.map((pack) => <label key={pack.id} className={`pack-option ${pack.id === variant?.id ? "selected" : ""}`}>
             <input type="radio" name={`pack-${product.id}`} value={pack.id} checked={pack.id === variant?.id} onChange={() => setSelectedVariantId(pack.id)} />
@@ -84,7 +86,7 @@ export function StorefrontDialogs({ dialog, onClose, onExplore, saved, onSave, c
   return <Modal title={dialog.type === "search" ? "Search products" : dialog.type === "guide" ? "Catalogue guide" : dialog.type === "about" ? "About Asal" : "Online ordering"} onClose={onClose} className={dialog.type === "guide" ? "guide-modal" : ""}>
     {dialog.type === "search" && <SearchContent onExplore={onExplore} />}
     {dialog.type === "guide" && <CatalogueGuide category={category} onCategory={onCategory} />}
-    {dialog.type === "ordering" && <div className="simple-dialog"><span className="modal-symbol"><ShoppingBag size={28} strokeWidth={1.4} /></span><h2>Ordering &amp; delivery</h2><p>Add products with a listed quantity to your bag and review your delivery details at checkout.</p><p className="muted">Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing. Delivery availability, charges and tax settings are still to be confirmed.</p><Link href="/cart" className="button button-green" onClick={onClose}>Go to your bag <ArrowRight size={18} /></Link></div>}
+    {dialog.type === "ordering" && <div className="simple-dialog"><span className="modal-symbol"><ShoppingBag size={28} strokeWidth={1.4} /></span><h2>Ordering &amp; delivery</h2><p>{deliveryNote} Listed oil prices exclude 5% GST, added at checkout.</p><p className="muted">Real payments and delivery orders are not yet available. Sandbox checkout is for testing only; non-oil tax and delivery eligibility still need verification.</p><Link href="/cart" className="button button-green" onClick={onClose}>Go to your bag <ArrowRight size={18} /></Link></div>}
     {dialog.type === "about" && <div className="simple-dialog"><span className="brand modal-brand"><BrandWordmark /></span><h2>About Asal</h2><p>Asal Iyarkai Angadi offers oils, ghee, spices, dairy products and traditional grains.</p><p className="muted">{foodLabelReview.brandNotice}</p><p className="muted">Browse the catalogue and prepare your bag. Online ordering is not yet available.</p><button className="button button-green" onClick={onClose}>Back to the collection <ArrowRight size={18} /></button></div>}
   </Modal>;
 }

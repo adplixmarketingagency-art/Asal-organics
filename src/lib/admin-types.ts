@@ -1,4 +1,5 @@
 import type { CheckoutDetails } from "./checkout.ts";
+import type { CheckoutPricing } from "./checkout-pricing.ts";
 
 export const fulfillmentStatuses = ["unfulfilled", "packed", "shipped", "delivered"] as const;
 export type FulfillmentStatus = typeof fulfillmentStatuses[number];
@@ -14,6 +15,7 @@ export type NotificationRecord = {
 };
 export type AdminOrderDetail = AdminOrder & {
   customer: CheckoutDetails;
+  pricing: CheckoutPricing | null;
   items: { productId: string; variantId?: string; name: string; size?: string; quantity: number; unitPricePaise: number }[];
   paymentId: string | null; razorpayOrderId: string | null;
   notification: NotificationRecord | null;

@@ -9,6 +9,7 @@ import { categoryLabel, formatPrice } from "@/content/products";
 import { MAX_ITEM_QUANTITY, type CartSummary } from "@/lib/cart";
 import { useCart } from "./CartProvider";
 import { ProductImage } from "./ProductImage";
+import { getCheckoutPricing, formatMoneyPaise, type CheckoutPricing } from "@/lib/checkout-pricing";
 
 export function CommerceLayout({ step, children }: { step: 1 | 2 | 3; children: ReactNode }) {
   const { summary } = useCart();
@@ -64,17 +65,23 @@ export function CartLines({ compact = false, summary: suppliedSummary }: { compa
   </ul>;
 }
 
-export function OrderSummary({ summary, children, showItems = false }: { summary: CartSummary; children?: ReactNode; showItems?: boolean }) {
+export function OrderSummary({ summary, pricing: suppliedPricing, children, showItems = false }: {
+  summary: CartSummary; pricing?: CheckoutPricing; children?: ReactNode; showItems?: boolean;
+}) {
+  const pricing = suppliedPricing ?? getCheckoutPricing(summary);
   return <aside className="order-summary" aria-label="Order summary">
     <div className="summary-heading"><h2>Order summary</h2><span>{summary.itemCount} {summary.itemCount === 1 ? "item" : "items"}</span></div>
     {showItems && <CartLines compact summary={summary} />}
     <dl className="summary-totals">
-      <div><dt>Items subtotal</dt><dd>{formatPrice(summary.subtotalPaise / 100)}</dd></div>
-      <div><dt>Delivery</dt><dd>To be confirmed</dd></div>
-      <div><dt>Tax</dt><dd>To be confirmed</dd></div>
-      <div className="summary-subtotal"><dt>Estimated subtotal</dt><dd>{formatPrice(summary.subtotalPaise / 100)}</dd></div>
+      <div><dt>Items subtotal</dt><dd>{formatMoneyPaise(pricing.subtotalPaise)}</dd></div>
+      {pricing.oilSubtotalPaise > 0 && <div><dt>Oil GST (5%)</dt><dd>{formatMoneyPaise(pricing.oilGstPaise)}</dd></div>}
+      <div><dt>Delivery</dt><dd>{formatMoneyPaise(pricing.deliveryPaise)}</dd></div>
+      <div className="summary-subtotal"><dt>{pricing.taxStatus === "partially_configured" ? "Estimated total" : "Total"}</dt><dd>{formatMoneyPaise(pricing.totalPaise)}</dd></div>
     </dl>
-    <p className="summary-disclaimer">Prices are for the listed quantities. Delivery and tax rules must be confirmed before real payments.</p>
+    <p className="summary-disclaimer">Delivery is charged once per order and includes applicable delivery GST.
+      {pricing.deliveryGstIncludedPaise !== null && pricing.deliveryPaise > 0 && <> Included delivery GST: {formatMoneyPaise(pricing.deliveryGstIncludedPaise)}.</>}
+      {pricing.taxStatus === "partially_configured" && <> Tax for non-oil products is awaiting verification; this is not a final payable total.</>}
+    </p>
     {children}
   </aside>;
 }

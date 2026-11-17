@@ -103,7 +103,11 @@ The catalogue uses the owner’s handwritten product and pack-size lists plus th
 Have the owner review Tamil terminology and provide the actual FSSAI certificate
 and licence details before publishing a certification section.
 
-Razorpay is integrated for sandbox testing. Live checkout remains gated: order storage is not configured, shipping/tax rules are unimplemented and inventory is not reserved. Test success does not place a fulfilment order or clear the bag. Complete the live-readiness checklist in `docs/payments.md` before collecting real money.
+Razorpay is integrated for sandbox testing. Checkout includes 5% oil GST and ₹49
+delivery per order, with delivery GST included. Non-oil tax remains pending.
+Live checkout stays gated by label review, merchant approvals and delivery
+eligibility; inventory is not reserved. Test success does not place a fulfilment
+order or clear the bag. Complete `docs/payments.md` before collecting real money.
 
 See [checkout integration notes](docs/checkout.md) and [design direction](docs/design.md).
 

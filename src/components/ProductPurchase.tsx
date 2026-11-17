@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 import { formatPrice, getProductVariant, productVariantsFor, type Product } from "@/content/products";
 import { useCart } from "./CartProvider";
+import { isEdibleOil, oilTaxNote } from "@/lib/checkout-pricing";
 
 export function ProductPurchase({ product }: { product: Product }) {
   const { addItem, ready } = useCart();
@@ -19,6 +20,7 @@ export function ProductPurchase({ product }: { product: Product }) {
       </select>
     </label> : <p>Pack prices need confirmation before this product can be added to your bag.</p>}
     <p className="product-page-price" aria-live="polite">{variant ? formatPrice(variant.price) : "Price pending"}</p>
+    {isEdibleOil(product) && <p className="product-tax-note">{oilTaxNote}</p>}
     <button className="button button-green full-width" disabled={!ready || !variant} onClick={() => addItem(product.id, variant?.id)}>
       <ShoppingBag size={18} />{variant ? `Add ${variant.size} to bag` : "Pack price to be confirmed"}
     </button>

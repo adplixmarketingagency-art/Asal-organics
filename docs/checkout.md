@@ -10,6 +10,11 @@
 - Address/contact data stays in React memory during review, not localStorage or application logs. Live order creation saves delivery details in the existing order store; sandbox does not. Opening Razorpay shares name, email and phone with the payment provider. Refresh clears local form details.
 - Checkout reviews become invalid if the bag changes, including another tab. An in-progress payment retains its original review for verification retries.
 - JSON requests are limited to 16 KiB and all endpoint responses use `Cache-Control: no-store`.
+- Listed oil prices exclude 5% GST. Checkout adds that GST and a final ₹49
+  delivery charge once per order (delivery GST included). The shared pricing
+  breakdown and full total are recomputed server-side and stored with orders.
+  Non-oil tax is still pending; those cart totals are estimates, not zero-rated.
+  See [oil tax and delivery](oil-gst-delivery.md).
 
 ## Razorpay boundary
 
@@ -37,7 +42,9 @@ Razorpay Standard Checkout is integrated. Test mode can run without a database u
 Before enabling **live** Razorpay payments:
 
 1. Confirm the base quantity behind Ragi and Bajra prices, and inventory availability. The owner authorised proportional whole-rupee rounding for other pack sizes; see [catalogue rules](catalogue.md). The catalogue uses the owner’s handwritten product/pack-size lists, without product photography.
-2. Configure actual delivery eligibility, shipping and tax rules. They are currently **unconfigured**, not free or zero-rated. The UI therefore shows an estimated items subtotal, not a payable grand total.
+2. Verify GST registration, delivery eligibility and the remaining non-oil tax
+   rules. Oil GST and ₹49 delivery are implemented; mixed/non-oil carts are
+   explicitly estimates. Label review and live-approval gates still apply.
 3. Provision durable merchant order storage and appropriate privacy, support and fulfilment policies.
 4. Revalidate stock and recompute the final payable amount on the server when creating a Razorpay order. Never trust browser totals or a previous review response.
 5. Create and persist pending merchant orders idempotently, with a server-side connection to the provider order ID. Keep all payment secrets server-only.

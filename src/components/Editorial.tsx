@@ -5,7 +5,8 @@ import { foodLabelReview } from "@/content/food-labels";
 const faqs = [
   { question: "Which pack sizes are available?", answer: "Use the pack selector on each product to see its sizes and prices." },
   { question: "How are pack prices calculated?", answer: "Prices are proportional to the listed litre or kilogram price and rounded up to a whole rupee." },
-  { question: "Can I place an order?", answer: "Real payments and delivery orders are not yet available. You can prepare your bag and review checkout. Sandbox payments are for testing only; delivery charges and tax settings are still to be confirmed." },
+  { question: "Can I place an order?", answer: "Real payments and delivery orders are not yet available. Sandbox payments are for testing only." },
+  { question: "What are the tax and delivery charges?", answer: "5% GST is added to listed oil prices at checkout. Delivery is ₹49 per order, including applicable delivery GST. Non-oil tax and delivery eligibility still need verification." },
   { question: "Where can I find product label details?", answer: `${foodLabelReview.notice} ${foodLabelReview.imageNotice}` },
   { question: "Are the products certified organic?", answer: foodLabelReview.brandNotice },
 ];

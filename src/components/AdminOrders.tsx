@@ -210,7 +210,14 @@ export function AdminOrders() {
           {!detail ? <p className="admin-muted">{detailError ? "Please retry by opening the order again." : "Opening order…"}</p> : <>
             <h2 ref={detailHeading} tabIndex={-1}>{detail.receipt}</h2><p className="admin-small">{date(detail.createdAt)} IST</p>
             <div className="admin-detail-badges"><Badge status={detail.status} />{detail.status === "paid" && <Badge status={detail.fulfillmentStatus} />}</div>
-            <section><h3>In the parcel</h3>{detail.items.map((item, i) => <div className="admin-line" key={`${item.productId}-${i}`}><div><strong>{item.name}</strong><p>{item.size ?? "Standard pack"} · Qty {item.quantity}</p></div><span>{money(item.quantity * item.unitPricePaise)}</span></div>)}<div className="admin-line total"><strong>Order total</strong><strong>{money(detail.amountPaise)}</strong></div></section>
+            <section><h3>In the parcel</h3>{detail.items.map((item, i) => <div className="admin-line" key={`${item.productId}-${i}`}><div><strong>{item.name}</strong><p>{item.size ?? "Standard pack"} · Qty {item.quantity}</p></div><span>{money(item.quantity * item.unitPricePaise)}</span></div>)}
+              {detail.pricing && <>
+                <div className="admin-line"><span>Items subtotal</span><span>{money(detail.pricing.subtotalPaise)}</span></div>
+                {detail.pricing.oilSubtotalPaise > 0 && <div className="admin-line"><span>Oil GST (5%)</span><span>{money(detail.pricing.oilGstPaise)}</span></div>}
+                <div className="admin-line"><span>Delivery (GST inclusive)</span><span>{money(detail.pricing.deliveryPaise)}</span></div>
+              </>}
+              <div className="admin-line total"><strong>Order total</strong><strong>{money(detail.amountPaise)}</strong></div>
+            </section>
             <section><h3>Deliver to</h3><address><strong>{detail.customer.fullName}</strong><br />{detail.customer.address}<br />{detail.customer.apartment && <>{detail.customer.apartment}<br /></>}{detail.customer.city}, {detail.customer.state} {detail.customer.pincode}<br />India</address><p className="admin-contact">{detail.customer.phone}<br />{detail.customer.email}</p></section>
             <section><h3>Fulfilment</h3><p className="admin-muted">{detail.status !== "paid" ? "Awaiting verified payment. Do not fulfil this order." : nextStatus ? "Confirm the parcel is ready before moving it forward." : "This order has been delivered."}</p>{detail.status === "paid" && nextStatus && (confirmStatus === nextStatus ? <div className="admin-confirm" role="group" aria-label="Confirm fulfilment change">
               <p className="admin-muted">Mark {detail.receipt} as {nextStatus}? This change is recorded in the activity log.</p>

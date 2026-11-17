@@ -11,7 +11,12 @@ Next.js App Router endpoints use the official Node SDK on the server and Razorpa
 5. Add a product with a confirmed unit, proceed through the bag, enter synthetic contact/address details, review, then choose **Pay with Razorpay · Test mode**.
 6. Use Razorpay's documented sandbox payment methods. Configure automatic capture in the Razorpay dashboard; an `authorized` payment returns 409 until captured. Do not use real payment details.
 
-Sandbox uses the items subtotal only; delivery and tax are not configured. Test checkout creates a real **test-mode Razorpay order**, but no merchant database order or fulfilment request. A signed, expiring server-issued reference binds the order ID, amount, currency and mode without storing customer information. Successful test verification keeps the bag unchanged.
+Sandbox uses the displayed total: items subtotal plus 5% oil GST and ₹49
+delivery (delivery GST included). Non-oil tax remains pending, so mixed/non-oil
+totals are sandbox estimates. Test checkout creates a real **test-mode Razorpay
+order**, but no merchant database order or fulfilment request. A signed, expiring
+server-issued reference binds the full amount, order ID, currency and mode without
+storing customer information. Successful test verification keeps the bag unchanged.
 
 ## Endpoint contracts
 
@@ -44,7 +49,10 @@ Live mode remains fail-closed unless **all** of these are configured: `PAYMENTS_
 
 The flags are not substitutes for implementation. Before enabling them:
 
-- Confirm missing Ragi/Bajra units, inventory, delivery eligibility, shipping/tax calculation and the final payable total. Current creation charges only the catalogue subtotal; implement any applicable extra charges on the server and display them in the review.
+- Confirm inventory, delivery eligibility, GST registration, non-oil tax and the
+  final payable total. Oil GST and ₹49 delivery are calculated on the server;
+  pending label review still blocks all live sales. Non-oil live creation also
+  fails closed even if payment approvals are enabled.
 - Configure the project's existing Postgres order store. Live creation saves the immutable pending snapshot before contacting Razorpay and attaches the returned provider order. Verification uses that snapshot, not current browser data. No database is configured by this task.
 - Add server-side rate limiting, durable create-order idempotency, inventory handling and reconciliation for interrupted/expired checkouts. The current UI prevents double clicks, not repeated requests from independent clients.
 - Set a public HTTPS webhook at `/api/webhooks/razorpay` for `payment.captured`, with a separate webhook secret. It is disabled in sandbox. Live events validate the raw-body signature, fetch the provider payment and compare its amount/order/currency. Payment updates and the existing notification-outbox insertion are transactionally idempotent; failed processing is retryable.

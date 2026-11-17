@@ -49,7 +49,8 @@ test("shopping dialogs and checkout use functional headings instead of filler", 
   assert.doesNotMatch(commerce, /announcement-bar|goodness|uncomplicated|everyday essentials|summary-footnote/);
   assert.match(commerce, /<h1>Your bag is empty<\/h1>/);
   assert.match(commerce, /<h2>Order summary<\/h2>/);
-  assert.match(commerce, /Delivery and tax rules must be confirmed/);
+  assert.match(commerce, /Delivery is charged once per order/);
+  assert.match(commerce, /Oil GST \(5%\)/);
   const cart = source("src/components/CartPage.tsx");
   assert.match(cart, /<h1>Your bag<\/h1>/);
   assert.doesNotMatch(cart, /goodness|A few good things/);

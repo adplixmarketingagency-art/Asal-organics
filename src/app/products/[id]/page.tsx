@@ -73,7 +73,7 @@ export default async function ProductPage({ params }: Props) {
           <h2>Prepare your bag</h2>
           <ProductLabelNotice />
           <ProductPurchase key={product.id} product={product} />
-          <div className="preview-notice"><p>Store preview. Real payments and delivery orders are not yet available. Delivery charges and tax settings are still to be confirmed.</p></div>
+          <div className="preview-notice"><p>Store preview. Real payments and delivery orders are not yet available. Delivery is ₹49 per order, including applicable delivery GST.</p></div>
         </aside>
       </div>
       <section className="product-page-related" aria-labelledby="related-heading">

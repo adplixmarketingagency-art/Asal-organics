@@ -21,12 +21,22 @@ test("D1: real SQLite order transactions, notification leases, sessions and dist
   try {
     await db.exec(readFileSync(new URL("../migrations/0001_orders_and_owner.sql", import.meta.url), "utf8")
       .replace(/--[^\n]*/g, "").replace(/\n/g, " "));
+    await db.exec(readFileSync(new URL("../migrations/0002_order_pricing.sql", import.meta.url), "utf8")
+      .replace(/--[^\n]*/g, "").replace(/\n/g, " "));
     globalThis[Symbol.for("__cloudflare-context__")] = { env: { ASAL_DB: db } };
     process.env.ORDER_STORAGE = "d1";
     const customer = { fullName: "Synthetic D1 Test", phone: "9876543210", email: "synthetic@example.com", address: "12 Test Street", apartment: "",
       city: "Chennai", state: "Tamil Nadu", pincode: "600001", country: "IN" };
     const review = prepareCheckoutReview({ customer, items: [{ productId: "sesame", quantity: 2 }] }).review;
     const order = await createPendingOrder(review, "synthetic-d1-order");
+    assert.equal(order.amountPaise, 122500);
+    assert.deepEqual((await getOrder(order.id)).pricing, review.pricing);
+    assert.deepEqual((await getAdminOrder(order.id)).pricing, review.pricing);
+    // Rows created before this feature must not receive a guessed breakdown.
+    await db.prepare(`INSERT INTO asal_orders(id,receipt,status,amount_paise,currency,customer,items)
+      VALUES('00000000-0000-4000-8000-000000000001','legacy-order','pending',42000,'INR',?,?)`)
+      .bind(JSON.stringify(customer), "[]").run();
+    assert.equal((await getAdminOrder("00000000-0000-4000-8000-000000000001")).pricing, null);
     assert.equal(await attachRazorpayOrder(order.id, "order_synthetic"), true);
     assert.ok(Array.isArray((await getOrder(order.id)).items));
     await assert.rejects(updateFulfillment(order.id, "unfulfilled", "packed", "owner@example.com"), { status: 409 });
