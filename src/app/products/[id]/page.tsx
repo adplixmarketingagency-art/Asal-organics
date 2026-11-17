@@ -4,6 +4,7 @@ import { ArrowLeft, ShoppingBag } from "lucide-react";
 import { BrandWordmark } from "@/components/BrandWordmark";
 import { ProductPurchase } from "@/components/ProductPurchase";
 import { ProductImage } from "@/components/ProductImage";
+import { VegetarianMark } from "@/components/VegetarianMark";
 import { categoryLabel, formatPrice, productPackSizes, products, productVariantsFor } from "@/content/products";
 import { productBreadcrumbs, productDescription, productPath } from "@/lib/product-pages";
 import { publicPageMetadata, serializeJsonLd, siteName, woodOilsPath } from "@/lib/seo";
@@ -52,7 +53,7 @@ export default async function ProductPage({ params }: Props) {
       </nav>
       <div className="product-page-grid">
         <section aria-labelledby="product-heading">
-          <p className="eyebrow">{categoryLabel(product.category)}</p>
+          <p className="eyebrow product-identity">{categoryLabel(product.category)}<VegetarianMark /></p>
           <h1 id="product-heading">{product.name}</h1>
           <p className="product-page-tamil" lang="ta">{product.tamilName}</p>
           <ProductImage productId={product.id} className="product-page-artwork" priority />

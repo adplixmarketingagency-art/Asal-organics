@@ -7,6 +7,7 @@ import { categoryLabel, formatPrice, getProductVariant, productVariantsFor, quan
 import { useCart } from "./CartProvider";
 import { productPath } from "@/lib/product-pages";
 import { ProductImage } from "./ProductImage";
+import { VegetarianMark } from "./VegetarianMark";
 import { isEdibleOil, oilTaxNote } from "@/lib/checkout-pricing";
 
 export function ProductCard({ product, saved, onSave, onExplore }: {
@@ -30,7 +31,7 @@ export function ProductCard({ product, saved, onSave, onExplore }: {
         </button>
       </div>
       <div className="product-info">
-        <p className="product-category">{categoryLabel(product.category)}</p>
+        <p className="product-category product-identity">{categoryLabel(product.category)}<VegetarianMark /></p>
         <h3><Link href={productPath(product)} prefetch={false}>{product.name}</Link></h3>
         <p className="product-tamil" lang="ta">{product.tamilName}</p>
         {variant ? <label className="pack-select">

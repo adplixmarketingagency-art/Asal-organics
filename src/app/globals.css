@@ -144,6 +144,8 @@
   .save-button { position: absolute; right: 9px; top: 7px; z-index: 3; color: #65735c; width: 34px; height: 34px; }
   .save-button:hover, .save-button.is-saved { color: var(--green); background: #fff; }
   .product-category { color: #8a9385; font-size: var(--text-caption); letter-spacing: 1.3px; margin-bottom: 6px; }
+  .product-identity { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .vegetarian-mark { display: block; width: 20px; height: 20px; flex-shrink: 0; color: #008000; background: #fff; }
   .product-info h3 { font-size: 1.5625rem; letter-spacing: -.5px; line-height: 1.25; }
   .product-info h3 a { display: inline-block; font: inherit; text-align: left; padding: 0; }
   .product-info h3 a:hover { color: var(--green-mid); }

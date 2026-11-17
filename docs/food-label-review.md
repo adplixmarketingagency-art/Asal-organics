@@ -13,6 +13,13 @@ sales. FAQ/About certification disclosures and checkout test-mode notices remain
 The implemented table and verification below describe the original 12 November
 review, before this subsequent UI change.
 
+**17 November 2026 vegetarian-symbol update:** At the owner's explicit request,
+all current product cards, quick views and full product pages display the green
+dot-in-square vegetarian symbol beside the food identity. The shared symbol has
+an accessible “Vegetarian” label. This owner-directed display is not independent
+verification of ingredients, additives or processing aids; the remaining label
+review and live-sale lock are unchanged.
+
 This is an implementation review, not legal certification or an assessment of
 the actual food. Later amendments, product standards, Advertising and Claims
 Regulations, Organic Foods Regulations and Legal Metrology requirements need

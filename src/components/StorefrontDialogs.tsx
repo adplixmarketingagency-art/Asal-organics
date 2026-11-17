@@ -10,6 +10,7 @@ import { Modal } from "./Modal";
 import { useCart } from "./CartProvider";
 import { productPath } from "@/lib/product-pages";
 import { ProductImage } from "./ProductImage";
+import { VegetarianMark } from "./VegetarianMark";
 import { CategorySelector } from "./CategorySelector";
 import { foodLabelReview } from "@/content/food-labels";
 import { isEdibleOil, oilTaxNote, deliveryNote } from "@/lib/checkout-pricing";
@@ -63,7 +64,7 @@ export function StorefrontDialogs({ dialog, onClose, onExplore, saved, onSave, c
     return <Modal title={product.name} onClose={onClose} className="product-modal">
       <ProductImage productId={product.id} className="detail-image-space" />
       <div className="detail-content">
-        <p className="eyebrow">{categoryLabel(product.category)}</p><h2>{product.name}</h2>
+        <p className="eyebrow product-identity">{categoryLabel(product.category)}<VegetarianMark /></p><h2>{product.name}</h2>
         {product.tamilName && <p className="modal-intro" lang="ta">{product.tamilName}</p>}
         <div className="detail-price" aria-live="polite"><strong>{variant ? formatPrice(variant.price) : "Price pending"}</strong><span>{variant?.size ?? quantityLabel(product)}</span></div>
         {isEdibleOil(product) && <p className="product-tax-note">{oilTaxNote}</p>}
