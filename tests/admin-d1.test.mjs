@@ -29,7 +29,7 @@ test("D1: real SQLite order transactions, notification leases, sessions and dist
       city: "Chennai", state: "Tamil Nadu", pincode: "600001", country: "IN" };
     const review = prepareCheckoutReview({ customer, items: [{ productId: "sesame", quantity: 2 }] }).review;
     const order = await createPendingOrder(review, "synthetic-d1-order");
-    assert.equal(order.amountPaise, 122500);
+    assert.equal(order.amountPaise, 116900);
     assert.deepEqual((await getOrder(order.id)).pricing, review.pricing);
     assert.deepEqual((await getAdminOrder(order.id)).pricing, review.pricing);
     // Rows created before this feature must not receive a guessed breakdown.
@@ -37,6 +37,13 @@ test("D1: real SQLite order transactions, notification leases, sessions and dist
       VALUES('00000000-0000-4000-8000-000000000001','legacy-order','pending',42000,'INR',?,?)`)
       .bind(JSON.stringify(customer), "[]").run();
     assert.equal((await getAdminOrder("00000000-0000-4000-8000-000000000001")).pricing, null);
+    const previousPricing = { ...review.pricing, version: 1, oilGstPaise: 5600, totalPaise: 122500 };
+    delete previousPricing.priceIncludesGst;
+    await db.prepare("UPDATE asal_orders SET amount_paise=122500,pricing=? WHERE id='00000000-0000-4000-8000-000000000001'")
+      .bind(JSON.stringify(previousPricing)).run();
+    const previousOrder = await getAdminOrder("00000000-0000-4000-8000-000000000001");
+    assert.equal(previousOrder.amountPaise, 122500, "GST-inclusive correction must not rewrite older payment amounts");
+    assert.deepEqual(previousOrder.pricing, previousPricing);
     assert.equal(await attachRazorpayOrder(order.id, "order_synthetic"), true);
     assert.ok(Array.isArray((await getOrder(order.id)).items));
     await assert.rejects(updateFulfillment(order.id, "unfulfilled", "packed", "owner@example.com"), { status: 409 });

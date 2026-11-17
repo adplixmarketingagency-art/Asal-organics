@@ -25,7 +25,7 @@ test("food names identify the powder, flour and rice already described in Tamil"
   }
 });
 
-test("pending declarations are visible on both product detail entry points", () => {
+test("product warning blocks are removed without approving live sales or changing review status", () => {
   assert.equal(foodLabelReview.readyForSale, false);
   assert.match(foodLabelReview.notice, /awaiting verification.*ordering remains unavailable/);
   for (const required of ["Ingredients", "allergens", "nutrition", "vegetarian/non-vegetarian", "FSSAI", "consumer-care", "storage", "where applicable"]) {
@@ -34,12 +34,22 @@ test("pending declarations are visible on both product detail entry points", () 
   assert.match(foodLabelReview.pendingDetails, /No allergen-free status is claimed/);
   assert.match(foodLabelReview.imageNotice, /Packaging claims remain under review/);
   assert.match(foodLabelReview.brandNotice, /certification has not been verified/);
-  assert.match(source("src/components/ProductLabelNotice.tsx"), /<details>[\s\S]*<summary>What is pending\?/);
   for (const file of ["src/app/products/[id]/page.tsx", "src/components/StorefrontDialogs.tsx"]) {
-    assert.match(source(file), /<ProductLabelNotice \/>/);
+    assert.doesNotMatch(source(file), /ProductLabelNotice/);
   }
+  assert.match(source("src/lib/payment-config.ts"), /foodLabelReview.readyForSale && catalogueApproved/);
   assert.match(source("src/components/Editorial.tsx"), /foodLabelReview.brandNotice/);
   assert.doesNotMatch(source("src/components/BrandWordmark.tsx"), /®|brand-registration/);
+});
+
+test("quick view keeps shopping actions and oil GST but not the repeated preview warning", () => {
+  const popup = source("src/components/StorefrontDialogs.tsx").split('if (dialog.type === "product") {')[1]
+    .split('return <Modal title={dialog.type === "search"')[0];
+  assert.doesNotMatch(popup, /preview-notice|You can prepare your bag and review checkout|Sandbox checkout may be enabled for testing/);
+  assert.match(popup, /Full product details/);
+  assert.match(popup, /Add \$\{variant.size\} to bag/);
+  assert.match(popup, /Save to your favourites/);
+  assert.match(popup, /oilTaxNote/);
 });
 
 test("existing bottle images remain available while the owner prepares replacements", () => {

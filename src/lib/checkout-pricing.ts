@@ -8,7 +8,7 @@ const oilHsn: Record<string, string> = {
   groundnut: "1508", sesame: "1515", coconut: "1513",
   "wood-groundnut": "1508", "wood-sesame": "1515", "wood-coconut": "1513",
 };
-export const oilTaxNote = "5% GST added at checkout.";
+export const oilTaxNote = "Price includes 5% GST.";
 export const deliveryNote = "₹49 delivery per order, including applicable delivery GST.";
 
 export function isEdibleOil(product: Pick<Product, "id">) {
@@ -16,7 +16,9 @@ export function isEdibleOil(product: Pick<Product, "id">) {
 }
 
 export type CheckoutPricing = {
-  version: 1;
+  /** Version 1 snapshots added GST; version 2 prices already include it. */
+  version: 1 | 2;
+  priceIncludesGst?: boolean;
   subtotalPaise: number;
   oilSubtotalPaise: number;
   oilGstPercent: typeof OIL_GST_PERCENT;
@@ -28,23 +30,23 @@ export type CheckoutPricing = {
   pendingTaxProductIds: string[];
 };
 
-/** Apply only reviewed oil rates. Unreviewed products are not assumed exempt. */
+/** Extract included oil GST for records; never add it to the owner's prices again. */
 export function getCheckoutPricing(summary: CartSummary): CheckoutPricing {
   const oils = summary.lines.filter(({ product }) => isEdibleOil(product));
   const pendingTaxProductIds = [...new Set(summary.lines
     .filter(({ product }) => !isEdibleOil(product)).map(({ product }) => product.id))];
   const oilSubtotalPaise = oils.reduce((sum, line) => sum + line.lineTotalPaise, 0);
-  const oilGstPaise = oils.reduce((sum, line) => sum + Math.round(line.lineTotalPaise * OIL_GST_PERCENT / 100), 0);
+  const oilGstPaise = oils.reduce((sum, line) => sum + Math.round(line.lineTotalPaise * OIL_GST_PERCENT / (100 + OIL_GST_PERCENT)), 0);
   const deliveryPaise = summary.lines.length ? DELIVERY_CHARGE_PAISE : 0;
   const taxStatus = pendingTaxProductIds.length ? "partially_configured" : "oil_rates_verified";
   return {
-    version: 1, subtotalPaise: summary.subtotalPaise, oilSubtotalPaise,
+    version: 2, priceIncludesGst: true, subtotalPaise: summary.subtotalPaise, oilSubtotalPaise,
     oilGstPercent: OIL_GST_PERCENT, oilGstPaise, deliveryPaise,
     // Supplier-arranged delivery follows the goods' GST treatment. Never add
     // another tax on top of the owner's final ₹49 delivery charge.
     deliveryGstIncludedPaise: taxStatus === "oil_rates_verified"
       ? Math.round(deliveryPaise * OIL_GST_PERCENT / (100 + OIL_GST_PERCENT)) : null,
-    totalPaise: summary.subtotalPaise + oilGstPaise + deliveryPaise,
+    totalPaise: summary.subtotalPaise + deliveryPaise,
     taxStatus, pendingTaxProductIds,
   };
 }

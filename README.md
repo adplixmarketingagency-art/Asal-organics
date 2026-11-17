@@ -103,8 +103,9 @@ The catalogue uses the owner’s handwritten product and pack-size lists plus th
 Have the owner review Tamil terminology and provide the actual FSSAI certificate
 and licence details before publishing a certification section.
 
-Razorpay is integrated for sandbox testing. Checkout includes 5% oil GST and ₹49
-delivery per order, with delivery GST included. Non-oil tax remains pending.
+Razorpay is integrated for sandbox testing. Listed prices already include GST;
+checkout adds only ₹49 delivery per order, with delivery GST included. Non-oil
+tax classification remains pending.
 Live checkout stays gated by label review, merchant approvals and delivery
 eligibility; inventory is not reserved. Test success does not place a fulfilment
 order or clear the bag. Complete `docs/payments.md` before collecting real money.

@@ -16,8 +16,9 @@ for the supplied FSSAI reference and outstanding owner information.
 
 The shared wordmark no longer shows `®` without registration evidence. The
 owner's Asal Organics name is retained with certification-status clarification
-in About and FAQ. Pending image-claim review is mentioned in the expandable label
-notice on product details; no gallery or repeated image-caption badges were added.
+in About and FAQ. The product-detail label notice was removed at the owner's
+request on November 17; the review status and live-sale lock remain unchanged.
+No gallery or repeated image-caption badges were added.
 
 ## Type
 

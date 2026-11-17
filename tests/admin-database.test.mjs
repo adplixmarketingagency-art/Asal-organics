@@ -19,7 +19,7 @@ test("PostgreSQL: durable paid orders, fulfilment concurrency and notification l
   try {
     assert.equal(await attachRazorpayOrder(order.id, `order_${order.id.replaceAll("-", "")}`), true);
     assert.ok(Array.isArray((await getAdminOrder(order.id)).items), "JSONB lines are stored as JSON, not a PG array");
-    assert.equal(order.amountPaise, 122500);
+    assert.equal(order.amountPaise, 116900);
     assert.deepEqual((await getAdminOrder(order.id)).pricing, review.pricing);
     await assert.rejects(updateFulfillment(order.id, "unfulfilled", "packed", "owner@example.com"), { status: 409 });
     const payment = `pay_${order.id.replaceAll("-", "")}`;

@@ -50,7 +50,7 @@ test("shopping dialogs and checkout use functional headings instead of filler", 
   assert.match(commerce, /<h1>Your bag is empty<\/h1>/);
   assert.match(commerce, /<h2>Order summary<\/h2>/);
   assert.match(commerce, /Delivery is charged once per order/);
-  assert.match(commerce, /Oil GST \(5%\)/);
+  assert.match(commerce, /Prices include GST/);
   const cart = source("src/components/CartPage.tsx");
   assert.match(cart, /<h1>Your bag<\/h1>/);
   assert.doesNotMatch(cart, /goodness|A few good things/);
@@ -60,5 +60,6 @@ test("shopping dialogs and checkout use functional headings instead of filler", 
   assert.match(checkout, /Contact &amp; delivery/);
   const product = source("src/app/products/[id]/page.tsx");
   assert.doesNotMatch(product, /product-page-intro/);
-  assert.match(product, /Real payments and delivery orders are not yet available/);
+  assert.doesNotMatch(product, /ProductLabelNotice|Real payments and delivery orders are not yet available/);
+  assert.match(product, /Delivery is ₹49 per order/);
 });

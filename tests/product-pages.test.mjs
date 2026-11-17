@@ -50,7 +50,8 @@ test("product pages prerender catalogue data and reject unknown product IDs", ()
   assert.match(page, /lang="ta">\{product.tamilName\}/);
   assert.match(page, /<table/);
   assert.match(page, /variants\.map/);
-  assert.match(page, /Real payments and delivery orders are not yet available/);
+  assert.match(page, /Store preview · Online ordering is not yet available/);
+  assert.doesNotMatch(page, /ProductLabelNotice|Real payments and delivery orders are not yet available/);
   assert.match(page, /serializeJsonLd\(productBreadcrumbs\(product\)\)/);
   assert.doesNotMatch(page, /"use client"|Offer|InStock|aggregateRating/);
 });

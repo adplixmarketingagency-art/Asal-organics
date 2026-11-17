@@ -36,9 +36,9 @@ test("checkout ignores forged prices and does not claim payment, order creation 
   assert.equal(result.review.summary.subtotalPaise, 154000);
   assert.equal(result.review.currency, "INR");
   assert.deepEqual(result.review.payment, { provider: "razorpay", enabled: false });
-  assert.equal(result.review.pricing.oilGstPaise, 7700);
+  assert.equal(result.review.pricing.oilGstPaise, 7333);
   assert.equal(result.review.pricing.deliveryPaise, 4900);
-  assert.equal(result.review.pricing.totalPaise, 166600);
+  assert.equal(result.review.pricing.totalPaise, 158900);
   assert.equal(result.review.pricing.taxStatus, "oil_rates_verified");
   assert.equal("orderId" in result.review, false);
 });
@@ -47,7 +47,7 @@ test("server ignores forged tax, delivery and total and charges delivery only on
   const result = prepareCheckoutReview({ ...payload, pricing: { totalPaise: 1 },
     tax: 0, shipping: 0, totalPaise: 1 });
   assert.equal(result.ok, true);
-  assert.equal(result.review.pricing.totalPaise, 166600);
+  assert.equal(result.review.pricing.totalPaise, 158900);
   assert.equal(result.review.pricing.deliveryPaise, 4900);
 });
 

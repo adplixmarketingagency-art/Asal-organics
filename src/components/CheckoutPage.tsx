@@ -235,7 +235,7 @@ export function CheckoutPage() {
       <Link href="/cart" className="button button-green">Back to your bag <ArrowRight size={18} /></Link>
     </section> : !ready ? <p className="commerce-loading" role="status">Preparing checkout…</p> : !items.length && !currentReview ? <EmptyBag /> : <>
       <div className="commerce-title"><h1>{currentReview ? "Review your order" : "Delivery details"}</h1></div>
-      {paymentSettings?.enabled && paymentSettings.mode === "test" && <p className="commerce-alert" role="status"><strong>Razorpay test mode.</strong> Use test details only. This sandbox payment uses the displayed total, including oil GST and delivery; no real money is charged and no delivery order is placed.</p>}
+      {paymentSettings?.enabled && paymentSettings.mode === "test" && <p className="commerce-alert" role="status"><strong>Razorpay test mode.</strong> Use test details only. This sandbox payment uses the GST-inclusive item prices plus delivery; no real money is charged and no delivery order is placed.</p>}
       {storageWarning && <p className="commerce-alert" role="status">{storageWarning}</p>}
       {cartChanged && <p className="commerce-alert" role="status">{paymentPending || confirmation ? "Your bag changed in another tab. This payment still uses the original reviewed items and total." : "Your bag has changed. Please review it again before continuing."}</p>}
       <div className="commerce-grid checkout-grid">

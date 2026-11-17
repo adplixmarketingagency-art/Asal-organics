@@ -11,7 +11,6 @@ import { useCart } from "./CartProvider";
 import { productPath } from "@/lib/product-pages";
 import { ProductImage } from "./ProductImage";
 import { CategorySelector } from "./CategorySelector";
-import { ProductLabelNotice } from "./ProductLabelNotice";
 import { foodLabelReview } from "@/content/food-labels";
 import { isEdibleOil, oilTaxNote, deliveryNote } from "@/lib/checkout-pricing";
 
@@ -75,18 +74,16 @@ export function StorefrontDialogs({ dialog, onClose, onExplore, saved, onSave, c
           </label>) : productPackSizes(product).map((size) => <div className="pack-option pending" key={size}><span><strong>{size}</strong><small>Price pending</small></span></div>)}
         </div></fieldset>
         <p className="detail-description">{variant ? "Pack prices are proportional to the listed litre or kilogram price, rounded up to the next whole rupee." : "500 g and 1 kg packs are listed. The base quantity for pricing needs confirmation; this item cannot be added to your bag yet."}</p>
-        <ProductLabelNotice />
         <Link href={productPath(product)} className="text-link detail-save" onClick={onClose}>Full product details <ArrowUpRight size={16} /></Link>
         <button className="button button-green full-width" disabled={!ready || !variant} onClick={() => { addItem(product.id, variant?.id); onClose(); }}><ShoppingBag size={18} />{variant ? `Add ${variant.size} to bag` : "Pack price to be confirmed"}<ArrowRight size={18} /></button>
         <button className="text-link detail-save" aria-pressed={saved.includes(product.id)} onClick={() => onSave(product.id)}><Heart size={16} fill={saved.includes(product.id) ? "currentColor" : "none"} />{saved.includes(product.id) ? "Saved to your favourites" : "Save to your favourites"}</button>
-        <div className="preview-notice"><p>You can prepare your bag and review checkout. Real payments and delivery orders are not yet available. Sandbox checkout may be enabled for testing.</p></div>
       </div>
     </Modal>;
   }
   return <Modal title={dialog.type === "search" ? "Search products" : dialog.type === "guide" ? "Catalogue guide" : dialog.type === "about" ? "About Asal" : "Online ordering"} onClose={onClose} className={dialog.type === "guide" ? "guide-modal" : ""}>
     {dialog.type === "search" && <SearchContent onExplore={onExplore} />}
     {dialog.type === "guide" && <CatalogueGuide category={category} onCategory={onCategory} />}
-    {dialog.type === "ordering" && <div className="simple-dialog"><span className="modal-symbol"><ShoppingBag size={28} strokeWidth={1.4} /></span><h2>Ordering &amp; delivery</h2><p>{deliveryNote} Listed oil prices exclude 5% GST, added at checkout.</p><p className="muted">Real payments and delivery orders are not yet available. Sandbox checkout is for testing only; non-oil tax and delivery eligibility still need verification.</p><Link href="/cart" className="button button-green" onClick={onClose}>Go to your bag <ArrowRight size={18} /></Link></div>}
+    {dialog.type === "ordering" && <div className="simple-dialog"><span className="modal-symbol"><ShoppingBag size={28} strokeWidth={1.4} /></span><h2>Ordering &amp; delivery</h2><p>{deliveryNote} Listed prices already include GST.</p><p className="muted">Real payments and delivery orders are not yet available. Sandbox checkout is for testing only; non-oil tax and delivery eligibility still need verification.</p><Link href="/cart" className="button button-green" onClick={onClose}>Go to your bag <ArrowRight size={18} /></Link></div>}
     {dialog.type === "about" && <div className="simple-dialog"><span className="brand modal-brand"><BrandWordmark /></span><h2>About Asal</h2><p>Asal Iyarkai Angadi offers oils, ghee, spices, dairy products and traditional grains.</p><p className="muted">{foodLabelReview.brandNotice}</p><p className="muted">Browse the catalogue and prepare your bag. Online ordering is not yet available.</p><button className="button button-green" onClick={onClose}>Back to the collection <ArrowRight size={18} /></button></div>}
   </Modal>;
 }

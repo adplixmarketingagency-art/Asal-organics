@@ -21,9 +21,11 @@ rates remain **pending**, not assumed exempt or automatically taxed at 5%.
 
 ## Customer calculation
 
-The owner accepted adding oil GST **on top of listed pack prices**. Packs retain
-their original whole-rupee base prices. Taxes are calculated per line in paise,
-rounded to the nearest paise, without rounding the final total to whole rupees.
+The owner corrected the pricing basis on 17 November: **listed prices already
+include GST**. No oil GST is added at checkout. Packs retain their original
+whole-rupee selling prices. The included oil GST component is extracted per line
+as `gross × 5 / 105`, rounded to the nearest paise, for internal order records
+only; it is not a surcharge or a separate customer checkout line.
 
 Delivery is **₹49 once per nonempty order**, inclusive of applicable delivery GST.
 For an oil-only parcel, ₹2.33 of the ₹49 is included delivery GST; it is disclosed
@@ -33,9 +35,10 @@ p18, includes supplier charges for anything done at/before delivery in the value
 of supply. Courier invoicing/composite-supply treatment must be confirmed for the
 actual business; mixed-cart delivery tax is not guessed.
 
-Example: ₹420 oil + ₹21 oil GST + ₹49 delivery = **₹490**.
-Mixed/non-oil carts display an **estimated total** with the missing tax made
-explicit. The sandbox can test that estimate; live mixed/non-oil creation fails
+Example: ₹420 oil (₹20 GST already included) + ₹49 delivery = **₹469**.
+Mixed/non-oil carts use the same GST-inclusive selling prices plus delivery.
+Their rates/classifications remain unverified, so the total is marked estimated;
+no extra tax is guessed. The sandbox can test that estimate; live mixed/non-oil creation fails
 before the provider or order store is contacted.
 
 ## Safety and persistence
@@ -44,7 +47,10 @@ before the provider or order store is contacted.
   Optional browser amounts must equal the full server total; browser charges,
   prices and receipts cannot override it.
 - Stored orders and signed payment references use the full total. Nullable
-  `pricing` stores the original breakdown; legacy rows remain null.
+  `pricing` stores the original breakdown; legacy rows remain null. New snapshots
+  are version 2 with `priceIncludesGst: true`. Version 1 snapshots from the
+  previous additive calculation are preserved and labelled correctly in admin;
+  existing order/payment amounts are never silently rewritten.
 - D1 requires additive migration `0002_order_pricing.sql`; PostgreSQL adds the
   nullable JSONB column under its existing migration lock.
 - The authenticated dashboard shows the persisted tax/delivery breakdown; owner
@@ -67,10 +73,16 @@ by these tests.
 Graphify CLI is unavailable; saved graph relationships were checked against
 the actual pricing, checkout and order-store sources.
 
-Verified before release: 151 runnable tests passed, one optional PostgreSQL
-integration skipped, typecheck passed, and an independent review found no
-blocking issues. Desktop and 390px mobile checkout show ₹420 + ₹21 + ₹49 =
-₹490; the review endpoint agrees, with no mobile horizontal overflow or console
-errors. No payment was submitted. PostgreSQL legacy-null integration remains
+The original additive release passed 151 runnable tests and independent review.
+It is superseded by the owner's GST-inclusive correction and warning-copy cleanup.
+The corrected acceptance check is ₹420 + ₹49 = ₹469, with no added GST line.
+No payment was submitted. PostgreSQL legacy-null integration remains
 unexercised locally; D1 legacy rows were checked. The admin displays the saved
 delivery charge but does not separately repeat its included GST component.
+
+GST-inclusive correction: 152 runnable tests passed, one optional PostgreSQL
+test skipped, typecheck passed. Desktop and 390px mobile checkout showed ₹420
+items + ₹49 delivery = ₹469, with no separate GST surcharge or horizontal
+overflow. Product popup/detail checks confirmed the requested warning blocks
+were removed while the full-detail link, bag/favourite actions and GST-inclusive
+price note remained.

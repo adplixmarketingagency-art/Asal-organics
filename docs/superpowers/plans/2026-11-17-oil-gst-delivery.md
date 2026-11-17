@@ -1,5 +1,10 @@
 # Oil GST and Delivery Implementation Plan
 
+**Historical plan:** The owner later corrected listed prices to GST-inclusive.
+The implemented correction uses subtotal + ₹49 only, with version 2 snapshots.
+The previous additive tests/steps below are superseded by current tests and
+`docs/oil-gst-delivery.md`.
+
 > **For agentic workers:** Use superpowers:executing-plans inline. Steps use checkbox syntax.
 
 **Goal:** Add 5% GST on listed edible-oil prices and ₹49 delivery once per order.

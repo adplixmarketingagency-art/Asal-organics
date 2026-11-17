@@ -213,7 +213,7 @@ export function AdminOrders() {
             <section><h3>In the parcel</h3>{detail.items.map((item, i) => <div className="admin-line" key={`${item.productId}-${i}`}><div><strong>{item.name}</strong><p>{item.size ?? "Standard pack"} · Qty {item.quantity}</p></div><span>{money(item.quantity * item.unitPricePaise)}</span></div>)}
               {detail.pricing && <>
                 <div className="admin-line"><span>Items subtotal</span><span>{money(detail.pricing.subtotalPaise)}</span></div>
-                {detail.pricing.oilSubtotalPaise > 0 && <div className="admin-line"><span>Oil GST (5%)</span><span>{money(detail.pricing.oilGstPaise)}</span></div>}
+                {detail.pricing.oilSubtotalPaise > 0 && <div className="admin-line"><span>{detail.pricing.priceIncludesGst ? "Oil GST (5%, included)" : "Oil GST (5%)"}</span><span>{money(detail.pricing.oilGstPaise)}</span></div>}
                 <div className="admin-line"><span>Delivery (GST inclusive)</span><span>{money(detail.pricing.deliveryPaise)}</span></div>
               </>}
               <div className="admin-line total"><strong>Order total</strong><strong>{money(detail.amountPaise)}</strong></div>

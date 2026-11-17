@@ -74,12 +74,10 @@ export function OrderSummary({ summary, pricing: suppliedPricing, children, show
     {showItems && <CartLines compact summary={summary} />}
     <dl className="summary-totals">
       <div><dt>Items subtotal</dt><dd>{formatMoneyPaise(pricing.subtotalPaise)}</dd></div>
-      {pricing.oilSubtotalPaise > 0 && <div><dt>Oil GST (5%)</dt><dd>{formatMoneyPaise(pricing.oilGstPaise)}</dd></div>}
       <div><dt>Delivery</dt><dd>{formatMoneyPaise(pricing.deliveryPaise)}</dd></div>
       <div className="summary-subtotal"><dt>{pricing.taxStatus === "partially_configured" ? "Estimated total" : "Total"}</dt><dd>{formatMoneyPaise(pricing.totalPaise)}</dd></div>
     </dl>
-    <p className="summary-disclaimer">Delivery is charged once per order and includes applicable delivery GST.
-      {pricing.deliveryGstIncludedPaise !== null && pricing.deliveryPaise > 0 && <> Included delivery GST: {formatMoneyPaise(pricing.deliveryGstIncludedPaise)}.</>}
+    <p className="summary-disclaimer">Prices include GST. Delivery is charged once per order and includes applicable delivery GST.
       {pricing.taxStatus === "partially_configured" && <> Tax for non-oil products is awaiting verification; this is not a final payable total.</>}
     </p>
     {children}

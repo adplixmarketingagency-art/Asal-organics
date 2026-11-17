@@ -1,5 +1,10 @@
 # Oil GST and delivery
 
+**Superseded pricing basis:** The owner subsequently confirmed listed prices
+already include GST. Current calculation is subtotal + ₹49 delivery only.
+Included oil GST is extracted as `gross × 5 / 105`, not added. See
+`docs/oil-gst-delivery.md`; the original approved proposal below is historical.
+
 ## Intent and approach
 
 The owner requested the Indian oil tax rate and ₹49 delivery at checkout,

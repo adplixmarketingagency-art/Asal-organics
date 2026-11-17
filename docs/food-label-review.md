@@ -5,6 +5,14 @@ Reviewed 12 November 2026 against the owner-supplied **Food Safety and Standards
 09.09.2025**, 39 pages (`Comp_Labelling Display_Version VIII_09_09_2025.pdf`).
 Page numbers below are the printed PDF page numbers.
 
+**17 November 2026 UI update:** At the owner's request, the product-page and
+quick-view label-warning blocks and repeated quick-view checkout-preview paragraph
+were removed. This is a copy/display change, not completion of the review:
+`foodLabelReview.readyForSale` remains false and the server still blocks live
+sales. FAQ/About certification disclosures and checkout test-mode notices remain.
+The implemented table and verification below describe the original 12 November
+review, before this subsequent UI change.
+
 This is an implementation review, not legal certification or an assessment of
 the actual food. Later amendments, product standards, Advertising and Claims
 Regulations, Organic Foods Regulations and Legal Metrology requirements need
