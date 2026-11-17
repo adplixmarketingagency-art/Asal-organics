@@ -1,5 +1,6 @@
 import { getProductVariant, productVariants } from "../content/products.ts";
 import { getCartSummary, isRecord, MAX_ITEM_QUANTITY, type CartItem } from "./cart.ts";
+import { getCheckoutPricing, type CheckoutPricing } from "./checkout-pricing.ts";
 
 export const INDIAN_STATES = [
   "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar",
@@ -51,8 +52,7 @@ export type CheckoutReview = {
   currency: "INR";
   customer: CheckoutDetails;
   summary: ReturnType<typeof getCartSummary>;
-  shipping: "not_configured";
-  tax: "not_configured";
+  pricing: CheckoutPricing;
   payment: { provider: "razorpay"; enabled: false };
 };
 
@@ -83,11 +83,12 @@ export function prepareCheckoutReview(value: unknown): ReviewResult {
   }
   const { details, errors } = validateCheckoutDetails(value.customer);
   if (Object.keys(errors).length) return { ok: false, error: "Please check your delivery details.", fieldErrors: errors };
+  const summary = getCartSummary(items);
   return {
     ok: true,
     review: {
-      status: "review_ready", currency: "INR", customer: details, summary: getCartSummary(items),
-      shipping: "not_configured", tax: "not_configured", payment: { provider: "razorpay", enabled: false },
+      status: "review_ready", currency: "INR", customer: details, summary,
+      pricing: getCheckoutPricing(summary), payment: { provider: "razorpay", enabled: false },
     },
   };
 }

@@ -13,7 +13,7 @@ const customer = {
   state: "Tamil Nadu", pincode: "600001", country: "IN",
 };
 const checkout = { customer, items: [{ productId: "sesame", quantity: 2 }, { productId: "groundnut", quantity: 1 }] };
-const order = { orderId: "order_test123", merchantOrderId: null, amount: 154000, currency: "INR", mode: "test" };
+const order = { orderId: "order_test123", merchantOrderId: null, amount: 166600, currency: "INR", mode: "test" };
 const captured = { id: "pay_test123", order_id: order.orderId, amount: order.amount, currency: "INR", status: "captured" };
 const config = { enabled: true, mode: "test", keyId: "rzp_test_dummy", keySecret: secret, databaseUrl: "", webhookSecret: "", catalogueApproved: false, purchaseTotalApproved: false };
 const signature = (id = order.orderId, payment = captured.id) => createHmac("sha256", secret).update(`${id}|${payment}`).digest("hex");
@@ -110,10 +110,10 @@ test("create uses catalogue prices, bounded server receipt and sandbox never wri
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("cache-control"), "no-store");
   const body = await response.json();
-  assert.deepEqual({ order_id: body.order_id, amount: body.amount, currency: body.currency }, { order_id: order.orderId, amount: 154000, currency: "INR" });
+  assert.deepEqual({ order_id: body.order_id, amount: body.amount, currency: body.currency }, { order_id: order.orderId, amount: 166600, currency: "INR" });
   assert.equal(body.key_id, config.keyId);
   assert.equal(body.mode, "test");
-  assert.equal(readPaymentOrder(body.orderToken, secret).amount, 154000);
+  assert.equal(readPaymentOrder(body.orderToken, secret).amount, 166600);
   assert.equal(JSON.stringify(body).includes(secret), false);
   assert.equal(api.calls.length, 1);
   assert.match(api.calls[0].receipt, /^asal_/);
@@ -121,11 +121,27 @@ test("create uses catalogue prices, bounded server receipt and sandbox never wri
 });
 
 test("create rejects forged, fractional, too-small and non-INR browser totals", async () => {
-  for (const extra of [{ amount: 99 }, { amount: 154000.5 }, { amount: "154000" }, { amount: 100 }, { currency: "USD" }]) {
+  for (const extra of [{ amount: 99 }, { amount: 154000.5 }, { amount: "154000" }, { amount: 100 }, { amount: 154000 }, { currency: "USD" }]) {
     const api = fixture();
     assert.equal((await api.createOrder(request({ ...checkout, ...extra }))).status, 400);
     assert.deepEqual(api.calls, []);
   }
+});
+
+test("forged browser fees cannot replace the full server total", async () => {
+  const api = fixture();
+  const response = await api.createOrder(request({ ...checkout, amount: 166600,
+    pricing: { totalPaise: 1 }, shipping: 0, tax: 0 }));
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).amount, 166600);
+  assert.equal(api.calls[0].amount, 166600);
+});
+
+test("live creation refuses unverified non-oil tax before persistence or provider calls", async () => {
+  const api = fixture({ paymentConfig: () => ({ ...config, mode: "live" }) });
+  assert.equal((await api.createOrder(request({ customer,
+    items: [{ productId: "groundnut", quantity: 1 }, { productId: "paneer", quantity: 1 }] }))).status, 503);
+  assert.deepEqual(api.calls, []);
 });
 
 test("create sends the selected pack total to Razorpay and signs that exact amount", async () => {
@@ -136,9 +152,9 @@ test("create sends the selected pack total to Razorpay and signs that exact amou
   ] }));
   assert.equal(response.status, 200);
   const body = await response.json();
-  assert.equal(body.amount, 54000);
-  assert.equal(api.calls[0].amount, 54000);
-  assert.equal(readPaymentOrder(body.orderToken, secret).amount, 54000);
+  assert.equal(body.amount, 61000);
+  assert.equal(api.calls[0].amount, 61000);
+  assert.equal(readPaymentOrder(body.orderToken, secret).amount, 61000);
 });
 
 test("create rejects forged pack IDs before contacting Razorpay", async () => {
@@ -158,9 +174,9 @@ test("wood-pressed order creation uses canonical pack prices without conflating 
   ] }));
   assert.equal(response.status, 200);
   const body = await response.json();
-  assert.equal(body.amount, 154000);
-  assert.equal(api.calls[0].amount, 154000);
-  assert.equal(readPaymentOrder(body.orderToken, secret).amount, 154000);
+  assert.equal(body.amount, 166600);
+  assert.equal(api.calls[0].amount, 166600);
+  assert.equal(readPaymentOrder(body.orderToken, secret).amount, 166600);
   const invalid = fixture();
   assert.equal((await invalid.createOrder(request({ customer, items: [
     { productId: "wood-groundnut", variantId: "groundnut:500ml", quantity: 1 },
@@ -266,7 +282,11 @@ const stored = { id: liveOrder.merchantOrderId, razorpayOrderId: order.orderId, 
 const liveConfig = { ...config, mode: "live", keyId: "rzp_live_dummy" };
 
 test("live create attaches the provider order to the existing durable order model", async () => {
-  const api = fixture({ paymentConfig: () => liveConfig, createPendingOrder: async () => stored });
+  const api = fixture({ paymentConfig: () => liveConfig, createPendingOrder: async (review) => {
+    assert.equal(review.pricing.totalPaise, 166600);
+    assert.equal(review.pricing.oilGstPaise, 7700);
+    return stored;
+  } });
   const response = await api.createOrder(request(checkout));
   assert.equal(response.status, 200);
   assert.equal(readPaymentOrder((await response.json()).orderToken, secret).merchantOrderId, stored.id);

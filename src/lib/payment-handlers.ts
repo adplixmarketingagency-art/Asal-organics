@@ -71,7 +71,10 @@ export function createPaymentHandlers(deps = dependencies) {
         if ("currency" in body && body.currency !== "INR") throw new RequestError("Only INR payments are supported.");
         const result = prepareCheckoutReview(body);
         if (!result.ok) return json(result, 422);
-        const amount = result.review.summary.subtotalPaise;
+        if (config.mode === "live" && result.review.pricing.taxStatus !== "oil_rates_verified") {
+          throw new RequestError("Tax details for one or more products still need verification.", 503);
+        }
+        const amount = result.review.pricing.totalPaise;
         if (!isValidPaymentAmount(amount)) throw new RequestError("Amount must be at least 100 paise.");
         // Browser prices/totals are never used to charge the customer.
         if ("amount" in body && body.amount !== amount) throw new RequestError("The amount does not match your bag.");
