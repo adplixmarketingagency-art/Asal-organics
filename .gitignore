@@ -10,6 +10,7 @@ node_modules/
 .DS_Store
 .claude/
 .impeccable/
+.playwright-mcp/
 docs/assets/category-originals/
 graphify-out/*
 !graphify-out/graph.json

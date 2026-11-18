@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { CartProvider } from "@/components/CartProvider";
 import { BrandIntro } from "@/components/BrandIntro";
-import { homeDescription, homeTitle, siteName, siteUrl } from "@/lib/seo";
+import { homeDescription, homeTitle, siteKeywords, siteName, siteUrl } from "@/lib/seo";
 import "./globals.css";
 import "./commerce.css";
 import "./heritage.css";
@@ -33,14 +33,26 @@ export const metadata: Metadata = {
   applicationName: siteName,
   title: { default: homeTitle, template: `%s | ${siteName}` },
   description: homeDescription,
+  keywords: siteKeywords,
+  authors: [{ name: siteName, url: siteUrl }],
+  creator: siteName,
+  publisher: siteName,
+  category: "food and grocery",
   robots: { index: true, follow: true, "max-image-preview": "large" },
   icons: {
     icon: { url: "/brand-icon.png", type: "image/png", sizes: "96x96" },
     apple: { url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" },
   },
-  // URL-prefix verification is optional; DNS verification needs no code change.
-  verification: process.env.GOOGLE_SITE_VERIFICATION
-    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+  // URL-prefix verification supports Google Search Console, Bing Webmaster Tools, and others.
+  // DNS verification (recommended by Cloudflare) requires no code changes.
+  verification: process.env.GOOGLE_SITE_VERIFICATION || process.env.BING_SITE_VERIFICATION || process.env.YANDEX_VERIFICATION
+    ? {
+        google: process.env.GOOGLE_SITE_VERIFICATION,
+        other: {
+          ...(process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : {}),
+          ...(process.env.YANDEX_VERIFICATION ? { yandex: process.env.YANDEX_VERIFICATION } : {}),
+        },
+      }
     : undefined,
 };
 

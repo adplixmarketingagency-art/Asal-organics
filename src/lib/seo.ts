@@ -9,15 +9,39 @@ export const homeDescription = "Explore Asal Iyarkai Angadi (Asaliyarkaiangadi):
 export const woodOilsPath = "/collections/wood-pressed-oils";
 export const woodOilsDescription = "Explore wood-pressed groundnut, sesame and coconut oils at Asal Iyarkai Angadi. Compare listed prices and packs from 500 ml to 5 litres.";
 
+export const siteKeywords = [
+  "Asal Iyarkai Angadi",
+  "asaliyarkaiangadi",
+  "Asal Organics",
+  "அசல் இயற்கை அங்காடி",
+  "மரச்செக்கு எண்ணெய்",
+  "இயற்கை அங்காடி",
+  "wood pressed oil",
+  "cold pressed oil",
+  "mara chekku oil",
+  "groundnut oil",
+  "sesame oil",
+  "gingelly oil",
+  "coconut oil",
+  "bilona ghee",
+  "karuppu kavuni rice",
+  "mapillai samba rice",
+  "seera samba rice",
+  "traditional rice tamil nadu",
+  "organic store tamil nadu",
+];
+
 export function publicPageMetadata(title: string, description: string, path: string): Metadata {
   const url = `${siteUrl}${path}`;
   return {
     title: { absolute: title },
     description,
+    keywords: siteKeywords,
     alternates: { canonical: url },
     openGraph: {
       type: "website",
       locale: "en_IN",
+      alternateLocale: ["ta_IN"],
       siteName,
       title,
       description,
