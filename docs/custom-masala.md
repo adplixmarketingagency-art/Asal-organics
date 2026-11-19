@@ -27,17 +27,30 @@ The optional **Other ingredients** note captures unlisted ingredients and
 instructions for admin. At least one positive listed quantity or a nonempty note
 is needed to save; individual quantities are never required.
 
-**Save request** sends only the recipe quantities/note and an idempotency UUID
-to `/api/custom-masala`. A successful save reveals the WhatsApp link, with the
+The customiser collects **ingredients only**, never name, phone or address.
+**Continue to checkout** opens `/checkout?custom=masala`, using the same
+`checkoutDetails` state and contact/address fields as regular checkout. A
+previously entered checkout address is reused; custom checkout also works when
+the regular bag is empty. Regular cart items and the ₹49 regular-order delivery
+charge are unchanged.
+
+**Save custom request** sends the recipe quantities/note, validated checkout
+customer/address and an idempotency UUID to `/api/custom-masala`. A successful
+save reveals the WhatsApp link, with the
 immutable server recipe and request reference, to **+91 7305597782**. The customer
 reviews and sends the draft; saving does not send a message or initiate payment.
 Items added only in WhatsApp cannot automatically sync to the dashboard.
 
 A failed save preserves inputs and does not reveal a successful saved state.
-Retries reuse the UUID for the same draft; changed recipes use a new UUID.
+Retries reuse the UUID for the same canonical recipe/customer; changed recipes
+or addresses use a new UUID. Request identity and saved results live in provider
+memory, so navigating back to the recipe and returning retains the saved
+reference instead of creating another admin entry. Reset clears the recipe and
+note atomically. Refreshing loses this in-memory draft and presents a helpful
+customiser link instead of an empty checkout.
 Saving is an unpaid enquiry, **not** a paid order, reservation or delivery promise.
-The owner's subsequent requirement adds customer name, mobile number and full
-Indian delivery address before saving. Email and apartment/landmark are optional.
+Checkout requires customer name, mobile number and full Indian delivery address
+before saving. Email and apartment/landmark are optional for custom requests.
 These details are stored privately with the recipe and shown when admin opens
 the CUSTOM entry. The WhatsApp draft contains the recipe/reference, not the
 customer's address. Customer data is never put in localStorage or public links.
@@ -75,11 +88,16 @@ database. Browser QA used synthetic **local** recipes and an ephemeral local
 admin session; the session cookie was removed afterward. No production test
 recipe, payment or WhatsApp message was submitted.
 
-Desktop/mobile checks confirmed equal-sized highlighted cards, popup scrolling,
-300 g / ₹101, saved Other ingredients note and request reference, CUSTOM badge
-and all recipe details with no mobile horizontal overflow. The contact/address
-extension has 174 runnable tests passing, two optional PostgreSQL tests skipped,
-and typecheck passing; changed-customer idempotent replays are rejected.
+Desktop/mobile checks confirmed an ingredient-only popup, 300 g / ₹101,
+checkout address reuse, optional custom email, empty-bag custom checkout,
+missing-address validation, saved Other ingredients note and request reference,
+CUSTOM badge and every ingredient plus the exact checkout address in admin.
+At 390 × 844, both popup and checkout had no horizontal overflow. Regular
+checkout review retained ₹420 GST-inclusive oil + ₹49 delivery = ₹469.
+Navigating back and changing 100 g to the equivalent 100.0 g retained the saved
+request/reference with no second save button. Refreshing safely showed the
+missing-recipe state. Final suite: 179 tests, 177 passing, two optional PostgreSQL
+tests skipped, zero failures; TypeScript and `git diff --check` passed.
 
 Graphify CLI was unavailable; saved graph relationships were read and checked
 against sources. `graphify update .` could not run. Existing Next.js 16.4.3

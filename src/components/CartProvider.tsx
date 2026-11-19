@@ -5,6 +5,8 @@ import { Check, X } from "lucide-react";
 import { getProductVariant, products } from "@/content/products";
 import { addCartItem, CART_STORAGE_KEY, getCartSummary, MAX_ITEM_QUANTITY, parseStoredCart, serializeCart, setCartQuantity, type CartItem } from "@/lib/cart";
 import { EMPTY_CHECKOUT_DETAILS, type CheckoutDetails } from "@/lib/checkout";
+import type { SavedCustomMasalaRequest } from "@/lib/custom-masala-request";
+export type CustomMasalaDraft = { quantities: Record<string, string>; otherIngredients: string };
 
 function useCartState() {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -14,6 +16,10 @@ function useCartState() {
   const [announcement, setAnnouncement] = useState("");
   // Contact details stay in memory only; never write personal data to browser storage.
   const [checkoutDetails, setCheckoutDetails] = useState<CheckoutDetails>(EMPTY_CHECKOUT_DETAILS);
+  // A custom recipe travels to checkout in memory, never in a URL or browser storage.
+  const [customMasalaDraft, setCustomMasalaDraft] = useState<CustomMasalaDraft | null>(null);
+  const customMasalaRequestIdentity = useRef<{ key: string; id: string } | null>(null);
+  const [customMasalaSavedRequest, setCustomMasalaSavedRequest] = useState<{ key: string; data: SavedCustomMasalaRequest } | null>(null);
 
   useEffect(() => {
     function read() {
@@ -83,6 +89,8 @@ function useCartState() {
     items, ready, storageWarning, announcement, setAnnouncement,
     summary: getCartSummary(items), addItem, updateQuantity, removePurchasedItems,
     checkoutDetails, setCheckoutDetails,
+    customMasalaDraft, setCustomMasalaDraft,
+    customMasalaRequestIdentity, customMasalaSavedRequest, setCustomMasalaSavedRequest,
   };
 }
 

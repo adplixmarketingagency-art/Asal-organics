@@ -78,16 +78,19 @@ test("custom card precedes standard masalas and never becomes a normal checkout 
   assert.match(card, /<CustomMasalaMenu/);
   assert.doesNotMatch(card, /<input/);
   const menu = source("src/components/CustomMasalaMenu.tsx");
-  assert.match(menu, /Other items \/ WhatsApp/);
+  assert.match(source("src/components/CustomMasalaCheckout.tsx"), /Other items \/ WhatsApp/);
   assert.match(menu, /Other ingredients/);
-  assert.match(menu, /Save request/);
-  assert.match(card, /\/api\/custom-masala/);
-  assert.match(card, /requestIdentity/);
-  assert.match(card, /savedRequest/);
-  assert.match(card, /customer/);
-  assert.match(menu, /<CustomMasalaContact/);
+  assert.match(menu, /Continue to checkout/);
+  assert.match(menu, /\/checkout\?custom=masala/);
+  assert.match(card, /customMasalaDraft/);
+  assert.doesNotMatch(card + menu, /CustomMasalaContact|customerErrors|onCustomerChange|\/api\/custom-masala/);
+  const checkout = source("src/components/CustomMasalaCheckout.tsx");
+  assert.match(checkout, /checkoutDetails/);
+  assert.match(checkout, /requestIdentity/);
+  assert.match(checkout, /savedRequest/);
+  assert.match(checkout, /\/api\/custom-masala/);
   assert.doesNotMatch(card + menu, /required[={ ]|window\.open|addItem|localStorage/);
-  assert.match(menu, /rel="noopener noreferrer"/);
+  assert.match(checkout, /rel="noopener noreferrer"/);
   const css = source("src/components/custom-masala.css");
   assert.match(css, /\.custom-masala-card \{[^}]*border-color: #[a-f0-9]+/);
   assert.doesNotMatch(css, /\.custom-masala-card \{[^}]*grid-column/);
@@ -110,6 +113,37 @@ test("saved WhatsApp draft and menu use server snapshot rates, not stale browser
   assert.match(draft, /₹23\/100 g/);
   assert.match(draft, /Calculated total: ₹26/);
   const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
-  assert.match(source("src/components/CustomMasalaMenu.tsx"), /savedCustomMasalaWhatsAppUrl\(savedRequest\)/);
+  assert.match(source("src/components/CustomMasalaCheckout.tsx"), /savedCustomMasalaWhatsAppUrl\(currentSaved/);
   assert.doesNotMatch(source("src/components/CustomMasalaCard.tsx"), /result\.recipe\?\.totalPaise !== quote\.totalPaise/);
+});
+
+test("custom checkout reuses normal checkout address fields and keeps drafts out of URLs and storage", () => {
+  const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+  for (const file of ["src/components/CheckoutPage.tsx", "src/components/CustomMasalaCheckout.tsx"]) {
+    assert.match(source(file), /<CheckoutContactFields/);
+  }
+  const provider = source("src/components/CartProvider.tsx");
+  assert.match(provider, /customMasalaDraft/);
+  assert.doesNotMatch(provider, /localStorage\.setItem\([^)]*customMasala|sessionStorage/);
+  assert.match(source("src/app/checkout/page.tsx"), /customMasala/);
+  const checkout = source("src/components/CustomMasalaCheckout.tsx");
+  assert.doesNotMatch(checkout, /addItem|removePurchasedItems|Razorpay|localStorage|useState<CheckoutDetails>/);
+});
+
+test("reset clears the shared recipe in one update without restoring stale quantities", () => {
+  const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+  assert.match(source("src/components/CustomMasalaCard.tsx"), /onReset=\{\(\) => setCustomMasalaDraft\(\{ quantities: \{\}, otherIngredients: "" \}\)\}/);
+  assert.match(source("src/components/CustomMasalaMenu.tsx"), /onClick=\{onReset\}/);
+});
+
+test("custom request identity and saved result survive checkout remounts in provider memory", () => {
+  const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+  const provider = source("src/components/CartProvider.tsx");
+  const checkout = source("src/components/CustomMasalaCheckout.tsx");
+  assert.match(provider, /customMasalaRequestIdentity = useRef/);
+  assert.match(provider, /customMasalaSavedRequest, setCustomMasalaSavedRequest/);
+  assert.match(checkout, /customMasalaRequestIdentity: requestIdentity/);
+  assert.match(checkout, /customMasalaSavedRequest: savedRequest/);
+  assert.doesNotMatch(checkout, /requestIdentity = useRef|savedRequest, setSavedRequest\] = useState/);
+  assert.match(checkout, /quote\.lines\.map/);
 });
