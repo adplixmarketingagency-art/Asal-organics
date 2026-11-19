@@ -26,15 +26,21 @@ No automatic WhatsApp send or claim of payment. No production test insertions.
    conflict, legacy rows and blocked payment/fulfilment.
 5. [x] Add admin CUSTOM badges, filter and recipe detail component. Add notes
    and explicit save-then-open flow to the menu, retaining recipe state on close.
-6. [ ] Run full tests/typecheck, desktop/mobile browser checks and independent
+6. [x] Run full tests/typecheck, desktop/mobile browser checks and independent
    review; fix blockers, then migrate/deploy via existing Cloudflare workflow
    and push only these task files.
 
 Review fixes: rejected IP attempts no longer consume global capacity; WhatsApp and
 menu totals use the saved server snapshot. Added optional PostgreSQL custom tests.
-Release migration/deployment/push remain the final operational checklist.
+Release migration, isolated Cloudflare deployment and Git push completed.
 
 Owner follow-up: collect validated name/mobile and complete Indian address in
 the custom menu; store/compare customer with immutable recipe; show contact and
 address when opening the CUSTOM admin entry. Preserve old enquiries without
 inventing address details. Email and landmark remain optional.
+
+Final verification: 174 runnable tests passed, two optional PostgreSQL tests
+skipped, typecheck passed. Local synthetic admin view confirmed full address
+and ingredient details on mobile/desktop; live menu and invalid-request guards
+verified without a production test insertion. Worker version
+`87070c0b-21c3-4b02-814e-2628a760de8c`.

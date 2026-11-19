@@ -78,7 +78,7 @@ recipe, payment or WhatsApp message was submitted.
 Desktop/mobile checks confirmed equal-sized highlighted cards, popup scrolling,
 300 g / ₹101, saved Other ingredients note and request reference, CUSTOM badge
 and all recipe details with no mobile horizontal overflow. The contact/address
-extension has 172 runnable tests passing, two optional PostgreSQL tests skipped,
+extension has 174 runnable tests passing, two optional PostgreSQL tests skipped,
 and typecheck passing; changed-customer idempotent replays are rejected.
 
 Graphify CLI was unavailable; saved graph relationships were read and checked
