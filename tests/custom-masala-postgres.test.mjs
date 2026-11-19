@@ -13,6 +13,8 @@ test("PostgreSQL custom recipe snapshot, replay conflicts and separate rate limi
   const requestId = crypto.randomUUID();
   const prepared = prepareCustomMasalaRequest({
     requestId, quantities: { coriander: "100", "chilli-long": "200" }, otherIngredients: "Synthetic pepper note",
+    customer: { fullName: "Synthetic Customer", email: "", phone: "9876543210", address: "12 Test Street",
+      apartment: "", city: "Chennai", state: "Tamil Nadu", pincode: "600001", country: "IN" },
   }).request;
   try {
     const saved = await saveCustomMasalaRequest(prepared);
@@ -21,6 +23,7 @@ test("PostgreSQL custom recipe snapshot, replay conflicts and separate rate limi
     assert.equal(detail.orderKind, "custom");
     assert.equal(detail.amountPaise, 10100);
     assert.deepEqual(detail.customRecipe, prepared.recipe);
+    assert.deepEqual(detail.customer, prepared.customer);
     assert.equal(detail.status, "pending");
     assert.equal(detail.notification, null);
     assert.equal((await listAdminOrders({ filter: "custom", page: 1, search: saved.receipt })).total, 1);

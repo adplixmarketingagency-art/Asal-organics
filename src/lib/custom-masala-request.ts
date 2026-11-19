@@ -1,5 +1,6 @@
 import { calculateCustomMasala, masalaIngredients } from "./custom-masala.ts";
 import { isRecord } from "./cart.ts";
+import { validateCheckoutDetails, type CheckoutDetails, type CheckoutErrors } from "./checkout.ts";
 
 export type CustomMasalaRecipe = {
   version: 1;
@@ -10,9 +11,16 @@ export type CustomMasalaRecipe = {
   totalPaise: number;
   otherIngredients: string;
 };
-export type CustomMasalaRequest = { requestId: string; recipe: CustomMasalaRecipe };
-export type SavedCustomMasalaRequest = { id: string; receipt: string; recipe: CustomMasalaRecipe };
-type Result = { ok: true; request: CustomMasalaRequest } | { ok: false; error: string };
+export type CustomMasalaRequest = { requestId: string; recipe: CustomMasalaRecipe; customer: CheckoutDetails };
+export type SavedCustomMasalaRequest = { id: string; receipt: string; recipe: CustomMasalaRecipe; customer?: CheckoutDetails };
+type Result = { ok: true; request: CustomMasalaRequest } | { ok: false; error: string; fieldErrors?: CheckoutErrors };
+
+export function validateCustomMasalaCustomer(value: unknown) {
+  const result = validateCheckoutDetails(value);
+  // A WhatsApp enquiry needs phone/address, not a mandatory email.
+  if (result.details.email === "") delete result.errors.email;
+  return result;
+}
 
 export function prepareCustomMasalaRequest(value: unknown): Result {
   if (!isRecord(value) || typeof value.requestId !== "string" ||
@@ -31,7 +39,9 @@ export function prepareCustomMasalaRequest(value: unknown): Result {
   if (quote.totalPaise === null || (!quote.lines.length && !otherIngredients)) {
     return { ok: false, error: "Enter an ingredient quantity or describe other ingredients." };
   }
-  return { ok: true, request: { requestId: value.requestId.toLowerCase(), recipe: {
+  const { details: customer, errors: fieldErrors } = validateCustomMasalaCustomer(value.customer);
+  if (Object.keys(fieldErrors).length) return { ok: false, error: "Please complete your name, phone and delivery address.", fieldErrors };
+  return { ok: true, request: { requestId: value.requestId.toLowerCase(), customer, recipe: {
     version: 1,
     ingredients: quote.lines.map(({ ingredient, grams, pricePaise }) => ({
       id: ingredient.id, name: ingredient.name, grams, pricePer100g: ingredient.pricePer100g, pricePaise,

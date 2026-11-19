@@ -4,7 +4,9 @@ import { prepareCustomMasalaRequest } from "../src/lib/custom-masala-request.ts"
 import { createCustomMasalaHandler } from "../src/lib/custom-masala-handlers.ts";
 
 const requestId = "7dcfc4de-8927-4e6e-9f01-042f6e93fbcd";
-const body = { requestId, quantities: { coriander: "100", "chilli-long": "200" }, otherIngredients: "Pepper 50 g" };
+const customer = { fullName: "Synthetic Customer", phone: "+91 9876543210", email: "",
+  address: "12 Test Street", apartment: "Near test park", city: "Chennai", state: "Tamil Nadu", pincode: "600001", country: "IN" };
+const body = { requestId, quantities: { coriander: "100", "chilli-long": "200" }, otherIngredients: "Pepper 50 g", customer };
 const request = (value = body, headers = {}) => new Request("http://localhost:3102/api/custom-masala", {
   method: "POST", headers: { Origin: "http://localhost:3102", "Content-Type": "application/json", ...headers },
   body: JSON.stringify(value),
@@ -13,7 +15,7 @@ function fixture(overrides = {}) {
   const calls = [];
   const handler = createCustomMasalaHandler({
     allowRequest: async (ip) => { calls.push(["limit", ip]); return true; },
-    saveRequest: async (prepared) => { calls.push(["save", prepared]); return { id: requestId, receipt: "custom_test", recipe: prepared.recipe }; },
+    saveRequest: async (prepared) => { calls.push(["save", prepared]); return { id: requestId, receipt: "custom_test", recipe: prepared.recipe, customer: prepared.customer }; },
     ...overrides,
   });
   return { handler, calls };
@@ -29,8 +31,20 @@ test("custom request recomputes recipe, preserves note and ignores forged money"
   assert.equal(result.request.recipe.otherIngredients, "Pepper 50 g");
   assert.deepEqual(result.request.recipe.ingredients.map(({ name, grams }) => [name, grams]),
     [["Coriander seeds", 100], ["Dry chilli — long", 200]]);
-  assert.equal(prepareCustomMasalaRequest({ requestId, quantities: {}, otherIngredients: "Pepper only" }).ok, true);
-  assert.equal(prepareCustomMasalaRequest({ requestId, quantities: {}, otherIngredients: "" }).ok, false);
+  assert.equal(result.request.customer.fullName, customer.fullName);
+  assert.equal(result.request.customer.phone, "9876543210");
+  assert.equal(result.request.customer.address, customer.address);
+  assert.equal(prepareCustomMasalaRequest({ requestId, quantities: {}, otherIngredients: "Pepper only", customer }).ok, true);
+  assert.equal(prepareCustomMasalaRequest({ requestId, quantities: {}, otherIngredients: "", customer }).ok, false);
+});
+
+test("custom order requires a real name, phone and full delivery address; email stays optional", () => {
+  for (const changed of [undefined, null, {}, { ...customer, fullName: "" }, { ...customer, phone: "1111111111" },
+    { ...customer, address: "" }, { ...customer, city: "" }, { ...customer, state: "" }, { ...customer, pincode: "000000" }]) {
+    assert.equal(prepareCustomMasalaRequest({ ...body, customer: changed }).ok, false);
+  }
+  assert.equal(prepareCustomMasalaRequest(body).ok, true);
+  assert.equal(prepareCustomMasalaRequest({ ...body, customer: { ...customer, email: "bad" } }).ok, false);
 });
 
 test("custom request rejects malformed IDs, unknown ingredients, numeric input and oversized notes", () => {
@@ -50,6 +64,7 @@ test("public save uses same-origin bounded JSON, no-store response and never mar
   assert.equal(saved.status, "custom_request_saved");
   assert.equal(saved.receipt, "custom_test");
   assert.equal(saved.recipe.totalPaise, 10100);
+  assert.equal(saved.customer.address, customer.address);
   assert.equal(saved.paid, false);
   assert.deepEqual(api.calls.map(([name]) => name), ["limit", "save"]);
   assert.equal(api.calls[1][1].recipe.totalPaise, 10100);

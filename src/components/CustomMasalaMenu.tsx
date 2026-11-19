@@ -7,8 +7,10 @@ import {
 import { formatMoneyPaise } from "@/lib/checkout-pricing";
 import "./custom-masala.css";
 import type { SavedCustomMasalaRequest } from "@/lib/custom-masala-request";
+import { CustomMasalaContact } from "./CustomMasalaContact";
+import type { CheckoutDetails, CheckoutErrors } from "@/lib/checkout";
 
-export function CustomMasalaMenu({ quantities, onQuantities, otherIngredients, onOtherIngredients, savedRequest, saving, saveError, onSave }: {
+export function CustomMasalaMenu({ quantities, onQuantities, otherIngredients, onOtherIngredients, savedRequest, saving, saveError, onSave, customer, customerErrors, onCustomerChange }: {
   quantities: Record<string, string>;
   onQuantities: (quantities: Record<string, string>) => void;
   otherIngredients: string;
@@ -17,6 +19,9 @@ export function CustomMasalaMenu({ quantities, onQuantities, otherIngredients, o
   saving: boolean;
   saveError: string;
   onSave: () => void;
+  customer: CheckoutDetails;
+  customerErrors: CheckoutErrors;
+  onCustomerChange: (key: keyof CheckoutDetails, value: string) => void;
 }) {
   const quote = savedRequest ? { ...savedRequest.recipe, errors: {} as Record<string, string> } : calculateCustomMasala(quantities);
   const whatsappUrl = savedRequest ? savedCustomMasalaWhatsAppUrl(savedRequest) : null;
@@ -53,6 +58,7 @@ export function CustomMasalaMenu({ quantities, onQuantities, otherIngredients, o
             {quote.errors[id] && <p className="custom-masala-error" id={`masala-${id}-error`}>{quote.errors[id]}</p>}
           </div>)}
         </div>
+        <CustomMasalaContact customer={customer} errors={customerErrors} disabled={saving} onChange={onCustomerChange} />
       </div>
       <aside className="custom-masala-summary" aria-label="Custom masala price summary">
         <p className="custom-masala-summary-label">Your blend</p>

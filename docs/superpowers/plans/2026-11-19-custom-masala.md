@@ -33,3 +33,8 @@ No automatic WhatsApp send or claim of payment. No production test insertions.
 Review fixes: rejected IP attempts no longer consume global capacity; WhatsApp and
 menu totals use the saved server snapshot. Added optional PostgreSQL custom tests.
 Release migration/deployment/push remain the final operational checklist.
+
+Owner follow-up: collect validated name/mobile and complete Indian address in
+the custom menu; store/compare customer with immutable recipe; show contact and
+address when opening the CUSTOM admin entry. Preserve old enquiries without
+inventing address details. Email and landmark remain optional.

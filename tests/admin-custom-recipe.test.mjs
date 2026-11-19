@@ -15,6 +15,7 @@ function renderElement(node) {
   if (node === null || node === undefined || typeof node === "boolean") return "";
   if (typeof node === "string" || typeof node === "number") return escapeHtml(node);
   if (Array.isArray(node)) return node.map(renderElement).join("");
+  if (node.type === React.Fragment) return renderElement(node.props.children);
   if (typeof node.type === "function") return renderElement(node.type(node.props));
   assert.equal(typeof node.type, "string");
   const attributes = Object.entries(node.props)
@@ -96,9 +97,26 @@ test("admin orders integrates custom requests without changing standard total la
   assert.match(admin, /detail\.orderKind === "custom"/);
   assert.match(admin, /Unpaid request/);
   assert.match(admin, /Quote requested — not paid/);
+  assert.match(admin, /<AdminCustomerDetails customer=\{detail\.customer\}/);
   assert.match(admin, /<AdminCustomRecipe recipe=\{detail\.customRecipe\}/);
   assert.match(admin, /detail\.orderKind === "standard" && detail\.status === "paid" && nextStatus/);
   assert.match(admin, /<span>Items subtotal<\/span>/);
   assert.match(admin, /<span>Delivery \(GST inclusive\)<\/span>/);
   assert.match(admin, /<strong>Order total<\/strong>/);
+});
+
+test("custom admin details render the complete customer contact and delivery address", () => {
+  const Component = loadTsxComponent("src/components/AdminCustomerDetails.tsx", "AdminCustomerDetails");
+  const customer = { fullName: "Synthetic Customer", phone: "9876543210", email: "synthetic@example.com",
+    address: "12 Test Street", apartment: "Near test park", city: "Chennai", state: "Tamil Nadu", pincode: "600001", country: "IN" };
+  const html = renderElement(React.createElement(Component, { customer }));
+  for (const value of ["Synthetic Customer", "9876543210", "synthetic@example.com", "12 Test Street",
+    "Near test park", "Chennai", "Tamil Nadu", "600001"]) assert.ok(html.includes(value), value);
+});
+
+test("older custom enquiries never receive fabricated contact or address details", () => {
+  const Component = loadTsxComponent("src/components/AdminCustomerDetails.tsx", "AdminCustomerDetails");
+  const html = renderElement(React.createElement(Component, { customer: { fullName: "Custom masala enquiry", address: "" } }));
+  assert.match(html, /Contact and address were not provided for this older request/);
+  assert.doesNotMatch(html, /<address/);
 });

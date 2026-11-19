@@ -84,6 +84,8 @@ test("custom card precedes standard masalas and never becomes a normal checkout 
   assert.match(card, /\/api\/custom-masala/);
   assert.match(card, /requestIdentity/);
   assert.match(card, /savedRequest/);
+  assert.match(card, /customer/);
+  assert.match(menu, /<CustomMasalaContact/);
   assert.doesNotMatch(card + menu, /required[={ ]|window\.open|addItem|localStorage/);
   assert.match(menu, /rel="noopener noreferrer"/);
   const css = source("src/components/custom-masala.css");

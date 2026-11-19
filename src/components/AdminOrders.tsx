@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Bell, Check, ChevronRight, Inbox, LogOut, Mail, Package, RefreshCw, Search, ShieldCheck, Truck } from "lucide-react";
 import { fulfillmentStatuses, type AdminOrderDetail, type OrderFilter, type OrdersResult } from "@/lib/admin-types";
 import { AdminCustomRecipe } from "./AdminCustomRecipe";
+import { AdminCustomerDetails } from "./AdminCustomerDetails";
 import { AdminInstall } from "./AdminInstall";
 
 type Snapshot = OrdersResult & { owner: string; notification: { emailConfigured: boolean; processorConfigured: boolean } };
@@ -228,9 +229,10 @@ export function AdminOrders() {
           {!detail ? <p className="admin-muted">{detailError ? "Please retry by opening the order again." : "Opening order…"}</p> : <>
             <h2 ref={detailHeading} tabIndex={-1}>{detail.receipt}</h2><p className="admin-small">{date(detail.createdAt)} IST</p>
             <div className="admin-detail-badges">{detail.orderKind === "custom" ? <><Badge status="custom" /><span className="admin-request-status">Quote requested — not paid</span></> : <><Badge status={detail.status} />{detail.status === "paid" && <Badge status={detail.fulfillmentStatus} />}</>}</div>
-            {detail.orderKind === "custom" ? detail.customRecipe
+            {detail.orderKind === "custom" ? <>{detail.customRecipe
               ? <AdminCustomRecipe recipe={detail.customRecipe} />
-              : <section><h3>Requested recipe</h3><p className="admin-muted">Recipe details are unavailable. Refresh this request before quoting.</p></section>
+              : <section><h3>Requested recipe</h3><p className="admin-muted">Recipe details are unavailable. Refresh this request before quoting.</p></section>}
+              <AdminCustomerDetails customer={detail.customer} /></>
               : <>
             <section><h3>In the parcel</h3>{detail.items.map((item, i) => <div className="admin-line" key={`${item.productId}-${i}`}><div><strong>{item.name}</strong><p>{item.size ?? "Standard pack"} · Qty {item.quantity}</p></div><span>{money(item.quantity * item.unitPricePaise)}</span></div>)}
               {detail.pricing && <>

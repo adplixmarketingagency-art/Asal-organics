@@ -36,14 +36,20 @@ Items added only in WhatsApp cannot automatically sync to the dashboard.
 A failed save preserves inputs and does not reveal a successful saved state.
 Retries reuse the UUID for the same draft; changed recipes use a new UUID.
 Saving is an unpaid enquiry, **not** a paid order, reservation or delivery promise.
-No customer contact/address is demanded or fabricated for the enquiry.
+The owner's subsequent requirement adds customer name, mobile number and full
+Indian delivery address before saving. Email and apartment/landmark are optional.
+These details are stored privately with the recipe and shown when admin opens
+the CUSTOM entry. The WhatsApp draft contains the recipe/reference, not the
+customer's address. Customer data is never put in localStorage or public links.
+Older enquiries without contact details show an explicit missing-address note.
 
 ## Admin and storage
 
 - Existing admin Order inbox lists custom requests with **CUSTOM / Unpaid
   request**; the Custom requests filter excludes regular orders.
 - Details show every selected ingredient, grams, rate and line cost; aggregate
-  listed quantity, ingredient cost, grinding, calculated subtotal and note.
+  listed quantity, ingredient cost, grinding, calculated subtotal and note,
+  plus the customer's name, phone, address, city, state and PIN code.
 - Custom requests cannot attach Razorpay orders, be marked paid by the standard
   payment adapter, or use standard fulfilment transitions.
 - In-page/opt-in browser alerts notice newly seen custom requests while the
@@ -53,7 +59,8 @@ No customer contact/address is demanded or fabricated for the enquiry.
   `order_kind`, nullable JSON `custom_recipe` and separate request-rate limits.
   PostgreSQL creates equivalent fields under its existing schema lock.
 - The public endpoint checks the fixed production Origin, JSON type, 16 KiB body,
-  known ingredients, valid quantities, UUID and a 1,000-character note. All rates
+  known ingredients, valid quantities, UUID, a 1,000-character note and validated
+  customer/address. All rates
   and totals are recomputed server-side. Limits are 5 per hashed IP and 100
   globally per 15-minute bucket; rejected IP requests do not consume global
   capacity. Admin access remains authenticated and responses stay no-store.
@@ -70,7 +77,9 @@ recipe, payment or WhatsApp message was submitted.
 
 Desktop/mobile checks confirmed equal-sized highlighted cards, popup scrolling,
 300 g / ₹101, saved Other ingredients note and request reference, CUSTOM badge
-and all recipe details with no mobile horizontal overflow.
+and all recipe details with no mobile horizontal overflow. The contact/address
+extension has 172 runnable tests passing, two optional PostgreSQL tests skipped,
+and typecheck passing; changed-customer idempotent replays are rejected.
 
 Graphify CLI was unavailable; saved graph relationships were read and checked
 against sources. `graphify update .` could not run. Existing Next.js 16.4.3

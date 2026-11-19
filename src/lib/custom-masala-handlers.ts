@@ -21,12 +21,12 @@ export function createCustomMasalaHandler(deps: {
     try {
       const bytes = await readBoundedBody(request, 16_384);
       const result = prepareCustomMasalaRequest(JSON.parse(new TextDecoder().decode(bytes)));
-      if (!result.ok) return json({ error: result.error }, 422);
+      if (!result.ok) return json({ error: result.error, fieldErrors: result.fieldErrors }, 422);
       // On production Cloudflare overwrites this header; ignore X-Forwarded-For.
       const ip = process.env.NODE_ENV === "production" ? request.headers.get("cf-connecting-ip") ?? "unknown" : "local";
       if (!await deps.allowRequest(ip)) return json({ error: "Too many requests. Try again in 15 minutes." }, 429);
       const saved = await deps.saveRequest(result.request);
-      return json({ status: "custom_request_saved", id: saved.id, receipt: saved.receipt, recipe: saved.recipe, paid: false }, 201);
+      return json({ status: "custom_request_saved", id: saved.id, receipt: saved.receipt, recipe: saved.recipe, customer: saved.customer, paid: false }, 201);
     } catch (error) {
       if (error instanceof BodyTooLargeError) return json({ error: "Recipe request is too large." }, 413);
       if (error instanceof SyntaxError) return json({ error: "Invalid recipe JSON." }, 400);

@@ -22,7 +22,9 @@ test("D1 custom requests save immutable recipes, appear in admin and cannot beco
     }
     globalThis[Symbol.for("__cloudflare-context__")] = { env: { ASAL_DB: db } };
     process.env.ORDER_STORAGE = "d1";
-    const input = { requestId: crypto.randomUUID(), quantities: { coriander: "100", "chilli-long": "200" }, otherIngredients: "Pepper 50 g" };
+    const customer = { fullName: "Synthetic Custom Customer", email: "", phone: "9876543210", address: "12 Test Street",
+      apartment: "", city: "Chennai", state: "Tamil Nadu", pincode: "600001", country: "IN" };
+    const input = { requestId: crypto.randomUUID(), quantities: { coriander: "100", "chilli-long": "200" }, otherIngredients: "Pepper 50 g", customer };
     const prepared = prepareCustomMasalaRequest(input).request;
     const saved = await saveCustomMasalaRequest(prepared);
     assert.equal((await saveCustomMasalaRequest(prepared)).id, saved.id);
@@ -32,16 +34,20 @@ test("D1 custom requests save immutable recipes, appear in admin and cannot beco
     assert.equal(detail.status, "pending");
     assert.equal(detail.amountPaise, 10100);
     assert.deepEqual(detail.customRecipe, prepared.recipe);
+    assert.deepEqual(detail.customer, customer);
     assert.equal(detail.paymentId, null);
     assert.equal(detail.notification, null);
     const list = await listAdminOrders({ filter: "custom", page: 1, search: "" });
     assert.equal(list.total, 1);
     assert.equal(list.orders[0].orderKind, "custom");
+    assert.equal(list.orders[0].customerName, customer.fullName);
+    assert.equal(list.orders[0].city, customer.city);
     assert.equal((await listAdminOrders({ filter: "pending", page: 1, search: "" })).total, 0);
     assert.equal(await attachRazorpayOrder(saved.id, "order_custom"), false);
     assert.equal(await markPaid(saved.id, "pay_custom"), false);
     await assert.rejects(updateFulfillment(saved.id, "unfulfilled", "packed", "owner@example.com"), { status: 409 });
     await assert.rejects(saveCustomMasalaRequest(prepareCustomMasalaRequest({ ...input, otherIngredients: "Different note" }).request), { status: 409 });
+    await assert.rejects(saveCustomMasalaRequest(prepareCustomMasalaRequest({ ...input, customer: { ...customer, address: "99 Different Street" } }).request), { status: 409 });
     assert.equal((await getAdminOrder(saved.id)).customRecipe.otherIngredients, "Pepper 50 g");
     assert.equal((await db.prepare("SELECT count(*) AS n FROM asal_notification_outbox").first()).n, 0);
     const decisions = await Promise.all(Array.from({ length: 8 }, () => allowCustomMasalaRequest("192.0.2.1", 900)));

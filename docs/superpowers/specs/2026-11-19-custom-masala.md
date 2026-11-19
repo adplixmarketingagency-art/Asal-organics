@@ -16,8 +16,12 @@ Use the existing durable order database with additive `order_kind` and
 pending/unpaid status, a CUSTOM badge and their own admin filter. Details show
 all selected ingredients, grams, rates, line costs, aggregate weight, grinding,
 calculated subtotal and note. Delivery/other-item charges remain unquoted.
-No customer/address is required for a recipe enquiry; admin must distinguish it
-from a paid delivery order. A request reference connects WhatsApp to the record.
+The owner subsequently required complete contact/address on the custom entry:
+name, valid Indian mobile, street, city, state and PIN are required at save.
+Email and landmark are optional. Admin shows all these details alongside the
+recipe; older entries without addresses are explicitly identified. The draft
+contains only recipe/reference, not private contact/address. The request stays
+unpaid, distinct from a confirmed delivery order.
 
 The public endpoint validates a bounded JSON body, fixed same-origin requests,
 known ingredient IDs, decimal/range limits and note length. All rates/totals are
