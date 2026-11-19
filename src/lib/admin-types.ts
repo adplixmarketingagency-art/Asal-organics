@@ -1,13 +1,15 @@
 import type { CheckoutDetails } from "./checkout.ts";
 import type { CheckoutPricing } from "./checkout-pricing.ts";
+import type { CustomMasalaRecipe } from "./custom-masala-request.ts";
 
 export const fulfillmentStatuses = ["unfulfilled", "packed", "shipped", "delivered"] as const;
 export type FulfillmentStatus = typeof fulfillmentStatuses[number];
-export type OrderFilter = "all" | "pending" | "paid" | FulfillmentStatus;
+export type OrderFilter = "all" | "pending" | "paid" | "custom" | FulfillmentStatus;
 export type AdminOrder = {
   id: string; receipt: string; status: string; fulfillmentStatus: FulfillmentStatus;
   amountPaise: number; currency: string; customerName: string; city: string;
   createdAt: string; updatedAt: string; notificationStatus: string | null;
+  orderKind: "standard" | "custom";
 };
 export type NotificationRecord = {
   id: string; status: string; attempts: number; lastError: string | null;
@@ -16,6 +18,7 @@ export type NotificationRecord = {
 export type AdminOrderDetail = AdminOrder & {
   customer: CheckoutDetails;
   pricing: CheckoutPricing | null;
+  customRecipe: CustomMasalaRecipe | null;
   items: { productId: string; variantId?: string; name: string; size?: string; quantity: number; unitPricePaise: number }[];
   paymentId: string | null; razorpayOrderId: string | null;
   notification: NotificationRecord | null;

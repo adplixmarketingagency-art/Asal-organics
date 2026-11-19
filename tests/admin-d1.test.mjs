@@ -23,6 +23,8 @@ test("D1: real SQLite order transactions, notification leases, sessions and dist
       .replace(/--[^\n]*/g, "").replace(/\n/g, " "));
     await db.exec(readFileSync(new URL("../migrations/0002_order_pricing.sql", import.meta.url), "utf8")
       .replace(/--[^\n]*/g, "").replace(/\n/g, " "));
+    await db.exec(readFileSync(new URL("../migrations/0003_custom_masala_requests.sql", import.meta.url), "utf8")
+      .replace(/--[^\n]*/g, "").replace(/\n/g, " "));
     globalThis[Symbol.for("__cloudflare-context__")] = { env: { ASAL_DB: db } };
     process.env.ORDER_STORAGE = "d1";
     const customer = { fullName: "Synthetic D1 Test", phone: "9876543210", email: "synthetic@example.com", address: "12 Test Street", apartment: "",

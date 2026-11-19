@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ChevronDown, Grid2X2, Heart, LayoutList, Search, SlidersHorizontal, Sprout, X } from "lucide-react";
 import { products, categoryPackSizes, catalogueMaxPrice, catalogueMinPrice, selectProducts, groupProducts, formatPrice, type Category, type Product, type Sort } from "@/content/products";
 import { ProductCard } from "./ProductCard";
+import { CustomMasalaCard } from "./CustomMasalaCard";
 import { HeritageIllustration } from "./HeritageIllustration";
 import { CategorySelector } from "./CategorySelector";
 
@@ -108,6 +109,7 @@ export function Catalogue({ saved, onSave, onExplore, category, filterCategory, 
             <span className="category-product-count">{group.products.length} {group.products.length === 1 ? "product" : "products"}</span>
           </div>
           <div className={`product-grid ${view === "list" ? "list-view" : ""}`}>
+            {group.id === "masala" && <CustomMasalaCard />}
             {group.products.map((product) => <ProductCard key={product.id} product={product} saved={saved.includes(product.id)} onSave={() => onSave(product.id)} onExplore={() => onExplore(product)} />)}
           </div>
         </section>)}

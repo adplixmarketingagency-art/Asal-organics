@@ -7,7 +7,7 @@ import { fulfillmentStatuses, type AdminOrder, type AdminOrderDetail, type Order
 
 export function orderQuery(url: URL) {
   const filter = url.searchParams.get("status") ?? "all";
-  if (!["all", "pending", "paid", ...fulfillmentStatuses].includes(filter)) throw new AdminError("Invalid order filter.", 400);
+  if (!["all", "pending", "paid", "custom", ...fulfillmentStatuses].includes(filter)) throw new AdminError("Invalid order filter.", 400);
   const page = url.searchParams.get("page") ?? "1";
   if (!/^[1-9]\d{0,4}$/.test(page)) throw new AdminError("Invalid page.", 400);
   const search = (url.searchParams.get("q") ?? "").trim();
@@ -22,6 +22,7 @@ export function validOrderId(id: string) {
 }
 
 const columns = `o.id, o.receipt, o.status, o.fulfillment_status AS "fulfillmentStatus",
+  o.order_kind AS "orderKind",
   o.amount_paise AS "amountPaise", o.currency, o.customer->>'fullName' AS "customerName",
   o.customer->>'city' AS city, o.created_at AS "createdAt", o.updated_at AS "updatedAt",
   n.status AS "notificationStatus"`;
@@ -31,7 +32,7 @@ export async function listAdminOrders(query: ReturnType<typeof orderQuery>): Pro
   if (usesD1()) return d1.listAdminOrders(query);
   return withDatabase(async (client) => {
     const { filter, page, search } = query;
-    const where = `WHERE ($1='all' OR ($1 IN ('paid','pending') AND o.status=$1)
+    const where = `WHERE ($1='all' OR ($1='custom' AND o.order_kind='custom') OR ($1 IN ('paid','pending') AND o.status=$1 AND o.order_kind='standard')
       OR (o.status='paid' AND o.fulfillment_status=$1))
       AND ($2='' OR strpos(lower(o.receipt), lower($2))>0 OR strpos(lower(o.customer->>'fullName'), lower($2))>0)`;
     const params = [filter, search];
@@ -51,7 +52,7 @@ export async function getAdminOrder(id: string): Promise<AdminOrderDetail | null
   validOrderId(id);
   if (usesD1()) return d1.getAdminOrder(id);
   return withDatabase(async (client) => {
-    const order = (await client.query<AdminOrderDetail>(`SELECT ${columns}, o.customer, o.items, o.pricing,
+    const order = (await client.query<AdminOrderDetail>(`SELECT ${columns}, o.customer, o.items, o.pricing, o.custom_recipe AS "customRecipe",
       o.payment_id AS "paymentId", o.razorpay_order_id AS "razorpayOrderId",
       CASE WHEN n.id IS NULL THEN NULL ELSE json_build_object('id', n.id, 'status', n.status,
         'attempts', n.attempts, 'lastError', n.last_error, 'nextAttemptAt', n.next_attempt_at,
@@ -79,7 +80,7 @@ export async function updateFulfillment(id: string, from: unknown, to: unknown, 
     await client.query("BEGIN");
     try {
       const result = await client.query(`UPDATE asal_orders SET fulfillment_status=$3, updated_at=now()
-        WHERE id=$1 AND status='paid' AND fulfillment_status=$2 RETURNING id`, [id, from, to]);
+        WHERE id=$1 AND status='paid' AND order_kind='standard' AND fulfillment_status=$2 RETURNING id`, [id, from, to]);
       if (!result.rowCount) throw new AdminError("Order changed or payment is not confirmed. Refresh before updating.", 409);
       await client.query(`INSERT INTO asal_fulfillment_events (id, order_id, from_status, to_status, actor)
         VALUES ($1,$2,$3,$4,$5)`, [crypto.randomUUID(), id, from, to, actor]);

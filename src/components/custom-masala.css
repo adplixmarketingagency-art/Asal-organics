@@ -1,0 +1,70 @@
+@layer components {
+  .custom-masala-card { border-color: #b08a39; background: #faf5e7; box-shadow: 0 0 0 1px #b08a3926; }
+  .custom-masala-cover { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: #ebe3c7; color: #614e20; font-size: var(--text-small); }
+  .custom-masala-cover-symbol { display: flex; align-items: center; justify-content: center; }
+  .custom-masala-name { padding: 0; text-align: left; font: inherit; }
+  .custom-masala-name:hover { color: var(--green-mid); }
+  .custom-masala-card-note { margin-block: 12px 18px; color: #635b41; font-size: var(--text-small); line-height: 1.8; }
+  .custom-masala-card .product-add { background: var(--green); color: white; }
+  .custom-masala-modal { width: min(960px, calc(100% - 40px)); padding: 0; background: #faf8ef; }
+  .custom-masala-modal .modal-close { position: sticky; float: right; margin: 10px 10px -50px 0; }
+  .custom-masala-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 28px 54px 28px 28px; background: var(--green); color: #fffdf5; }
+  .custom-masala-eyebrow { display: flex; align-items: center; gap: 8px; color: #e5d29d; font-size: var(--text-small); }
+  .custom-masala-modal .custom-masala-header h2 { margin: 10px 0 8px; font-family: var(--display); font-size: clamp(28px, 3vw, 38px); font-weight: 400; line-height: 1.2; letter-spacing: -.6px; }
+  .custom-masala-header p { color: #d9e6da; font-size: var(--text-small); }
+  .custom-masala-grinding { display: grid; gap: 3px; flex-shrink: 0; border-left: 1px solid #e5d29d55; padding-left: 24px; color: #e5d29d; font-size: var(--text-small); }
+  .custom-masala-grinding strong { color: #fffdf5; font-size: 1.5rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .custom-masala-body { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 28px; padding: 28px; }
+  .custom-masala-input-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+  .custom-masala-input-heading p { font-size: var(--text-small); font-weight: 600; }
+  .custom-masala-input-heading p span { color: #66745f; font-weight: 400; }
+  .custom-masala-reset { display: inline-flex; gap: 6px; align-items: center; min-height: 44px; margin-top: -10px; padding: 8px 4px; color: #42624c; font-size: var(--text-small); }
+  .custom-masala-ingredients { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 14px; }
+  .custom-masala-ingredient { display: grid; align-content: start; min-width: 0; }
+  .custom-masala-ingredient label { font-size: var(--text-small); font-weight: 600; line-height: 1.45; }
+  .custom-masala-rate { color: #66745f; font-size: var(--text-caption); margin-block: 4px 7px; }
+  .custom-masala-quantity { display: flex; align-items: center; overflow: hidden; border: 1px solid #cbd0bf; border-radius: 4px; background: white; }
+  .custom-masala-quantity:focus-within { outline: 2px solid var(--green-mid); outline-offset: 2px; }
+  .custom-masala-quantity input { width: 100%; min-width: 0; min-height: 44px; border: 0; outline: 0; background: transparent; padding: 9px 10px; font-size: var(--text-body); font-variant-numeric: tabular-nums; }
+  .custom-masala-quantity > span { color: #66745f; font-size: var(--text-small); padding-right: 12px; }
+  .custom-masala-quantity.has-error { border-color: #a7352f; }
+  .custom-masala-error { color: #9d2828; font-size: var(--text-caption); line-height: 1.6; margin-top: 6px; }
+  .custom-masala-summary { min-width: 0; align-self: start; padding: 22px; border: 1px solid #dfdccb; border-radius: 6px; background: #efeddc; }
+  .custom-masala-summary-label { font-family: var(--display); font-size: 1.5rem; margin-bottom: 12px; }
+  .custom-masala-summary dl { margin: 0; font-size: var(--text-small); }
+  .custom-masala-summary dl > div { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-block: 12px; }
+  .custom-masala-summary dd { margin: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .custom-masala-summary dt > span { display: block; color: #66745f; font-size: var(--text-caption); }
+  .custom-masala-summary .custom-masala-weight { margin-block: 16px 24px; padding-bottom: 18px; border-bottom: 1px solid #d6d3c0; }
+  .custom-masala-weight dd { font-family: var(--display); font-size: 1.625rem; }
+  .custom-masala-weight dd > span { font-family: var(--sans); font-size: var(--text-small); }
+  .custom-masala-summary .custom-masala-total { border-top: 1px solid #d6d3c0; padding-top: 16px; margin-top: 18px; font-weight: 600; }
+  .custom-masala-total dd { font-size: 1.75rem; font-weight: 500; }
+  .custom-masala-note, .custom-masala-other p, .custom-masala-draft-note { color: #58644e; font-size: var(--text-caption); line-height: 1.7; }
+  .custom-masala-other { margin-block: 24px 16px; }
+  .custom-masala-other label { display: block; font-size: var(--text-small); font-weight: 600; }
+  .custom-masala-other label span { font-size: var(--text-caption); font-weight: 400; }
+  .custom-masala-other textarea { display: block; width: 100%; resize: vertical; margin-block: 8px; min-height: 88px; border: 1px solid #cbd0bf; border-radius: 4px; padding: 10px; background: white; color: var(--ink); font: inherit; font-size: var(--text-small); }
+  .custom-masala-other p { margin-top: 6px; }
+  .custom-masala-whatsapp { width: 100%; gap: 10px; padding-inline: 12px; font-size: var(--text-small); }
+  .custom-masala-whatsapp:disabled { opacity: .55; cursor: not-allowed; }
+  .custom-masala-draft-note { margin-top: 10px; }
+}
+
+@layer responsive {
+  @media (max-width: 1000px) {
+    .custom-masala-body { grid-template-columns: minmax(0, 1fr) 250px; gap: 20px; padding: 22px; }
+    .custom-masala-ingredients { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 700px) {
+    .custom-masala-modal { width: calc(100% - 28px); padding: 0; }
+    .custom-masala-header { flex-direction: column; align-items: flex-start; gap: 16px; padding: 22px 45px 22px 18px; }
+    .custom-masala-grinding { display: flex; align-items: baseline; gap: 10px; padding-left: 0; border-left: 0; }
+    .custom-masala-grinding strong { font-size: 1.125rem; }
+    .custom-masala-body { grid-template-columns: minmax(0, 1fr); padding: 20px 16px; gap: 24px; }
+    .custom-masala-input-heading p span { display: block; }
+    .custom-masala-ingredients { gap: 18px 12px; }
+    .custom-masala-ingredient label { min-height: 41px; }
+    .custom-masala-summary { padding: 22px 18px; }
+  }
+}

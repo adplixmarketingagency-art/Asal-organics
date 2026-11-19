@@ -3,10 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Bell, Check, ChevronRight, Inbox, LogOut, Mail, Package, RefreshCw, Search, ShieldCheck, Truck } from "lucide-react";
 import { fulfillmentStatuses, type AdminOrderDetail, type OrderFilter, type OrdersResult } from "@/lib/admin-types";
+import { AdminCustomRecipe } from "./AdminCustomRecipe";
 import { AdminInstall } from "./AdminInstall";
 
 type Snapshot = OrdersResult & { owner: string; notification: { emailConfigured: boolean; processorConfigured: boolean } };
-const labels: Record<string, string> = { all: "All orders", paid: "Paid", pending: "Awaiting payment", unfulfilled: "To pack", packed: "Packed", shipped: "Shipped", delivered: "Delivered", retry: "Retry queued", processing: "Sending", sent: "Provider accepted", failed: "Needs attention", needs_review: "Check provider" };
+const labels: Record<string, string> = { all: "All orders", custom: "Custom requests", paid: "Paid", pending: "Awaiting payment", unfulfilled: "To pack", packed: "Packed", shipped: "Shipped", delivered: "Delivered", retry: "Retry queued", processing: "Sending", sent: "Provider accepted", failed: "Needs attention", needs_review: "Check provider" };
 const notificationLabel = (status: string) => status === "pending" ? "Queued" : labels[status] ?? status;
 const money = (value: number) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(value / 100);
 const date = (value: string) => new Date(value).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" });
@@ -26,7 +27,7 @@ async function api<T>(path: string, method = "GET", body?: unknown): Promise<T> 
   return result;
 }
 function Badge({ status, notification = false }: { status: string; notification?: boolean }) {
-  return <span className={`admin-badge ${status}`}>{notification ? notificationLabel(status) : labels[status] ?? status}</span>;
+  return <span className={`admin-badge ${status}`}>{status === "custom" ? "CUSTOM" : notification ? notificationLabel(status) : labels[status] ?? status}</span>;
 }
 
 export function AdminOrders() {
@@ -46,6 +47,9 @@ export function AdminOrders() {
   const [alerts, setAlerts] = useState(false);
   const [lastRefresh, setLastRefresh] = useState("");
   const previousPaid = useRef<number | null>(null);
+  const previousTotal = useRef<number | null>(null);
+  const previousListKey = useRef<string | null>(null);
+  const seenCustomIds = useRef(new Set<string>());
   const listVersion = useRef(0);
   const detailVersion = useRef(0);
   const alertsRef = useRef(false);
@@ -69,14 +73,28 @@ export function AdminOrders() {
     try {
       const data = await api<Snapshot>(`/api/admin/orders?${new URLSearchParams({ status: filter, page: String(page), q: search })}`);
       if (version !== listVersion.current) return;
+      const listKey = `${filter}\n${search}`;
+      const newCustomIds = data.orders
+        .filter((order) => order.orderKind === "custom" && !seenCustomIds.current.has(order.id))
+        .map((order) => order.id);
       if (previousPaid.current !== null && data.summary.paid > previousPaid.current) {
         const count = data.summary.paid - previousPaid.current;
         setNotice(`${count} new paid ${count === 1 ? "order" : "orders"} received. Check the order inbox.`);
         if (alertsRef.current && "Notification" in window && Notification.permission === "granted") {
           try { new Notification("Asal · New paid order", { body: "Your order inbox has new orders.", tag: "asal-new-orders" }); } catch { /* In-page alert remains available on unsupported mobile browsers. */ }
         }
+      } else if (previousListKey.current === listKey && previousTotal.current !== null &&
+        data.total > previousTotal.current && newCustomIds.length) {
+        const count = newCustomIds.length;
+        setNotice(`${count} new custom ${count === 1 ? "request" : "requests"} received. Check the order inbox.`);
+        if (alertsRef.current && "Notification" in window && Notification.permission === "granted") {
+          try { new Notification("Asal · New custom request", { body: "Your order inbox has new custom requests.", tag: "asal-new-custom-requests" }); } catch { /* In-page alert remains available on unsupported mobile browsers. */ }
+        }
       }
       previousPaid.current = data.summary.paid;
+      previousTotal.current = data.total;
+      previousListKey.current = listKey;
+      for (const order of data.orders) if (order.orderKind === "custom") seenCustomIds.current.add(order.id);
       setSnapshot(data); setError(""); setLastRefresh(new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }));
     } catch (cause) { if (version === listVersion.current) handleError(cause); }
     finally { if (version === listVersion.current) setLoading(false); }
@@ -190,14 +208,14 @@ export function AdminOrders() {
         <section className="admin-inbox" aria-label="Order inbox">
           <div className="admin-inbox-heading"><h2>Order inbox <span>{snapshot?.total ?? "—"}</span></h2><span className="admin-small">{loading ? "Updating…" : lastRefresh ? `Updated ${lastRefresh}` : "Awaiting connection"}</span></div>
           <div className="admin-tools">
-            <label className="admin-filter"><span className="sr-only">Order status</span><select value={filter} onChange={(e) => { setFilter(e.target.value as OrderFilter); setPage(1); }}>{["all", "unfulfilled", "packed", "shipped", "delivered", "paid", "pending"].map((status) => <option key={status} value={status}>{labels[status]}</option>)}</select></label>
+            <label className="admin-filter"><span className="sr-only">Order status</span><select value={filter} onChange={(e) => { setFilter(e.target.value as OrderFilter); setPage(1); }}><option value="all">{labels.all}</option><option value="custom">Custom requests</option>{["unfulfilled", "packed", "shipped", "delivered", "paid", "pending"].map((status) => <option key={status} value={status}>{labels[status]}</option>)}</select></label>
             <form className="admin-search" onSubmit={(e) => { e.preventDefault(); setPage(1); setSearch(searchInput.trim()); }}><Search size={17} /><label className="sr-only" htmlFor="order-search">Search receipt or customer name</label><input id="order-search" type="search" maxLength={100} placeholder="Receipt or customer name" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} /><button type="submit">Search</button></form>
           </div>
           <div className="admin-table-wrap" aria-busy={loading}>
             <table className="admin-table"><thead><tr><th scope="col">Order / customer</th><th scope="col">Total</th><th scope="col">Status</th><th scope="col"><span className="sr-only">Details</span></th></tr></thead>
               <tbody>{snapshot?.orders.map((order) => <tr key={order.id} className={detailId === order.id ? "selected" : ""}>
-                <td><button className="admin-order-link" onClick={() => selectOrder(order.id)} aria-expanded={detailId === order.id}>{order.receipt}</button><p>{order.customerName} <span>· {order.city}</span></p><small>{date(order.createdAt)}</small></td>
-                <td className="admin-total">{money(order.amountPaise)}</td><td><Badge status={order.status === "paid" ? order.fulfillmentStatus : "pending"} /><small className="admin-email-status">Email: {order.notificationStatus ? notificationLabel(order.notificationStatus) : "Not queued"}</small></td>
+                <td><button className="admin-order-link" onClick={() => selectOrder(order.id)} aria-expanded={detailId === order.id}>{order.receipt}</button><p>{order.customerName}{order.city && <span> · {order.city}</span>}</p><small>{date(order.createdAt)}</small></td>
+                <td className="admin-total">{money(order.amountPaise)}</td><td>{order.orderKind === "custom" ? <><Badge status="custom" /><small className="admin-email-status">Unpaid request</small></> : <><Badge status={order.status === "paid" ? order.fulfillmentStatus : "pending"} /><small className="admin-email-status">Email: {order.notificationStatus ? notificationLabel(order.notificationStatus) : "Not queued"}</small></>}</td>
                 <td><button className="admin-open" onClick={() => selectOrder(order.id)} aria-label={`View order ${order.receipt}`}><ChevronRight size={18} /></button></td>
               </tr>)}</tbody></table>
             {(!snapshot || !snapshot.orders.length) && <div className="admin-empty"><Inbox size={34} strokeWidth={1.2} /><h3>{loading ? "Loading your orders…" : error ? "Orders are unavailable" : search || filter !== "all" ? "No matching orders" : "A little quiet, for now."}</h3><p>{error ? "Your data hasn't been loaded. Fix the connection and refresh." : "Verified live orders will appear here. Sandbox payments aren't saved or fulfilled."}</p></div>}
@@ -209,7 +227,11 @@ export function AdminOrders() {
           {detailError && <p className="admin-message error" role="alert">{detailError}</p>}
           {!detail ? <p className="admin-muted">{detailError ? "Please retry by opening the order again." : "Opening order…"}</p> : <>
             <h2 ref={detailHeading} tabIndex={-1}>{detail.receipt}</h2><p className="admin-small">{date(detail.createdAt)} IST</p>
-            <div className="admin-detail-badges"><Badge status={detail.status} />{detail.status === "paid" && <Badge status={detail.fulfillmentStatus} />}</div>
+            <div className="admin-detail-badges">{detail.orderKind === "custom" ? <><Badge status="custom" /><span className="admin-request-status">Quote requested — not paid</span></> : <><Badge status={detail.status} />{detail.status === "paid" && <Badge status={detail.fulfillmentStatus} />}</>}</div>
+            {detail.orderKind === "custom" ? detail.customRecipe
+              ? <AdminCustomRecipe recipe={detail.customRecipe} />
+              : <section><h3>Requested recipe</h3><p className="admin-muted">Recipe details are unavailable. Refresh this request before quoting.</p></section>
+              : <>
             <section><h3>In the parcel</h3>{detail.items.map((item, i) => <div className="admin-line" key={`${item.productId}-${i}`}><div><strong>{item.name}</strong><p>{item.size ?? "Standard pack"} · Qty {item.quantity}</p></div><span>{money(item.quantity * item.unitPricePaise)}</span></div>)}
               {detail.pricing && <>
                 <div className="admin-line"><span>Items subtotal</span><span>{money(detail.pricing.subtotalPaise)}</span></div>
@@ -219,7 +241,7 @@ export function AdminOrders() {
               <div className="admin-line total"><strong>Order total</strong><strong>{money(detail.amountPaise)}</strong></div>
             </section>
             <section><h3>Deliver to</h3><address><strong>{detail.customer.fullName}</strong><br />{detail.customer.address}<br />{detail.customer.apartment && <>{detail.customer.apartment}<br /></>}{detail.customer.city}, {detail.customer.state} {detail.customer.pincode}<br />India</address><p className="admin-contact">{detail.customer.phone}<br />{detail.customer.email}</p></section>
-            <section><h3>Fulfilment</h3><p className="admin-muted">{detail.status !== "paid" ? "Awaiting verified payment. Do not fulfil this order." : nextStatus ? "Confirm the parcel is ready before moving it forward." : "This order has been delivered."}</p>{detail.status === "paid" && nextStatus && (confirmStatus === nextStatus ? <div className="admin-confirm" role="group" aria-label="Confirm fulfilment change">
+            <section><h3>Fulfilment</h3><p className="admin-muted">{detail.status !== "paid" ? "Awaiting verified payment. Do not fulfil this order." : nextStatus ? "Confirm the parcel is ready before moving it forward." : "This order has been delivered."}</p>{detail.orderKind === "standard" && detail.status === "paid" && nextStatus && (confirmStatus === nextStatus ? <div className="admin-confirm" role="group" aria-label="Confirm fulfilment change">
               <p className="admin-muted">Mark {detail.receipt} as {nextStatus}? This change is recorded in the activity log.</p>
               <button className="admin-button primary" disabled={busy} onClick={() => void action(`/api/admin/orders/${detail.id}`, "PATCH", { from: detail.fulfillmentStatus, to: nextStatus }, `Order marked ${nextStatus}.`)}><Check size={17} /> Confirm {nextStatus}</button>{" "}
               <button className="admin-button" disabled={busy} onClick={() => setConfirmStatus(null)}>Cancel</button>
@@ -227,6 +249,7 @@ export function AdminOrders() {
             <section><h3>Owner notification</h3>{notification ? <><Badge status={notification.status} notification /><p className="admin-small">{notification.attempts} delivery attempts{notification.sentAt ? ` · Accepted ${date(notification.sentAt)}` : ""}</p>{notification.lastError && <p className="admin-muted">{notification.lastError}</p>}{canRetry && <button className="admin-button" disabled={busy || !snapshot?.notification.emailConfigured} onClick={() => action(`/api/admin/orders/${detail.id}/retry`, "POST", {}, "Email retry queued for the next scheduled run.")}>Queue safe retry <RefreshCw size={15} /></button>}</> : <p className="admin-muted">Queued only after a verified payment.</p>}</section>
             <section><h3>Payment references</h3><dl className="admin-references"><dt>Razorpay order</dt><dd>{detail.razorpayOrderId ?? "Not attached"}</dd><dt>Payment</dt><dd>{detail.paymentId ?? "Not captured"}</dd></dl></section>
             {!!detail.history.length && <section><h3>Activity</h3><ul className="admin-history">{detail.history.map((event) => <li key={event.id}><strong>{labels[event.toStatus]}</strong><span>{date(event.createdAt)} · {event.actor}</span></li>)}</ul></section>}
+            </>}
           </>}
         </aside>}
       </div>

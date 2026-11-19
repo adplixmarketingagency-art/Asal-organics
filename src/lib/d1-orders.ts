@@ -8,6 +8,7 @@ import type { CheckoutPricing } from "./checkout-pricing.ts";
 
 const now = `strftime('%Y-%m-%dT%H:%M:%fZ','now')`;
 const columns = `o.id, o.receipt, o.status, o.fulfillment_status AS fulfillmentStatus,
+  o.order_kind AS orderKind,
   o.amount_paise AS amountPaise, o.currency, json_extract(o.customer,'$.fullName') AS customerName,
   json_extract(o.customer,'$.city') AS city, o.created_at AS createdAt, o.updated_at AS updatedAt,
   n.status AS notificationStatus`;
@@ -26,7 +27,7 @@ export async function createPendingOrder(review: CheckoutReview, receipt: string
 }
 export async function attachRazorpayOrder(id: string, razorpayId: string) {
   const result = await cloudflareDatabase().prepare(`UPDATE asal_orders SET razorpay_order_id=?, updated_at=${now}
-    WHERE id=? AND status='pending' RETURNING id`).bind(razorpayId, id).first();
+    WHERE id=? AND status='pending' AND order_kind='standard' RETURNING id`).bind(razorpayId, id).first();
   return Boolean(result);
 }
 type StoredDetail = StoredOrder & { customer: string; items: string; pricing: string | null; paymentId: string | null };
@@ -43,7 +44,7 @@ export async function markPaid(id: string, paymentId: string) {
   const db = cloudflareDatabase();
   // The schema's AFTER UPDATE trigger creates the outbox row in this same write.
   const result = await db.prepare(`UPDATE asal_orders SET status='paid',payment_id=?,updated_at=${now}
-    WHERE id=? AND status='pending' RETURNING id`).bind(paymentId, id).first();
+    WHERE id=? AND status='pending' AND order_kind='standard' RETURNING id`).bind(paymentId, id).first();
   return Boolean(result || await db.prepare("SELECT id FROM asal_orders WHERE id=? AND status='paid' AND payment_id=?").bind(id, paymentId).first());
 }
 export async function recordWebhook(id: string, orderId: string | null, type: string, payload: unknown) {
@@ -52,7 +53,8 @@ export async function recordWebhook(id: string, orderId: string | null, type: st
 }
 export async function listAdminOrders({ filter, page, search }: { filter: OrderFilter; page: number; search: string }): Promise<OrdersResult> {
   const db = cloudflareDatabase();
-  const where = `WHERE (?1='all' OR (?1 IN ('paid','pending') AND o.status=?1) OR (o.status='paid' AND o.fulfillment_status=?1))
+  const where = `WHERE (?1='all' OR (?1='custom' AND o.order_kind='custom')
+    OR (?1 IN ('paid','pending') AND o.status=?1 AND o.order_kind='standard') OR (o.status='paid' AND o.fulfillment_status=?1))
     AND (?2='' OR instr(lower(o.receipt),lower(?2))>0 OR instr(lower(json_extract(o.customer,'$.fullName')),lower(?2))>0)`;
   const orders = await db.prepare(`SELECT ${columns} ${join} ${where} ORDER BY o.created_at DESC,o.id DESC LIMIT 20 OFFSET ?3`)
     .bind(filter, search, (page - 1) * 20).all<AdminOrder>();
@@ -66,21 +68,22 @@ export async function listAdminOrders({ filter, page, search }: { filter: OrderF
 }
 export async function getAdminOrder(id: string): Promise<AdminOrderDetail | null> {
   const db = cloudflareDatabase();
-  const row = await db.prepare(`SELECT ${columns},o.customer,o.items,o.pricing,
+  const row = await db.prepare(`SELECT ${columns},o.customer,o.items,o.pricing,o.custom_recipe AS customRecipe,
     o.payment_id AS paymentId,o.razorpay_order_id AS razorpayOrderId,
     CASE WHEN n.id IS NULL THEN NULL ELSE json_object('id',n.id,'status',n.status,'attempts',n.attempts,
       'lastError',n.last_error,'nextAttemptAt',n.next_attempt_at,'sentAt',n.sent_at,'firstAttemptAt',n.first_attempt_at) END AS notification
-    ${join} WHERE o.id=?`).bind(id).first<Omit<AdminOrderDetail, "customer" | "items" | "pricing" | "notification" | "history"> & { customer: string; items: string; pricing: string | null; notification: string | null }>();
+    ${join} WHERE o.id=?`).bind(id).first<Omit<AdminOrderDetail, "customer" | "items" | "pricing" | "customRecipe" | "notification" | "history"> & { customer: string; items: string; pricing: string | null; customRecipe: string | null; notification: string | null }>();
   if (!row) return null;
   const history = await db.prepare(`SELECT id,from_status AS fromStatus,to_status AS toStatus,actor,created_at AS createdAt
     FROM asal_fulfillment_events WHERE order_id=? ORDER BY created_at DESC LIMIT 30`).bind(id).all<AdminOrderDetail["history"][number]>();
   return { ...row, customer: JSON.parse(row.customer), items: JSON.parse(row.items),
     pricing: row.pricing ? JSON.parse(row.pricing) as CheckoutPricing : null,
+    customRecipe: row.customRecipe ? JSON.parse(row.customRecipe) : null,
     notification: row.notification ? JSON.parse(row.notification) : null, history: history.results };
 }
 export async function updateFulfillment(id: string, from: string, to: string, actor: string) {
   // The audit trigger runs atomically only for the winning compare-and-swap.
   const result = await cloudflareDatabase().prepare(`UPDATE asal_orders SET fulfillment_status=?,fulfillment_actor=?,updated_at=${now}
-    WHERE id=? AND status='paid' AND fulfillment_status=? RETURNING id`).bind(to, actor, id, from).first();
+    WHERE id=? AND status='paid' AND order_kind='standard' AND fulfillment_status=? RETURNING id`).bind(to, actor, id, from).first();
   if (!result) throw new AdminError("Order changed or payment is not confirmed. Refresh before updating.", 409);
 }

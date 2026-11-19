@@ -45,6 +45,11 @@ async function ensureSchema(client: Client) {
   );
   ALTER TABLE asal_orders ADD COLUMN IF NOT EXISTS fulfillment_status TEXT NOT NULL DEFAULT 'unfulfilled';
   ALTER TABLE asal_orders ADD COLUMN IF NOT EXISTS pricing JSONB;
+  ALTER TABLE asal_orders ADD COLUMN IF NOT EXISTS order_kind TEXT NOT NULL DEFAULT 'standard';
+  ALTER TABLE asal_orders ADD COLUMN IF NOT EXISTS custom_recipe JSONB;
+  CREATE TABLE IF NOT EXISTS asal_custom_request_limits (
+    key TEXT PRIMARY KEY, attempts INTEGER NOT NULL, expires_at INTEGER NOT NULL
+  );
   ALTER TABLE asal_notification_outbox ADD COLUMN IF NOT EXISTS lease_id UUID;
   ALTER TABLE asal_notification_outbox ADD COLUMN IF NOT EXISTS lease_until TIMESTAMPTZ;
   ALTER TABLE asal_notification_outbox ADD COLUMN IF NOT EXISTS first_attempt_at TIMESTAMPTZ;
@@ -78,7 +83,7 @@ export async function createPendingOrder(review: CheckoutReview, receipt: string
 
 export async function attachRazorpayOrder(id: string, razorpayOrderId: string) {
   if (usesD1()) return d1.attachRazorpayOrder(id, razorpayOrderId);
-  return withDatabase(async (client) => (await client.query(`UPDATE asal_orders SET razorpay_order_id=$2, updated_at=now() WHERE id=$1 AND status='pending' RETURNING id`, [id, razorpayOrderId])).rowCount === 1);
+  return withDatabase(async (client) => (await client.query(`UPDATE asal_orders SET razorpay_order_id=$2, updated_at=now() WHERE id=$1 AND status='pending' AND order_kind='standard' RETURNING id`, [id, razorpayOrderId])).rowCount === 1);
 }
 
 export async function getOrder(id: string) {
@@ -96,7 +101,7 @@ export async function markPaid(id: string, paymentId: string) {
   return withDatabase(async (client) => {
     await client.query("BEGIN");
     try {
-      const result = await client.query(`UPDATE asal_orders SET status='paid', payment_id=$2, updated_at=now() WHERE id=$1 AND status='pending' RETURNING id`, [id, paymentId]);
+      const result = await client.query(`UPDATE asal_orders SET status='paid', payment_id=$2, updated_at=now() WHERE id=$1 AND status='pending' AND order_kind='standard' RETURNING id`, [id, paymentId]);
       if (result.rowCount) await client.query(`INSERT INTO asal_notification_outbox (id, order_id, kind) VALUES ($1,$2,'seller_order_paid') ON CONFLICT DO NOTHING`, [crypto.randomUUID(), id]);
       // A duplicate confirmation succeeds only for the same captured payment.
       const alreadyPaid = !result.rowCount && (await client.query(`SELECT id FROM asal_orders WHERE id=$1 AND status='paid' AND payment_id=$2`, [id, paymentId])).rowCount === 1;
