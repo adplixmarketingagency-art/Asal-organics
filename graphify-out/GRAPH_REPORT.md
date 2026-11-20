@@ -1,88 +1,84 @@
-# Graph Report - Asal  (2026-11-17)
+# Graph Report - Asal  (2026-11-20)
 
 ## Corpus Check
-- 108 files · ~37,249 words
+- 125 files · ~43,830 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 10 file(s) not represented in the graph (top: .css 7, (none) 2, .jsonc 1)
+- Unclassified: 11 file(s) not represented in the graph (top: .css 8, (none) 2, .jsonc 1)
 
 ## Summary
-- 566 nodes · 1532 edges · 20 communities (15 shown, 5 thin omitted)
+- 629 nodes · 1779 edges · 16 communities (12 shown, 4 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 47 edges (avg confidence: 0.85)
 - Token cost: 1,600 input · 900 output
 
 ## Graph Freshness
-- Built from commit: `99618c4a`
+- Built from commit: `674c6567`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- products.ts
+- ref_node_assert
 - [id]/page.tsx
-- order-notifications.ts
+- custom-masala.ts
 - CartProvider.tsx
 - package.json
 - compilerOptions
 - payment-handlers.ts
 - AdminOrders.tsx
-- README.md
 - Statement
 - generate-brand-assets.mjs
-- admin/layout.tsx
-- owner-session.ts
-- StorefrontDialogs.tsx
-- admin-handlers.ts
+- order-notifications.ts
+- products.ts
 - razorpay.d.ts
-- admin-d1.test.mjs
-- d1-orders.ts
+- admin-orders.ts
 
 ## God Nodes (most connected - your core abstractions)
-1. `AdminError` - 21 edges
-2. `lucide-react` - 21 edges
-3. `next` - 21 edges
-4. `StorefrontDialogs()` - 19 edges
-5. `getProductVariant()` - 19 edges
-6. `withDatabase()` - 18 edges
-7. `Storefront()` - 17 edges
-8. `compilerOptions` - 17 edges
-9. `products` - 16 edges
-10. `productVariantsFor()` - 16 edges
+1. `AdminError` - 24 edges
+2. `lucide-react` - 24 edges
+3. `next` - 23 edges
+4. `withDatabase()` - 22 edges
+5. `useCart()` - 20 edges
+6. `isRecord()` - 20 edges
+7. `StorefrontDialogs()` - 19 edges
+8. `usesD1()` - 19 edges
+9. `cloudflareDatabase()` - 19 edges
+10. `getProductVariant()` - 19 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `fixture()` --calls--> `createCustomMasalaHandler()`  [EXTRACTED]
+  tests/custom-masala-requests.test.mjs → src/lib/custom-masala-handlers.ts
 - `fixture()` --calls--> `createAdminHandlers()`  [EXTRACTED]
   tests/admin.test.mjs → src/lib/admin-handlers.ts
 - `fixture()` --calls--> `createPaymentHandlers()`  [EXTRACTED]
   tests/payments.test.mjs → src/lib/payment-handlers.ts
-- `price()` --calls--> `getCartSummary()`  [EXTRACTED]
-  tests/checkout-pricing.test.mjs → src/lib/cart.ts
+- `CreditsPage()` --calls--> `BrandWordmark()`  [EXTRACTED]
+  src/app/credits/page.tsx → src/components/BrandWordmark.tsx
 - `price()` --calls--> `getCheckoutPricing()`  [EXTRACTED]
   tests/checkout-pricing.test.mjs → src/lib/checkout-pricing.ts
-- `confirmation()` --calls--> `signPaymentOrder()`  [EXTRACTED]
-  tests/payments.test.mjs → src/lib/payment-order-token.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (20 total, 5 thin omitted)
+## Communities (16 total, 4 thin omitted)
 
-### Community 0 - "products.ts"
-Cohesion: 0.09
-Nodes (26): config, Catalogue(), categories, CategorySelector(), HeritageIllustration(), categoryImages, foodLabelReview, productImages (+18 more)
+### Community 0 - "ref_node_assert"
+Cohesion: 0.11
+Nodes (10): config, productImages, escapeHtml(), loadTsxComponent(), recipe, renderElement(), require, source() (+2 more)
 
 ### Community 1 - "[id]/page.tsx"
-Cohesion: 0.07
-Nodes (43): descriptions, htmlByPath, publicPaths, sitemapUrls, titles, metadata, WoodPressedOils(), lora (+35 more)
+Cohesion: 0.08
+Nodes (29): descriptions, htmlByPath, publicPaths, sitemapUrls, titles, metadata, WoodPressedOils(), CreditsPage() (+21 more)
 
-### Community 2 - "order-notifications.ts"
-Cohesion: 0.15
-Nodes (19): POST(), adminConfig(), adminFailure(), adminJson(), keySets, claimNotification(), completeNotification(), deliveryForOrder() (+11 more)
+### Community 2 - "custom-masala.ts"
+Cohesion: 0.24
+Nodes (12): CustomMasalaCard(), CustomMasalaMenu(), formatMoneyPaise(), calculateCustomMasala(), CustomMasalaLine, CustomMasalaQuote, customMasalaWhatsAppUrl(), GRINDING_PAISE_PER_KG (+4 more)
 
 ### Community 3 - "CartProvider.tsx"
-Cohesion: 0.11
-Nodes (38): headers, POST(), CartContext, useCartState(), addItem(), commit(), onStorage(), read() (+30 more)
+Cohesion: 0.06
+Nodes (68): node_modules/next/dist/docs Guides, Asal Organics, Before launch, Routes, next, metadata, viewport, headers (+60 more)
 
 ### Community 4 - "package.json"
 Cohesion: 0.05
-Nodes (46): config, dependencies, jose@^6.2.16, lucide-react@^0.468.0, next@^16.0.0, pg@^8.23.1, razorpay@^2.9.8, react@^19.2.0 (+38 more)
+Nodes (45): config, dependencies, jose@^6.2.16, lucide-react@^0.468.0, next@^16.0.0, pg@^8.23.1, razorpay@^2.9.8, react@^19.2.0 (+37 more)
 
 ### Community 5 - "compilerOptions"
 Cohesion: 0.10
@@ -90,59 +86,47 @@ Nodes (19): compilerOptions, allowImportingTsExtensions, allowJs, esModuleIntero
 
 ### Community 6 - "payment-handlers.ts"
 Cohesion: 0.07
-Nodes (38): POST, runtime, POST, runtime, POST, runtime, POST, runtime (+30 more)
+Nodes (43): server-only, POST, runtime, POST, runtime, POST, runtime, POST (+35 more)
 
 ### Community 7 - "AdminOrders.tsx"
-Cohesion: 0.10
-Nodes (26): dynamic, OrdersPage(), AdminInstall(), InstallEvent, AdminLogin(), AdminOrders(), action(), signOut() (+18 more)
-
-### Community 9 - "README.md"
-Cohesion: 0.33
-Nodes (4): node_modules/next/dist/docs Guides, Asal Organics, Before launch, Routes
+Cohesion: 0.13
+Nodes (17): AdminCustomerDetails(), AdminCustomRecipe(), money(), rate(), AdminInstall(), InstallEvent, AdminOrders(), action() (+9 more)
 
 ### Community 11 - "generate-brand-assets.mjs"
 Cohesion: 0.10
 Nodes (11): buildEnv, deployEnv, root, root, child, email, key, salt (+3 more)
 
-### Community 13 - "owner-session.ts"
-Cohesion: 0.12
-Nodes (20): dynamic, POST, dynamic, POST, Database, createOwnerHandlers(), dependencies, allowLogin() (+12 more)
+### Community 13 - "order-notifications.ts"
+Cohesion: 0.06
+Nodes (59): jose, dynamic, OrdersPage(), dynamic, POST, dynamic, POST, POST (+51 more)
 
-### Community 14 - "StorefrontDialogs.tsx"
-Cohesion: 0.09
-Nodes (49): lucide-react, next, react, metadata, Page(), metadata, Page(), CreditsPage() (+41 more)
+### Community 14 - "products.ts"
+Cohesion: 0.08
+Nodes (61): lucide-react, react, dynamicParams, generateMetadata(), productForPage(), ProductPage(), Props, BrandIntro() (+53 more)
 
-### Community 16 - "admin-handlers.ts"
-Cohesion: 0.15
-Nodes (15): POST, POST(), dynamic, handlers, dynamic, GET, AdminError, readAdminBody() (+7 more)
-
-### Community 18 - "admin-d1.test.mjs"
-Cohesion: 0.25
-Nodes (17): POST(), runtime, getAdminOrder(), listAdminOrders(), usesD1(), retryNotification(), attachRazorpayOrder(), createPendingOrder() (+9 more)
-
-### Community 19 - "d1-orders.ts"
-Cohesion: 0.17
-Nodes (18): server-only, cloudflareDatabase(), D1Result, claimNotification(), completeNotification(), retryNotification(), attachRazorpayOrder(), createPendingOrder() (+10 more)
+### Community 19 - "admin-orders.ts"
+Cohesion: 0.07
+Nodes (59): dynamic, POST, getAdminOrder(), listAdminOrders(), AdminOrder, AdminOrderDetail, FulfillmentStatus, fulfillmentStatuses (+51 more)
 
 ## Knowledge Gaps
 - **2 isolated node(s):** `node_modules/next/dist/docs Guides`, `Before launch`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 188 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 206 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `next` connect `StorefrontDialogs.tsx` to `[id]/page.tsx`, `CartProvider.tsx`, `package.json`, `AdminOrders.tsx`, `admin/layout.tsx`?**
-  _High betweenness centrality (0.101) - this node is a cross-community bridge._
+- **Why does `next` connect `CartProvider.tsx` to `[id]/page.tsx`, `custom-masala.ts`, `package.json`, `order-notifications.ts`, `products.ts`?**
+  _High betweenness centrality (0.090) - this node is a cross-community bridge._
 - **What connects `node_modules/next/dist/docs Guides`, `Before launch` to the rest of the system?**
   _2 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `products.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.08635703918722787 - nodes in this community are weakly interconnected._
-- **Why does `server-only` connect `d1-orders.ts` to `order-notifications.ts`, `package.json`, `payment-handlers.ts`, `owner-session.ts`, `admin-handlers.ts`, `admin-d1.test.mjs`?**
-  _High betweenness centrality (0.075) - this node is a cross-community bridge._
+- **Should `ref_node_assert` be split into smaller, more focused modules?**
+  _Cohesion score 0.10967741935483871 - nodes in this community are weakly interconnected._
+- **Why does `server-only` connect `payment-handlers.ts` to `admin-orders.ts`, `package.json`, `order-notifications.ts`?**
+  _High betweenness centrality (0.068) - this node is a cross-community bridge._
 - **Should `[id]/page.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.06784260515603799 - nodes in this community are weakly interconnected._
-- **Why does `lucide-react` connect `StorefrontDialogs.tsx` to `products.ts`, `[id]/page.tsx`, `CartProvider.tsx`, `package.json`, `AdminOrders.tsx`?**
-  _High betweenness centrality (0.065) - this node is a cross-community bridge._
+  _Cohesion score 0.08163265306122448 - nodes in this community are weakly interconnected._
+- **Why does `lucide-react` connect `products.ts` to `[id]/page.tsx`, `custom-masala.ts`, `CartProvider.tsx`, `package.json`, `AdminOrders.tsx`, `order-notifications.ts`?**
+  _High betweenness centrality (0.062) - this node is a cross-community bridge._
 - **Should `CartProvider.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.11414141414141414 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05958485958485959 - nodes in this community are weakly interconnected._

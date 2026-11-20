@@ -1,6 +1,6 @@
 # Storefront design assets
 
-Updated November 12, 2026. The reference storefront informed navigation and
+Updated November 20, 2026. The reference storefront informed navigation and
 editorial hierarchy only. No competitor images, branding, certificates or
 testimonials were copied.
 
@@ -117,13 +117,19 @@ and oil; cold-pressed packaging is never reused for wood-pressed products.
 The cold-pressed groundnut bottle was subsequently replaced with the owner's
 new clipboard attachment above. It supersedes `Groundnut_oil.png` (1024×1536),
 previously delivered as `groundnut-bottle`. The `v2` filenames avoid cached old
-imagery; all other product images remain unchanged.
+imagery; the other product images were unchanged at that time.
+
+On November 20, 2026 the owner supplied two replacement coconut oil photographs,
+both 1122×1402: `6787819d-1f36-446c-b6ab-61905a91bc17.png` for cold-pressed
+`coconut`, and `coconut oil.png` for `wood-coconut`. These supersede the two
+November 11 coconut sources above, retaining the `coconut-bottle` and
+`wood-coconut-bottle` delivery prefixes. Both originals remain in Downloads.
 
 Delivery files live in `public/images/products/` with `-240.webp` and `-800.webp`
 suffixes. Sharp resizes each original with `fit: "contain"` onto a white square,
 WebP quality 88 / effort 6, keeping the whole bottle and label without cropping,
 stretching, repainting or removing anything. All thumbnails are under 7 KB;
-all large versions are under 40 KB. The original cold-pressed PNGs remain in the
+all large versions are under 41 KB. The original cold-pressed PNGs remain in the
 owner's Downloads; the wood-pressed PNGs and revised cold-pressed groundnut PNG
 were supplied as clipboard attachments.
 Only the optimized WebPs are included in the public bundle. No independent
