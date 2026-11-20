@@ -18,6 +18,7 @@ export const masalaIngredients = [
   { id: "curry-leaves", name: "Curry leaves", pricePer100g: 10 },
   { id: "asafetida", name: "Asafetida", pricePer100g: 120 },
   { id: "rice", name: "Raw rice", pricePer100g: 10 },
+  { id: "pepper", name: "Pepper", pricePer100g: 120 },
 ] as const;
 
 export const GRINDING_PAISE_PER_KG = 3000;

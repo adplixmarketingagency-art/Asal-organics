@@ -64,7 +64,7 @@ export function CustomMasalaMenu({ quantities, onQuantities, otherIngredients, o
         <div className="custom-masala-other">
           <label htmlFor="masala-other-ingredients">Other ingredients <span>(optional)</span></label>
           <textarea id="masala-other-ingredients" maxLength={1000} rows={3}
-            placeholder="e.g. Pepper 50 g, cloves 10 g" value={otherIngredients}
+            placeholder="e.g. Cloves 10 g, cinnamon 5 g" value={otherIngredients}
             onChange={(event) => onOtherIngredients(event.target.value)} />
           <p>This note will be saved with your checkout request. WhatsApp-only edits won’t sync back to admin.</p>
         </div>

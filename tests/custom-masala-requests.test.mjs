@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { prepareCustomMasalaRequest } from "../src/lib/custom-masala-request.ts";
 import { createCustomMasalaHandler } from "../src/lib/custom-masala-handlers.ts";
+import { savedCustomMasalaWhatsAppUrl } from "../src/lib/custom-masala.ts";
 
 const requestId = "7dcfc4de-8927-4e6e-9f01-042f6e93fbcd";
 const customer = { fullName: "Synthetic Customer", phone: "+91 9876543210", email: "",
@@ -45,6 +46,20 @@ test("custom order requires a real name, phone and full delivery address; email 
   }
   assert.equal(prepareCustomMasalaRequest(body).ok, true);
   assert.equal(prepareCustomMasalaRequest({ ...body, customer: { ...customer, email: "bad" } }).ok, false);
+});
+
+test("a pepper-only recipe is saved at ₹120 per 100 g plus proportional grinding", async () => {
+  const api = fixture();
+  const response = await api.handler(request({ ...body, quantities: { pepper: "50" }, otherIngredients: "" }));
+  assert.equal(response.status, 201);
+  const saved = await response.json();
+  assert.deepEqual(api.calls[1][1].recipe.ingredients, [
+    { id: "pepper", name: "Pepper", grams: 50, pricePer100g: 120, pricePaise: 6000 },
+  ]);
+  assert.equal(saved.recipe.grindingPaise, 150);
+  assert.equal(saved.recipe.totalPaise, 6150);
+  const text = new URL(savedCustomMasalaWhatsAppUrl(saved)).searchParams.get("text");
+  assert.match(text, /Pepper: 50 g \(₹120\/100 g\) — ₹60/);
 });
 
 test("custom request rejects malformed IDs, unknown ingredients, numeric input and oversized notes", () => {

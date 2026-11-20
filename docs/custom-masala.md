@@ -1,17 +1,17 @@
-# Customised masala — 19 November 2026
+# Customised masala — 20 November 2026
 
 ## Storefront
 
 The first tile in Masala & Spices is a normal-sized **Customised Masala** card,
 with a gold border and warm tinted background. Its ingredient menu opens in the
 existing accessible modal; it is not a full-width inline form or gallery.
-The card stays first in grid and list views. All existing images and ready-made
-products remain unchanged.
+The card stays first in grid and list views, with the owner-supplied
+“Get back to your own flavours” artwork. Ready-made products remain unchanged.
 
 Rates per 100 g: coriander seeds ₹22; long chilli ₹35; round chilli ₹50;
 Kashmiri chilli ₹55; turmeric ₹30; toor dal ₹17; channa dal ₹15; cumin ₹70;
 fennel ₹48; fenugreek ₹30; dry ginger ₹80; mustard ₹20; curry leaves ₹10;
-asafetida ₹120; raw rice ₹10.
+asafetida ₹120; raw rice ₹10; pepper ₹120.
 
 Quantities are optional in grams, to one decimal place, 0–10,000 per ingredient.
 Blank/zero quantities are omitted. Rates are computed in paise, rounding each

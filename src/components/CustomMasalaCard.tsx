@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ArrowUpRight, SlidersHorizontal } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Modal } from "./Modal";
 import { CustomMasalaMenu } from "./CustomMasalaMenu";
 import { calculateCustomMasala } from "@/lib/custom-masala";
@@ -24,10 +24,13 @@ export function CustomMasalaCard() {
     <article className="product-card custom-masala-card" data-product="custom-masala">
       <div className="product-media">
         <button type="button" className="product-media-open custom-masala-cover"
-          aria-label="Customise masala ingredients" aria-haspopup="dialog"
+          aria-labelledby="custom-masala-cover-action" aria-describedby="custom-masala-cover-art" aria-haspopup="dialog"
           onClick={(event) => { lastTrigger.current = event.currentTarget; setOpen(true); }}>
-          <span className="custom-masala-cover-symbol"><SlidersHorizontal size={35} strokeWidth={1.3} /></span>
-          <span>Your own blend</span>
+          <span className="sr-only" id="custom-masala-cover-action">Customise masala ingredients</span>
+          <img id="custom-masala-cover-art" src="/images/products/custom-masala-800.webp"
+            srcSet="/images/products/custom-masala-240.webp 240w, /images/products/custom-masala-800.webp 800w"
+            sizes="(max-width: 520px) 45vw, 260px" width="800" height="800" loading="lazy" decoding="async"
+            alt="Get back to your own flavours. We source, you customise, we grind. Hands hold a tray of spices." />
         </button>
       </div>
       <div className="product-info">

@@ -10,6 +10,7 @@ test("custom masala uses the owner's exact ingredient order and prices per 100 g
     ["Dry chilli — Kashmiri", 55], ["Turmeric", 30], ["Toor dal", 17],
     ["Channa dal", 15], ["Cumin seeds", 70], ["Fennel seeds", 48], ["Fenugreek", 30],
     ["Dry ginger", 80], ["Mustard", 20], ["Curry leaves", 10], ["Asafetida", 120], ["Raw rice", 10],
+    ["Pepper", 120],
   ]);
   for (const ingredient of masalaIngredients) {
     const quote = calculateCustomMasala({ [ingredient.id]: "100" });
@@ -26,6 +27,11 @@ test("optional fields calculate ingredients and proportional ₹30 per kg grindi
   assert.equal(quote.ingredientsPaise, 9200);
   assert.equal(quote.grindingPaise, 900);
   assert.equal(quote.totalPaise, 10100);
+  const pepper = calculateCustomMasala({ pepper: "50" });
+  assert.equal(pepper.totalGrams, 50);
+  assert.equal(pepper.ingredientsPaise, 6000);
+  assert.equal(pepper.grindingPaise, 150);
+  assert.equal(pepper.totalPaise, 6150);
   const halfKg = calculateCustomMasala({ coriander: "500" });
   assert.equal(halfKg.grindingPaise, 1500);
   const empty = calculateCustomMasala({});
@@ -74,6 +80,7 @@ test("custom card precedes standard masalas and never becomes a normal checkout 
   const card = source("src/components/CustomMasalaCard.tsx");
   assert.match(card, /Customised Masala/);
   assert.match(card, /className="product-card custom-masala-card"/);
+  assert.match(card, /src="\/images\/products\/custom-masala-800\.webp"/);
   assert.match(card, /open && <Modal/);
   assert.match(card, /<CustomMasalaMenu/);
   assert.doesNotMatch(card, /<input/);
@@ -81,6 +88,7 @@ test("custom card precedes standard masalas and never becomes a normal checkout 
   assert.match(source("src/components/CustomMasalaCheckout.tsx"), /Other items \/ WhatsApp/);
   assert.match(menu, /Other ingredients/);
   assert.match(menu, /Continue to checkout/);
+  assert.match(menu, /masalaIngredients\.map/);
   assert.match(menu, /\/checkout\?custom=masala/);
   assert.match(card, /customMasalaDraft/);
   assert.doesNotMatch(card + menu, /CustomMasalaContact|customerErrors|onCustomerChange|\/api\/custom-masala/);

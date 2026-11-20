@@ -118,13 +118,14 @@ test("removed brand and products cannot return; only reviewed image assets are s
     assert.doesNotMatch(source, /aishw(?:a|ari)|sunflower|castor|almond|product\.image|originalPrice|images\/hero/i, file);
   }
   const assets = readdirSync(new URL("../public/", import.meta.url), { recursive: true });
-  // Brand marks, credited editorial photos, reviewed illustrations and owner-supplied packaging.
+  // Brand marks, credited editorial photos, reviewed illustrations and owner-supplied artwork.
   assert.deepEqual(assets.filter((name) => /\.(jpg|jpeg|png|webp)$/i.test(name)).sort(),
     [
       "apple-touch-icon.png", "brand-icon.png", "images/asal-logo.png", "images/asal-social.png",
       "icons/owner-180.png", "icons/owner-192.png", "icons/owner-512.png", "icons/owner-maskable-512.png",
       ...["oils", "wood-oils", "ghee", "masala", "milk", "paneer", "rice", "grain"].map((id) => `images/categories/${id}.webp`),
       "images/editorial/paddy-field.webp", "images/editorial/kitchen-harvest.webp",
+      "images/products/custom-masala-240.webp", "images/products/custom-masala-800.webp",
       "images/heritage/nammalvar.webp",
       ...["chekku", "bilona", "cattle"].flatMap((id) => [640, 1200, "mobile"].map((variant) => `images/heritage/${id}-${variant}.webp`)),
       ...["groundnut", "sesame", "coconut", "turmeric", "curry-masala", "chilli-powder", "coriander-powder", "ragi", "bajra", "bilona-ghee", "bilona-butter", "palkova", "karuppu-kavuni-halwa", "paneer", "karuppu-kavuni", "mapillai-samba", "seera-samba"].flatMap((id) => [240, 800].map((width) => `images/products/${id}-${width}.webp`)),
